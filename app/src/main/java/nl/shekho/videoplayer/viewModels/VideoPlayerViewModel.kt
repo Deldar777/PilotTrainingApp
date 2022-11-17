@@ -35,6 +35,7 @@ class VideoPlayerViewModel @Inject constructor(
 
     init {
         player.prepare()
+        addMockVideo()
     }
 
     fun addVideoUri(uri: Uri){
@@ -51,6 +52,11 @@ class VideoPlayerViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         player.release()
+    }
+
+    fun addMockVideo(){
+        var uri =  Uri.parse( "https://drive.google.com/file/d/1hxpEgzewkJpJKQ7RGxV_6zeqByJ1turI/view?usp=share_link")
+        addVideoUri(uri)
     }
 
 }

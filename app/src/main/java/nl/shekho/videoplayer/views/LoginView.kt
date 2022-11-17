@@ -33,8 +33,6 @@ import nl.shekho.videoplayer.views.cells.NavigationBar
 @Composable
 fun LoginView(context: Context) {
 
-
-
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)

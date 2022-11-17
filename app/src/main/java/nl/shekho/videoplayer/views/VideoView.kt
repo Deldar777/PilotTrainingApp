@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
@@ -54,11 +56,14 @@ fun VideoView(){
 
     Column(
         modifier = Modifier
-            .padding(10.dp)
-            .background(Color.LightGray)
+            .fillMaxSize()
+            .background(color = Color.Red, RoundedCornerShape(20.dp))
     ) {
 
         AndroidView(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(shape = RoundedCornerShape(20.dp)),
             factory = { context ->
                 PlayerView(context).also {
                     it.player = videoPlayerViewModel.player
@@ -77,8 +82,6 @@ fun VideoView(){
                     else -> Unit
                 }
             },
-            modifier = Modifier
-                .aspectRatio(16 / 9f)
         )
         Spacer(modifier = Modifier.height(8.dp))
         IconButton(onClick = {
