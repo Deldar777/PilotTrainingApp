@@ -1,17 +1,14 @@
-package nl.shekho.videoplayer
+package nl.shekho.videoplayer.helpers
 
 import android.app.Application
 import android.net.Uri
 import android.provider.MediaStore
+import nl.shekho.videoplayer.helpers.contracts.MetaDataReaderInterface
 import nl.shekho.videoplayer.models.MetaData
 
-interface MetaDataReader {
-    fun getMetaDataFromUri(contentUri: Uri): MetaData?
-}
-
-class MetaDataReaderImpl(
+class MetaDataReader(
     private val app: Application
-): MetaDataReader {
+): MetaDataReaderInterface {
     override fun getMetaDataFromUri(contentUri: Uri): MetaData? {
         if(contentUri.scheme != "content"){
             return null

@@ -1,4 +1,4 @@
-package nl.shekho.videoplayer
+package nl.shekho.videoplayer.viewModels
 
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import nl.shekho.videoplayer.helpers.MetaDataReader
 import nl.shekho.videoplayer.models.VideoItem
 import javax.inject.Inject
 
