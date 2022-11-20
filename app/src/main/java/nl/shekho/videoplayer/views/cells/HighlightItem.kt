@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,22 +24,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import nl.shekho.videoplayer.models.Event
-import nl.shekho.videoplayer.ui.theme.deepBlue
-import nl.shekho.videoplayer.ui.theme.highlightDivider
-import nl.shekho.videoplayer.ui.theme.highlightItemGray
-import nl.shekho.videoplayer.ui.theme.highlightListGray
+import nl.shekho.videoplayer.ui.theme.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HighlightItem(event: Event) {
+fun HighlightItem(
+    event: Event,
+    isSelected: Boolean = false,
+    activeHighlightColor: Color = selectedItemLightBlue,
+    inactiveColor: Color = highlightItemGray,
+    onItemClick: () -> Unit
+) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .background(highlightItemGray)
+            .clickable {
+                onItemClick()
+            }
+            .background(
+                if (isSelected) activeHighlightColor
+                else inactiveColor
+            )
     ) {
 
 
@@ -151,12 +161,13 @@ fun HighlightItem(event: Event) {
                         .fillMaxHeight(),
                     contentAlignment = Alignment.CenterStart,
                 ){
-                    Icon(
-                        painter = painterResource(id = event.feedbackIcon),
-                        contentDescription = "Feedback icon",
-                        tint = MaterialTheme.colors.primary,
-                    )
-
+                    if(event.hasFeedback){
+                        Icon(
+                            painter = painterResource(id = event.feedbackIcon),
+                            contentDescription = "Feedback icon",
+                            tint = MaterialTheme.colors.primary,
+                        )
+                    }
                 }
             }
 
