@@ -55,7 +55,7 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
     fun addMockVideo(){
-        var uri =  Uri.parse( "https://drive.google.com/file/d/1hxpEgzewkJpJKQ7RGxV_6zeqByJ1turI/view?usp=share_link")
+        var uri =  Uri.parse( "https://drive.google.com/file/d/1hxpEgzewkJpJKQ7RGxV_6zeqByJ1turI/view?usp=sharing")
         addVideoUri(uri)
     }
 

@@ -1,7 +1,11 @@
 package nl.shekho.videoplayer.views
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -9,14 +13,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.highlightListGray
+import nl.shekho.videoplayer.ui.theme.lightGray
+import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
+import nl.shekho.videoplayer.views.cells.HighlightItem
 import nl.shekho.videoplayer.views.cells.NavigationBar
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SessionView() {
+
+    val sessionViewModel = hiltViewModel<SessionViewModel>()
+    val events = sessionViewModel.events.value
+
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
@@ -28,16 +44,16 @@ fun SessionView() {
             NavigationBar()
 
             // Middle part of the screen (highlight - video and add feedback block)
-            HighlightAndVideo()
-
-
+            HighlightAndVideo(eventList = events)
         }
     }
 }
 
 
 @Composable
-fun HighlightAndVideo() {
+fun HighlightAndVideo(
+    eventList: List<Event>
+) {
 
     val shape = RoundedCornerShape(20.dp)
     Row(
@@ -59,12 +75,46 @@ fun HighlightAndVideo() {
                 .padding(),
             contentAlignment = Alignment.TopCenter,
         ) {
-            Text(
-                text = "Highlight",
-                color = MaterialTheme.colors.primary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp
-            )
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp)
+            ) {
+
+                //  Highlight title
+                Box(
+                    Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Highlight",
+                        color = MaterialTheme.colors.primary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp
+                    )
+                }
+
+                // Highlights
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(lightGray),
+                    contentAlignment = Alignment.TopCenter
+                ){
+
+                    LazyColumn{
+                        itemsIndexed(items = eventList) { index, event ->
+                            HighlightItem(
+                                event = event
+                            )
+                        }
+                    }
+                }
+
+            }
+
         }
 
         //Video and feedback section
