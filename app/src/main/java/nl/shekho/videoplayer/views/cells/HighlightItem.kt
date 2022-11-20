@@ -13,7 +13,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +37,10 @@ fun HighlightItem(
     inactiveColor: Color = highlightItemGray,
     onItemClick: () -> Unit
 ) {
+
+    var showFeedbackIcon by remember {
+        mutableStateOf(event.hasFeedback)
+    }
 
     Row(
         modifier = Modifier
@@ -161,7 +165,7 @@ fun HighlightItem(
                         .fillMaxHeight(),
                     contentAlignment = Alignment.CenterStart,
                 ){
-                    if(event.hasFeedback){
+                    if(showFeedbackIcon){
                         Icon(
                             painter = painterResource(id = event.feedbackIcon),
                             contentDescription = "Feedback icon",

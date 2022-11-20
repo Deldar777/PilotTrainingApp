@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.views.cells.NavigationBar
 
 @Composable
@@ -151,12 +152,12 @@ fun LoginBox(context: Context){
                             login(email, password, context)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = deepBlue,
+                            backgroundColor = deepPurple,
                             contentColor = MaterialTheme.colors.primary
                         )
                     ) {
                         Text(
-                            text = "Login",
+                            text = "Marked event",
                             fontFamily = FontFamily.Monospace,
                             textAlign = TextAlign.Center,
                             fontSize = 24.sp,
