@@ -1,10 +1,13 @@
 package nl.shekho.videoplayer.views.cells
 
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -13,23 +16,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import nl.shekho.videoplayer.models.Event
+import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.ui.theme.highlightDivider
+import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import nl.shekho.videoplayer.ui.theme.highlightListGray
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HighlightItem(event: Event){
+fun HighlightItem(event: Event) {
 
     Row(
-
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
+            .background(highlightItemGray)
     ) {
+
 
         // Altitude and timestamp part
         Box(
@@ -38,50 +49,127 @@ fun HighlightItem(event: Event){
                 .fillMaxHeight()
                 .padding(),
             contentAlignment = Alignment.CenterStart,
-        ){
-            Text(
-                text = "${event.altitude} ft",
-                color = MaterialTheme.colors.primary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(start = 10.dp)
-            )
+        ) {
 
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    contentAlignment = Alignment.TopStart,
+                    modifier = Modifier
+                        .padding(top = 6.dp, bottom = 2.dp)
+                ) {
+                    Text(
+                        text = formatDate(event.timestamp),
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colors.primary,
+                        modifier = Modifier
+                            .padding(0.dp)
+                            .background(deepBlue, RectangleShape)
+                    )
+                }
+
+                Text(
+                    text = "${event.altitude} ft",
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
         }
 
+
         // Icon part
+
         Box(
             modifier = Modifier
                 .weight(0.5f)
                 .fillMaxHeight()
                 .padding(),
             contentAlignment = Alignment.Center,
-        ){
+        ) {
+            Divider(
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxHeight()  //fill the max height
+                    .width(1.dp)
+                    .zIndex(1f)
+            )
+
             Icon(
                 painter = painterResource(id = event.eventIcon),
                 contentDescription = event.eventType.type,
-                tint = Color(event.eventIconColor)
+                tint = Color(event.eventIconColor),
+                modifier = Modifier
+                    .zIndex(4f)
+                    .background(
+                        color = MaterialTheme.colors.primary,
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .border(
+                        width = 2.dp,
+                        color = Color(event.eventIconColor),
+                        shape = CircleShape
+                    )
+                    .padding(4.dp)
             )
 
         }
 
-        // Event title part
 
+        // Event title and feedback part
         Box(
             modifier = Modifier
                 .weight(2.0f)
                 .fillMaxHeight()
-                .padding(),
+                .padding(start = 4.dp),
             contentAlignment = Alignment.Center,
-        ){
-            Text(
-                text = event.eventType.type,
-                color = MaterialTheme.colors.primary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .weight(2.0f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.CenterStart,
+                ){
+                    Text(
+                        text = event.eventType.type,
+                        color = MaterialTheme.colors.primary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+
+                }
+                Box(
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.CenterStart,
+                ){
+                    Icon(
+                        painter = painterResource(id = event.feedbackIcon),
+                        contentDescription = "Feedback icon",
+                        tint = MaterialTheme.colors.primary,
+                    )
+
+                }
+            }
+
         }
     }
-    Divider(color = MaterialTheme.colors.primary, thickness = 1.dp)
 
+    Divider(color = highlightDivider, thickness = 1.dp)
+
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+private fun formatDate(date: String): String {
+    val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+    return parsedDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 }

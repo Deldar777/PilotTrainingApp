@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.highlightListGray
 import nl.shekho.videoplayer.ui.theme.lightGray
+import nl.shekho.videoplayer.ui.theme.mediumGray
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.cells.HighlightItem
@@ -50,6 +51,7 @@ fun SessionView() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HighlightAndVideo(
     eventList: List<Event>
@@ -100,7 +102,7 @@ fun HighlightAndVideo(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(lightGray),
+                        .background(highlightListGray),
                     contentAlignment = Alignment.TopCenter
                 ){
 
@@ -112,9 +114,7 @@ fun HighlightAndVideo(
                         }
                     }
                 }
-
             }
-
         }
 
         //Video and feedback section

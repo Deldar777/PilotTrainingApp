@@ -9,12 +9,12 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.ui.theme.orange
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Event(
     var eventType: EventType,
-    var timestamp: LocalTime,
+    var timestamp: String,
     var altitude: Int,
     var feedback: String?
 ) {
@@ -23,14 +23,35 @@ class Event(
     companion object{
         fun getEventListMockData(): List<Event> {
             return listOf(
-                Event(EventType.TAKEOFF, LocalTime.now(), 1000, null),
-                Event(EventType.MASTERWARNING, LocalTime.now(), 1000, "Good job"),
-                Event(EventType.ENGINEFAILURE, LocalTime.now(), 1000, null),
-                Event(EventType.LANDING, LocalTime.now(), 1000, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
             )
         }
     }
 
+    val feedbackIcon: Int = R.drawable.feedback_logo
 
     val hasFeedback: Boolean
         get() = feedback?.isNotEmpty() == true
