@@ -74,7 +74,7 @@ fun HighlightItem(
                         .padding(top = 6.dp, bottom = 2.dp)
                 ) {
                     Text(
-                        text = formatDate(event.timestamp),
+                        text = event.timestamp?.let { formatDate(it) } ?: "",
                         fontSize = 12.sp,
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier
@@ -113,7 +113,7 @@ fun HighlightItem(
 
             Icon(
                 painter = painterResource(id = event.eventIcon),
-                contentDescription = event.eventType.type,
+                contentDescription = event.eventType?.type,
                 tint = Color(event.eventIconColor),
                 modifier = Modifier
                     .zIndex(4f)
@@ -151,12 +151,14 @@ fun HighlightItem(
                         .fillMaxHeight(),
                     contentAlignment = Alignment.CenterStart,
                 ){
-                    Text(
-                        text = event.eventType.type,
-                        color = MaterialTheme.colors.primary,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
+                    event.eventType?.let {
+                        Text(
+                            text = it.type,
+                            color = MaterialTheme.colors.primary,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                    }
 
                 }
                 Box(
@@ -179,7 +181,6 @@ fun HighlightItem(
     }
 
     Divider(color = highlightDivider, thickness = 1.dp)
-
 }
 
 

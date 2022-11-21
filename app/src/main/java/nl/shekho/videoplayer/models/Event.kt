@@ -13,9 +13,9 @@ import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Event(
-    var eventType: EventType,
-    var timestamp: String,
-    var altitude: Int,
+    var eventType: EventType?,
+    var timestamp: String?,
+    var altitude: Int?,
     var feedback: String?
 ) {
 
@@ -27,26 +27,7 @@ class Event(
                 Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
                 Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
                 Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
-                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
-                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
-                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
-                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
-                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
-                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
-                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
-                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
-                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
-                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null)
             )
         }
     }

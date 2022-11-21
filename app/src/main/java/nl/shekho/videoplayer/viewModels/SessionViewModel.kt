@@ -17,6 +17,7 @@ class SessionViewModel @Inject constructor()
     : ViewModel() {
 
     val events: MutableState<List<Event>> = mutableStateOf(ArrayList())
+    var selectedEvent = mutableStateOf(Event(null,null,null,null))
 
     init {
         events.value = Event.getEventListMockData()

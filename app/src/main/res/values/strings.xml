@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">VideoPlayer</string>
+    <string name="app_name">Pilot Training App</string>
+    <string name="markEvent">Mark event</string>
+    <string name="highlightTitle">Highlights</string>
+    <string name="currentAltitude">Current altitude</string>
+
+
+    <string name="addNote">Add notes</string>
+    <string name="addNoteDescription">Add a note to the event described below</string>
+    <string name="eventType">Event type</string>
+    <string name="altitude">Altitude</string>
+    <string name="timestamp">Timestamp</string>
+
 </resources>
