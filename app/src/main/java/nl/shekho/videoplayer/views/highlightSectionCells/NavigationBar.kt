@@ -1,6 +1,5 @@
-package nl.shekho.videoplayer.views.cells
+package nl.shekho.videoplayer.views.highlightSectionCells
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -8,12 +7,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.customDarkGray
 import nl.shekho.videoplayer.ui.theme.deepBlue
 

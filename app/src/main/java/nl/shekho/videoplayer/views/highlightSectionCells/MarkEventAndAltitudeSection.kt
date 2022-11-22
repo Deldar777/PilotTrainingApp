@@ -1,4 +1,4 @@
-package nl.shekho.videoplayer.views.cells
+package nl.shekho.videoplayer.views.highlightSectionCells
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

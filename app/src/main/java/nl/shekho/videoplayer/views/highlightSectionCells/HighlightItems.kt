@@ -1,4 +1,4 @@
-package nl.shekho.videoplayer.views.cells
+package nl.shekho.videoplayer.views.highlightSectionCells
 
 import android.os.Build
 import androidx.annotation.RequiresApi

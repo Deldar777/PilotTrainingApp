@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.ui.theme.deepPurple
-import nl.shekho.videoplayer.views.cells.NavigationBar
+import nl.shekho.videoplayer.views.highlightSectionCells.NavigationBar
 
 @Composable
 fun LoginView(context: Context) {

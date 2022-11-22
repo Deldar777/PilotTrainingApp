@@ -1,6 +1,5 @@
-package nl.shekho.videoplayer.views.cells
+package nl.shekho.videoplayer.views.highlightSectionCells
 
-import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
