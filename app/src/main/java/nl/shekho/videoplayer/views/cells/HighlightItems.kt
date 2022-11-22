@@ -30,6 +30,7 @@ fun HighlightItems(
     var selectedItemIndex by remember {
         mutableStateOf(initialSelectedItemIndex)
     }
+    sessionViewModel.selectedEvent.value = eventList.get(eventList.lastIndex)
 
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()

@@ -24,10 +24,14 @@ class Event(
         fun getEventListMockData(): List<Event> {
             return listOf(
                 Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 1000, "Good job"),
-                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 1000, null),
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, "More attention"),
-                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null)
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 4343, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 434, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 7676, "More attention"),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 32323, null),
+                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 545, null),
+                Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 545, "Good job"),
+                Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 545, null),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 43434, "More attention"),
             )
         }
     }

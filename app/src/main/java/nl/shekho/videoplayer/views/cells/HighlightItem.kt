@@ -170,7 +170,7 @@ fun HighlightItem(
                     if(showFeedbackIcon){
                         Icon(
                             painter = painterResource(id = event.feedbackIcon),
-                            contentDescription = "Feedback icon",
+                            contentDescription = "",
                             tint = MaterialTheme.colors.primary,
                         )
                     }
