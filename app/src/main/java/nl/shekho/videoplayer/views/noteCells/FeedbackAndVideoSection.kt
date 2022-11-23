@@ -25,8 +25,10 @@ import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.noteCells.FeedbackSection
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.ExperimentalTime
 
 
+@OptIn(ExperimentalTime::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FeedbackAndVideoSection(

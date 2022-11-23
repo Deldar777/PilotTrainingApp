@@ -19,7 +19,9 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EventDetailsSection(

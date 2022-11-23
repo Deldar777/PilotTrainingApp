@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.ui.theme.deepPurple
-import nl.shekho.videoplayer.views.highlightSectionCells.NavigationBar
+import nl.shekho.videoplayer.views.topbarCells.TopBar
 
 @Composable
 fun LoginView(context: Context) {
@@ -43,7 +43,7 @@ fun LoginView(context: Context) {
         Column {
 
             // Top bar
-            NavigationBar()
+
 
             // Login block
             LoginBox(context = context)
