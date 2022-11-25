@@ -1,4 +1,4 @@
-package nl.shekho.videoplayer.views
+package nl.shekho.videoplayer.views.highlightSectionCells
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts

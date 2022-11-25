@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.*
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.highlightSectionCells.*
 import nl.shekho.videoplayer.views.noteCells.FeedbackAndVideoSection
@@ -24,6 +25,7 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun SessionView() {
     val sessionViewModel = hiltViewModel<SessionViewModel>()
+    val accessViewModel = hiltViewModel<AccessViewModel>()
     val events = sessionViewModel.events.value
 
     Box(

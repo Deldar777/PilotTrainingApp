@@ -1,6 +1,8 @@
 package nl.shekho.videoplayer.viewModels
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
 import nl.shekho.videoplayer.models.VideoItem
 import javax.inject.Inject
@@ -18,9 +21,12 @@ import javax.inject.Inject
 class VideoPlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     val player: Player,
-    private val metaDataReader: MetaDataReader
+    private val metaDataReader: MetaDataReader,
+    private val connectivityChecker: ConnectivityChecker
 ) : ViewModel() {
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    var isOnline = connectivityChecker.isOnline()
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
     val videoItems = videoUris.map {uris ->

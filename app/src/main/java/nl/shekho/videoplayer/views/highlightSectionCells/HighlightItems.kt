@@ -2,6 +2,7 @@ package nl.shekho.videoplayer.views.highlightSectionCells
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -18,6 +19,8 @@ import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
+import nl.shekho.videoplayer.views.generalCells.NoInternetView
+
 
 @OptIn(ExperimentalTime::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -29,28 +32,33 @@ fun HighlightItems(
     initialSelectedItemIndex: Int = eventList.lastIndex,
     sessionViewModel: SessionViewModel
 ){
-    var selectedItemIndex by remember {
-        mutableStateOf(initialSelectedItemIndex)
-    }
-    sessionViewModel.selectedEvent.value = eventList.get(eventList.lastIndex)
+    if(sessionViewModel.isOnline()){
+        var selectedItemIndex by remember {
+            mutableStateOf(initialSelectedItemIndex)
+        }
+        sessionViewModel.selectedEvent.value = eventList.get(eventList.lastIndex)
 
-    val coroutineScope = rememberCoroutineScope()
-    val scrollState = rememberLazyListState()
+        val coroutineScope = rememberCoroutineScope()
+        val scrollState = rememberLazyListState()
 
-    LazyColumn(state = scrollState){
-        itemsIndexed(items = eventList) { index, event ->
-            HighlightItem(
-                event = event,
-                isSelected = index == selectedItemIndex,
-                activeHighlightColor = activeHighlightColor,
-                inactiveColor = inactiveColor,
-            ){
-                selectedItemIndex = index
-                sessionViewModel.selectedEvent.value = event
+        LazyColumn(state = scrollState){
+            itemsIndexed(items = eventList) { index, event ->
+                HighlightItem(
+                    event = event,
+                    isSelected = index == selectedItemIndex,
+                    activeHighlightColor = activeHighlightColor,
+                    inactiveColor = inactiveColor,
+                ){
+                    selectedItemIndex = index
+                    sessionViewModel.selectedEvent.value = event
+                }
+            }
+            coroutineScope.launch {
+                scrollState.scrollToItem(eventList.lastIndex)
             }
         }
-        coroutineScope.launch {
-            scrollState.scrollToItem(eventList.lastIndex)
-        }
+    }else{
+        NoInternetView()
     }
 }
+

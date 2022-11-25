@@ -8,12 +8,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
-import nl.shekho.videoplayer.helpers.contracts.MetaDataReaderInterface
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object DependencyInjectionModule {
+object ViewModelModule {
+
     @Provides
     @ViewModelScoped
     fun providerVideoPlayer(app: Application): Player{
@@ -27,4 +28,9 @@ object DependencyInjectionModule {
         return MetaDataReader(app)
     }
 
+    @Provides
+    @ViewModelScoped
+    fun providerConnectivityChecker(app: Application): ConnectivityChecker{
+        return ConnectivityChecker(app)
+    }
 }

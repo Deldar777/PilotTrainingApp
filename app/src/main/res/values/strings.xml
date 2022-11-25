@@ -10,5 +10,6 @@
     <string name="eventType">Event type</string>
     <string name="altitude">Altitude</string>
     <string name="timestamp">Timestamp</string>
+    <string name="noInternetHighlight">"You have no internet connection, connect to WiFi and refresh the list" </string>
 
 </resources>
