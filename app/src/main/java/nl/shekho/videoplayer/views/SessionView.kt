@@ -23,9 +23,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SessionView() {
-    val sessionViewModel = hiltViewModel<SessionViewModel>()
-    val accessViewModel = hiltViewModel<AccessViewModel>()
+fun SessionView(sessionViewModel: SessionViewModel) {
     val events = sessionViewModel.events.value
 
     Box(

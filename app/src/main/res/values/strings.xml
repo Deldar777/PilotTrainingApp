@@ -5,11 +5,24 @@
     <string name="currentAltitude">Current altitude</string>
 
 
+    <string name="vrefSolutions">VRef solutions</string>
     <string name="addNote">Add notes</string>
     <string name="addNoteDescription">Add a note to the event described below</string>
     <string name="eventType">Event type</string>
     <string name="altitude">Altitude</string>
     <string name="timestamp">Timestamp</string>
+    <string name="about">About</string>
+    <string name="contact">Contact</string>
+
+    <string name="enterPassword">Enter your password</string>
+    <string name="password">Password</string>
+
+    <string name="emailExample">example@vrefsolutions.com</string>
+    <string name="email">Email</string>
+
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+
     <string name="noInternetHighlight">"You have no internet connection, connect to WiFi and refresh the list" </string>
 
 </resources>

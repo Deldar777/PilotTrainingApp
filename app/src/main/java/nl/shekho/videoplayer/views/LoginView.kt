@@ -1,7 +1,9 @@
 package nl.shekho.videoplayer.views
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -27,33 +31,43 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.ui.theme.deepPurple
+import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
+import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.topbarCells.TopBar
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LoginView(context: Context) {
+fun LoginView(context: Context, accessViewModel: AccessViewModel) {
 
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
             .fillMaxSize()
-    ){
+    ) {
 
         Column {
 
             // Top bar
-
+            TopBar(accessViewModel = accessViewModel)
 
             // Login block
-            LoginBox(context = context)
+            LoginBox(context = context, accessViewModel = accessViewModel)
         }
     }
 }
 
 
 @Composable
-fun LoginBox(context: Context){
+fun LoginBox(
+    context: Context,
+    accessViewModel: AccessViewModel
+) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -65,7 +79,7 @@ fun LoginBox(context: Context){
             .fillMaxWidth()
             .padding(15.dp)
             .padding(top = 80.dp)
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .width(width = 700.dp)
@@ -84,41 +98,78 @@ fun LoginBox(context: Context){
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        text = "VRef solutions",
+                        text = stringResource(id = R.string.vrefSolutions),
                         fontFamily = FontFamily.Monospace,
                         textAlign = TextAlign.Center,
                         fontSize = 40.sp,
                         fontWeight = FontWeight.Bold,
                         color = deepBlue,
+                        modifier = Modifier.padding(top = 60.dp)
                     )
                 }
 
 
                 // Email textField
                 OutlinedTextField(
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.White,
+                        textColor = MaterialTheme.colors.primaryVariant
+                    ),
+                    shape = RoundedCornerShape(20.dp),
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text(text = "example@vrefsolutions.com") },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.primaryVariant,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.emailExample),
+                            color = textSecondaryDarkMode
+                        )
+                    },
                     leadingIcon = {
-                        Icon(Icons.Default.Email, contentDescription = "Email")
+                        Icon(
+                            Icons.Default.Email,
+                            contentDescription = stringResource(id = R.string.email),
+                            tint = textSecondaryDarkMode
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp, top = 10.dp, start = 20.dp, end = 20.dp)
+                        .padding(bottom = 10.dp, top = 10.dp, start = 40.dp, end = 40.dp)
                         .clip(RoundedCornerShape(10.dp))
                 )
 
                 // Password textField
                 OutlinedTextField(
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.White,
+                        textColor = MaterialTheme.colors.primaryVariant
+                    ),
+                    shape = RoundedCornerShape(20.dp),
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text(text = "Enter your password") },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.primaryVariant,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.enterPassword),
+                            color = textSecondaryDarkMode
+                        )
+                    },
                     leadingIcon = {
-                        Icon(Icons.Default.Info, contentDescription = "Password")
+                        Icon(
+                            Icons.Default.Info,
+                            contentDescription = stringResource(id = R.string.password),
+                            tint = textSecondaryDarkMode
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp, top = 10.dp, start = 20.dp, end = 20.dp)
+                        .padding(bottom = 10.dp, top = 10.dp, start = 40.dp, end = 40.dp)
                         .clip(RoundedCornerShape(10.dp)),
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -126,38 +177,27 @@ fun LoginBox(context: Context){
 
                 // Reset password and login button
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(15.dp)
                 ) {
 
-                    Text(
-                        text = "Reset password",
-                        fontFamily = FontFamily.Monospace,
-                        textAlign = TextAlign.Start,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        style = TextStyle(textDecoration = TextDecoration.Underline),
-                        color = deepBlue,
-                        modifier = Modifier
-                            .clickable {
-
-                            }
-                    )
-
                     OutlinedButton(
                         onClick = {
-                            login(email, password, context)
+                            login(email, password, context,accessViewModel)
                         },
+                        shape = RoundedCornerShape(20.dp),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = deepPurple,
+                            backgroundColor = deepBlue,
                             contentColor = MaterialTheme.colors.primary
-                        )
+                        ),
+                        modifier = Modifier
+                            .width(300.dp)
                     ) {
                         Text(
-                            text = "Marked event",
+                            text = stringResource(id = R.string.login),
                             fontFamily = FontFamily.Monospace,
                             textAlign = TextAlign.Center,
                             fontSize = 24.sp,
@@ -175,10 +215,10 @@ fun LoginBox(context: Context){
     }
 }
 
-fun login(email: String, password: String, context: Context) {
+fun login(email: String, password: String, context: Context, accessViewModel: AccessViewModel) {
 
     if (email == "simba" && password == "12345") {
-        Toast.makeText(context, "Logged In Successfully", Toast.LENGTH_SHORT).show()
+        accessViewModel.loggedIn = true
     } else {
         Toast.makeText(context, "Logged In Failed", Toast.LENGTH_SHORT).show()
     }
