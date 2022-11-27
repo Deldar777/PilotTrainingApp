@@ -1,6 +1,7 @@
 package nl.shekho.videoplayer.api
 
 
+import nl.shekho.videoplayer.models.AuthToken
 import nl.shekho.videoplayer.models.JwtToken
 import retrofit2.Response
 import retrofit2.http.Field
@@ -17,4 +18,10 @@ interface ApiService {
         @Field("password") password: String
     ): Response<JwtToken>
 
+    @FormUrlEncoded
+    @POST("api/Users/login")
+    suspend fun logoin(
+        @Field("UserName") UserName: String,
+        @Field("Password") Password: String
+    ): Response<AuthToken>
 }

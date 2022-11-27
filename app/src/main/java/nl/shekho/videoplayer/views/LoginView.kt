@@ -37,6 +37,7 @@ import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
 
@@ -63,14 +64,25 @@ fun LoginView(context: Context, accessViewModel: AccessViewModel) {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun LoginBox(
     context: Context,
     accessViewModel: AccessViewModel
 ) {
 
-    var email by remember { mutableStateOf("") }
+    //Feedback color and message
+    var messageColor by remember { mutableStateOf(Color.Red) }
+    var messageText by remember { mutableStateOf("") }
+
+    //Logon text fields
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    //Feedback sentences
+    val userNameOrPasswordEmpty = stringResource(id = R.string.emptyFields)
+    val notInternet = stringResource(id = R.string.noInternet)
+    val loginFailed = stringResource(id = R.string.loginFailed)
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -109,29 +121,29 @@ fun LoginBox(
                 }
 
 
-                // Email textField
+                // Username textField
                 OutlinedTextField(
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.White,
                         textColor = MaterialTheme.colors.primaryVariant
                     ),
                     shape = RoundedCornerShape(20.dp),
-                    value = email,
-                    onValueChange = { email = it },
+                    value = username,
+                    onValueChange = { username = it },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.primaryVariant,
                         fontWeight = FontWeight.Bold
                     ),
                     label = {
                         Text(
-                            text = stringResource(id = R.string.emailExample),
+                            text = stringResource(id = R.string.usernameExample),
                             color = textSecondaryDarkMode
                         )
                     },
                     leadingIcon = {
                         Icon(
                             Icons.Default.Email,
-                            contentDescription = stringResource(id = R.string.email),
+                            contentDescription = stringResource(id = R.string.username),
                             tint = textSecondaryDarkMode
                         )
                     },
@@ -175,7 +187,7 @@ fun LoginBox(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
 
-                // Reset password and login button
+                // Login button
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -186,7 +198,20 @@ fun LoginBox(
 
                     OutlinedButton(
                         onClick = {
-                            login(email, password, context,accessViewModel)
+                            if(accessViewModel.isOnline()){
+                                if (username != "" && password != "") {
+
+                                    accessViewModel.logIn(username,password)
+
+                                    if (!accessViewModel.succeeded) {
+                                        messageText = loginFailed
+                                    }
+                                } else {
+                                    messageText = userNameOrPasswordEmpty
+                                }
+                            }else{
+                                messageText = notInternet
+                            }
                         },
                         shape = RoundedCornerShape(20.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -209,17 +234,9 @@ fun LoginBox(
                         )
                     }
                 }
+                FeedbackMessage(color = messageColor, text = messageText)
             }
         }
 
-    }
-}
-
-fun login(email: String, password: String, context: Context, accessViewModel: AccessViewModel) {
-
-    if (email == "simba" && password == "12345") {
-        accessViewModel.loggedIn = true
-    } else {
-        Toast.makeText(context, "Logged In Failed", Toast.LENGTH_SHORT).show()
     }
 }

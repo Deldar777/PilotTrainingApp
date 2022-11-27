@@ -16,13 +16,15 @@
 
     <string name="enterPassword">Enter your password</string>
     <string name="password">Password</string>
-
-    <string name="emailExample">example@vrefsolutions.com</string>
-    <string name="email">Email</string>
-
+    <string name="usernameExample">example@vrefsolutions.com</string>
+    <string name="username">Username</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="loginFailed">"UserName or password is incorrect" </string>
+    <string name="emptyFields">"Username or password cannot be empty!" </string>
+    <string name="generalError">"Something went wrong! try again later" </string>
+    <string name="noInternet">"You have no internet connection, connect to WiFi and try again" </string>
 
-    <string name="noInternetHighlight">"You have no internet connection, connect to WiFi and refresh the list" </string>
+    <string name="noInternetHighlight">"You have no internet connection, connect to WiFi and pull the list to" </string>
 
 </resources>

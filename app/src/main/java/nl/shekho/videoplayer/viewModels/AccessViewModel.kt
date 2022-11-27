@@ -23,18 +23,34 @@ class AccessViewModel @Inject constructor(
     private val userPreferences: UserPreferences
 ) : ViewModel()  {
 
+    //Response information
     var succeeded: Boolean by mutableStateOf(false)
     var failed: String by mutableStateOf("")
-    var loggedIn: Boolean by mutableStateOf(false)
+
+
+    //Session information
     var name: MutableState<String?> = mutableStateOf("")
+    var loggedIn: Boolean by mutableStateOf(false)
+    var jwtToken: String by mutableStateOf("")
 
-
-    fun login(username: String, password: String){
+    fun logIn(username: String, password: String){
         viewModelScope.launch {
             try {
                 val response = apiService.login(username, password)
-                succeeded = response.isSuccessful
-                failed = response.message()
+
+                if(response.isSuccessful){
+                    val body = response.body()
+
+                    if(body != null){
+                        succeeded = true
+                        userPreferences.save(SessionInformation.JWTTOKEN, body.token)
+                        loggedIn = true
+                        jwtToken = body.token
+                    }
+
+                }else{
+                    failed = response.message()
+                }
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
@@ -53,4 +69,5 @@ class AccessViewModel @Inject constructor(
     suspend fun read(key: String): String?{
         return userPreferences.read(key)
     }
+
 }

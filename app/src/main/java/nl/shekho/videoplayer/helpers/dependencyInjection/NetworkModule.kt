@@ -20,8 +20,8 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     @Singleton
