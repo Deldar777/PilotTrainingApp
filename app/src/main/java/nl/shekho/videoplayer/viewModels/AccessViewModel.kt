@@ -24,13 +24,13 @@ class AccessViewModel @Inject constructor(
 ) : ViewModel()  {
 
     //Response information
-    var succeeded: Boolean by mutableStateOf(false)
+    var succeeded = mutableStateOf(false)
     var failed: String by mutableStateOf("")
 
 
     //Session information
     var name: MutableState<String?> = mutableStateOf("")
-    var loggedIn: Boolean by mutableStateOf(false)
+    var loggedIn = mutableStateOf(true)
     var jwtToken: String by mutableStateOf("")
 
     fun logIn(username: String, password: String){
@@ -42,9 +42,9 @@ class AccessViewModel @Inject constructor(
                     val body = response.body()
 
                     if(body != null){
-                        succeeded = true
+                        succeeded.value = true
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
-                        loggedIn = true
+                        loggedIn.value = true
                         jwtToken = body.token
                     }
 

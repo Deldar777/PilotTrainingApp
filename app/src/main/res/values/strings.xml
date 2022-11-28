@@ -22,9 +22,11 @@
     <string name="logout">Logout</string>
     <string name="loginFailed">"UserName or password is incorrect" </string>
     <string name="emptyFields">"Username or password cannot be empty!" </string>
-    <string name="generalError">"Something went wrong! try again later" </string>
+    <string name="generalError">"Something went wrong!" </string>
     <string name="noInternet">"You have no internet connection, connect to WiFi and try again" </string>
 
     <string name="noInternetHighlight">"You have no internet connection, connect to WiFi and pull the list to" </string>
+    <string name="noSessionsYet">There are no sessions in the last 24 hours</string>
+    <string name="newSession">New session</string>
 
 </resources>

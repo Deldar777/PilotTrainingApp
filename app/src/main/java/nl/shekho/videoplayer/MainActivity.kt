@@ -9,12 +9,14 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import nl.shekho.videoplayer.ui.theme.VideoPlayerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import nl.shekho.videoplayer.config.ApiConfig
 import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.helpers.UserPreferences
 import nl.shekho.videoplayer.ui.theme.pilotTrainingThemes.PilotTrainingTheme
@@ -40,19 +42,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-
         setContent {
             PilotTrainingTheme {
 
-                lifecycleScope.launch {
-                    accessViewModel.save(SessionInformation.NAME, "Deldar")
-                }
-
-                if(accessViewModel.loggedIn){
+                if(accessViewModel.loggedIn.value){
                     ReadSessionInformation(SessionInformation.NAME)
                     OverviewView(accessViewModel,sessionViewModel)
                 }else{
-                    LoginView(context = applicationContext,accessViewModel)
+                    LoginView(accessViewModel)
                 }
             }
         }
@@ -63,7 +60,6 @@ class MainActivity : ComponentActivity() {
     ) {
         lifecycleScope.launchWhenResumed {
             accessViewModel.name.value = accessViewModel.read(key)
-
         }
     }
 }

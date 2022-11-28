@@ -44,7 +44,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LoginView(context: Context, accessViewModel: AccessViewModel) {
+fun LoginView(accessViewModel: AccessViewModel) {
 
     Box(
         modifier = Modifier
@@ -58,7 +58,7 @@ fun LoginView(context: Context, accessViewModel: AccessViewModel) {
             TopBar(accessViewModel = accessViewModel)
 
             // Login block
-            LoginBox(context = context, accessViewModel = accessViewModel)
+            LoginBox(accessViewModel = accessViewModel)
         }
     }
 }
@@ -67,7 +67,6 @@ fun LoginView(context: Context, accessViewModel: AccessViewModel) {
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun LoginBox(
-    context: Context,
     accessViewModel: AccessViewModel
 ) {
 
@@ -198,20 +197,21 @@ fun LoginBox(
 
                     OutlinedButton(
                         onClick = {
-                            if(accessViewModel.isOnline()){
-                                if (username != "" && password != "") {
-
-                                    accessViewModel.logIn(username,password)
-
-                                    if (!accessViewModel.succeeded) {
-                                        messageText = loginFailed
-                                    }
-                                } else {
-                                    messageText = userNameOrPasswordEmpty
-                                }
-                            }else{
-                                messageText = notInternet
-                            }
+                                  accessViewModel.loggedIn.value = true
+//                            if(accessViewModel.isOnline()){
+//                                if (username != "" && password != "") {
+//
+//                                    accessViewModel.logIn(username,password)
+//
+//                                    if (!accessViewModel.succeeded.value) {
+//                                        messageText = loginFailed
+//                                    }
+//                                } else {
+//                                    messageText = userNameOrPasswordEmpty
+//                                }
+//                            }else{
+//                                messageText = notInternet
+//                            }
                         },
                         shape = RoundedCornerShape(20.dp),
                         colors = ButtonDefaults.buttonColors(

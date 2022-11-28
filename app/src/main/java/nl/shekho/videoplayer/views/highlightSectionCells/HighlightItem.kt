@@ -94,7 +94,6 @@ fun HighlightItem(
 
 
         // Icon part
-
         Box(
             modifier = Modifier
                 .weight(0.5f)

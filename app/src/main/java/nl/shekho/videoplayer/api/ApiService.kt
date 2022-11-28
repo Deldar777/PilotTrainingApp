@@ -1,12 +1,9 @@
 package nl.shekho.videoplayer.api
 
-
-import nl.shekho.videoplayer.models.AuthToken
 import nl.shekho.videoplayer.models.JwtToken
+import nl.shekho.videoplayer.models.Session
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 
 interface ApiService {
@@ -19,9 +16,19 @@ interface ApiService {
     ): Response<JwtToken>
 
     @FormUrlEncoded
-    @POST("api/Users/login")
-    suspend fun logoin(
-        @Field("UserName") UserName: String,
-        @Field("Password") Password: String
-    ): Response<AuthToken>
+    @POST("GetSessionByCompanyId/{companyId}")
+    suspend fun getSessionsByCompanyId(
+        @Path("companyId") companyId: Int,
+    )
+
+
+    @FormUrlEncoded
+    @POST("CreateSession")
+    suspend fun createSession(
+        @Field("UserIds") userIds: List<String>,
+        @Field("CompanyId") companyId: String
+    ): Response<Session>
+
+
+
 }

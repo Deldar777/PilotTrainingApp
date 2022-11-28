@@ -55,14 +55,14 @@ fun TopBar(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    if (accessViewModel.loggedIn) {
+                    if (accessViewModel.loggedIn.value) {
                         Text(
                             text = stringResource(id = R.string.logout),
                             color = deepBlue,
                             fontWeight = FontWeight.Bold,
                             fontSize = 26.sp,
                             modifier = Modifier.clickable {
-                                accessViewModel.loggedIn = false
+                                accessViewModel.loggedIn.value = false
                             }
                         )
                     }else{

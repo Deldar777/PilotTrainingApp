@@ -1,13 +1,18 @@
 package nl.shekho.videoplayer.views
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -17,39 +22,50 @@ import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.ui.theme.highlightItemGray
+import nl.shekho.videoplayer.ui.theme.mediumGray
+import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.highlightSectionCells.HighlightSection
 import nl.shekho.videoplayer.views.noteCells.FeedbackAndVideoSection
+import nl.shekho.videoplayer.views.overviewCells.SessionItems
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class)
 @Composable
 fun OverviewView(
     accessViewModel: AccessViewModel,
     sessionViewModel: SessionViewModel
-){
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .fillMaxSize()
-    ) {
+) {
+    if (accessViewModel.loggedIn.value) {
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize()
+        ) {
 
-        Column {
-            // Top bar
-            TopBar(accessViewModel = accessViewModel)
+            Column {
+                // Top bar
+                TopBar(accessViewModel = accessViewModel)
 
 
-            // Side bar and new session and review
-            SessionsAndReview(
-                accessViewModel = accessViewModel,
-                sessionViewModel = sessionViewModel
-            )
+                // Side bar and new session and review
+                SessionsAndReview(
+                    accessViewModel = accessViewModel,
+                    sessionViewModel = sessionViewModel
+                )
+            }
         }
+    } else {
+        LoginView(accessViewModel = accessViewModel)
     }
+
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SessionsAndReview(
@@ -79,31 +95,99 @@ fun SessionsAndReview(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-
-                //Welcome text
-                Row(
-                    horizontalArrangement = Arrangement.Center,
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                ){
-                    accessViewModel.name.value?.let {
+                        .weight(0.8f)
+
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 40.dp)
+                    ) {
+                        //Welcome text
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            accessViewModel.name.value?.let {
+                                Text(
+                                    text = "Welcome $it!",
+                                    fontFamily = FontFamily.Monospace,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 28.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colors.primary,
+                                )
+                            }
+                        }
+                        //Recent title
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Recent",
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = TextAlign.Center,
+                                fontSize = 26.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.secondary,
+                                modifier = Modifier.padding(20.dp)
+                            )
+                        }
+                    }
+                }
+
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(2.0f)
+
+                ) {
+                    SessionItems(sessionViewModel = sessionViewModel)
+                }
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.4f)
+
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(260.dp)
+                            .height(60.dp)
+                            .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
+                            .clickable {
+
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(30.dp)
+                                .align(Alignment.CenterStart),
+                            tint = MaterialTheme.colors.primary
+                        )
+
                         Text(
-                            text = "Welcome $it!",
-                            fontFamily = FontFamily.Monospace,
-                            textAlign = TextAlign.Center,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
+                            text = stringResource(id = R.string.newSession),
                             color = MaterialTheme.colors.primary,
-                            modifier = Modifier.padding(top = 20.dp)
+                            textAlign = TextAlign.Center,
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
             }
-
-
-
-
-
         }
 
         //New session and overview block
