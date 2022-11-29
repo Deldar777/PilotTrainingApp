@@ -36,12 +36,10 @@ class SessionViewModel @Inject constructor(
     val sessions: StateFlow<Result<List<Session>>?> = mutableSessions
 
     //Events
-    val events: MutableState<List<Event>> = mutableStateOf(ArrayList())
+    private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
+    val events: StateFlow<Result<List<Event>>?> = mutableEvents
     var selectedEvent = mutableStateOf(Event(null, null, null, null))
 
-    init {
-        events.value = Event.getEventListMockData()
-    }
 
     fun getSessionsMockData(){
         val flightWare = Company("1", "Flightware")
@@ -60,7 +58,26 @@ class SessionViewModel @Inject constructor(
             val result = Result.success(sessions)
             mutableSessions.emit(result)
         }
+    }
 
+    fun getEventsMockData(){
+        val events = listOf(
+            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+            Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 4343, "Good job"),
+            Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 434, null),
+            Event(EventType.LANDING, LocalDateTime.now().toString(), 7676, "More attention"),
+            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 32323, null),
+            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 545, null),
+            Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 545, "Good job"),
+            Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 545, null),
+            Event(EventType.LANDING, LocalDateTime.now().toString(), 43434, "More attention"),
+        )
+
+        viewModelScope.launch {
+            delay(4000)
+            val result = Result.success(events)
+            mutableEvents.emit(result)
+        }
     }
 
     //Stopwatch

@@ -60,14 +60,14 @@ fun SessionItems(
                 sessions
                     .onSuccess {
                         if (it.isNotEmpty()) {
-                            LazyColumn{
+                            LazyColumn {
                                 itemsIndexed(items = it) { index, session ->
 
                                     SessionItem(
                                         session = session,
                                         isSelected = index == selectedItemIndex,
                                         activeHighlightColor = activeHighlightColor
-                                        ) {
+                                    ) {
                                         selectedItemIndex = index
                                     }
                                 }

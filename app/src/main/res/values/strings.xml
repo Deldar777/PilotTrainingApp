@@ -28,5 +28,6 @@
     <string name="noInternetHighlight">"You have no internet connection, connect to WiFi and pull the list to" </string>
     <string name="noSessionsYet">There are no sessions in the last 24 hours</string>
     <string name="newSession">New session</string>
+    <string name="noEventsYet">No events have occurred yet</string>
 
 </resources>

@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.ui.theme.deepPurple
@@ -38,12 +39,15 @@ import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
+import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
 
 @Composable
-fun LoginView(accessViewModel: AccessViewModel) {
-
+fun LoginView(
+    accessViewModel: AccessViewModel,
+    navController: NavController
+) {
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
@@ -51,12 +55,13 @@ fun LoginView(accessViewModel: AccessViewModel) {
     ) {
 
         Column {
-
             // Top bar
             TopBar(accessViewModel = accessViewModel)
-
             // Login block
-            LoginBox(accessViewModel = accessViewModel)
+            LoginBox(
+                accessViewModel = accessViewModel,
+                navController = navController
+            )
         }
     }
 }
@@ -64,9 +69,9 @@ fun LoginView(accessViewModel: AccessViewModel) {
 
 @Composable
 fun LoginBox(
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    navController: NavController
 ) {
-
     //Feedback color and message
     var messageColor by remember { mutableStateOf(Color.Red) }
     var messageText by remember { mutableStateOf("") }
@@ -194,18 +199,20 @@ fun LoginBox(
 
                     OutlinedButton(
                         onClick = {
-                            if(accessViewModel.isOnline()){
+                            if (accessViewModel.isOnline()) {
                                 if (username != "" && password != "") {
 
-                                    accessViewModel.logIn(username,password)
+                                    accessViewModel.logIn(username, password)
 
-                                    if (!accessViewModel.succeeded.value) {
-                                        messageText = loginFailed
+                                    if (accessViewModel.succeeded.value) {
+                                        navController.navigate(Screens.Overview.route)
+                                    }else{
+                                        messageText =loginFailed
                                     }
                                 } else {
                                     messageText = userNameOrPasswordEmpty
                                 }
-                            }else{
+                            } else {
                                 messageText = notInternet
                             }
                         },

@@ -14,10 +14,8 @@ import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HighlightSection(
-    eventList: List<Event>,
     sessionViewModel: SessionViewModel
 ){
     Column(
@@ -40,7 +38,6 @@ fun HighlightSection(
         ){
             // Highlights lazy columns
             HighlightItems(
-                eventList = eventList,
                 sessionViewModel = sessionViewModel
             )
         }

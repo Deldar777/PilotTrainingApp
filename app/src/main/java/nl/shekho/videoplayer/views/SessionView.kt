@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.*
 import nl.shekho.videoplayer.viewModels.AccessViewModel
@@ -21,11 +22,11 @@ import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SessionView(sessionViewModel: SessionViewModel) {
-    val events = sessionViewModel.events.value
-
+fun SessionView(
+    sessionViewModel: SessionViewModel,
+    navController: NavController
+) {
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
@@ -38,7 +39,6 @@ fun SessionView(sessionViewModel: SessionViewModel) {
 
             // Middle part of the screen (highlight - video and add feedback block)
             HighlightAndVideo(
-                eventList = events,
                 sessionViewModel = sessionViewModel
             )
         }
@@ -47,10 +47,8 @@ fun SessionView(sessionViewModel: SessionViewModel) {
 
 
 @OptIn(ExperimentalTime::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HighlightAndVideo(
-    eventList: List<Event>,
     sessionViewModel: SessionViewModel
 ) {
     val shape = RoundedCornerShape(20.dp)
@@ -73,7 +71,6 @@ fun HighlightAndVideo(
             contentAlignment = Alignment.TopCenter,
         ) {
             HighlightSection(
-                eventList = eventList,
                 sessionViewModel = sessionViewModel
             )
         }

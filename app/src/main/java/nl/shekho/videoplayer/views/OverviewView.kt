@@ -17,42 +17,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.overviewCells.SessionItems
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class)
 @Composable
 fun OverviewView(
     accessViewModel: AccessViewModel,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    navController: NavController
 ) {
-    if (accessViewModel.loggedIn) {
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colors.background)
-                .fillMaxSize()
-        ) {
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+    ) {
 
-            Column {
-                // Top bar
-                TopBar(accessViewModel = accessViewModel)
+        Column {
+            // Top bar
+            TopBar(accessViewModel = accessViewModel)
 
-
-                // Side bar and new session and review
-                SessionsAndReview(
-                    accessViewModel = accessViewModel,
-                    sessionViewModel = sessionViewModel
-                )
-            }
+            // Side bar and new session and review
+            SessionsAndReview(
+                accessViewModel = accessViewModel,
+                sessionViewModel = sessionViewModel,
+                navController = navController
+            )
         }
-    } else {
-        LoginView(accessViewModel = accessViewModel)
     }
 
 }
@@ -61,7 +59,8 @@ fun OverviewView(
 @Composable
 fun SessionsAndReview(
     accessViewModel: AccessViewModel,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    navController: NavController
 ) {
     val shape = RoundedCornerShape(20.dp)
 
@@ -154,7 +153,7 @@ fun SessionsAndReview(
                             .height(60.dp)
                             .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
                             .clickable {
-
+                                       navController.navigate(Screens.Session.route)
                             },
                         contentAlignment = Alignment.Center
                     ) {

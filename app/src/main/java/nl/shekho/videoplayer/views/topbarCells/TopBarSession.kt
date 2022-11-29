@@ -5,15 +5,19 @@ package nl.shekho.videoplayer.views.topbarCells
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.customDarkGray
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
@@ -34,12 +38,11 @@ fun TopBar(
             .fillMaxWidth()
             .background(customDarkGray)
     ) {
-        Text(
-            text = "VRef solution",
-            color = deepBlue,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            modifier = Modifier.padding(20.dp)
+        Image(
+            painter = painterResource(id = R.drawable.vref_logo),
+            contentDescription = "",
+            modifier = Modifier
+                .width(200.dp)
         )
 
         Row(

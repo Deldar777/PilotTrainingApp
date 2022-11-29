@@ -9,6 +9,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import nl.shekho.videoplayer.ui.theme.VideoPlayerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import nl.shekho.videoplayer.ui.theme.pilotTrainingThemes.PilotTrainingTheme
@@ -16,13 +18,15 @@ import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.LoginView
 import nl.shekho.videoplayer.views.OverviewView
+import nl.shekho.videoplayer.views.navigation.SetupNavGraph
 import kotlin.time.ExperimentalTime
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalTime::class)
+    private lateinit var navController: NavHostController
 
+    @OptIn(ExperimentalTime::class)
     private val sessionViewModel by viewModels<SessionViewModel>()
     private val accessViewModel by viewModels<AccessViewModel>()
 
@@ -34,16 +38,18 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PilotTrainingTheme {
+                //Check if the user has token stored
                 ReadSessionInformation()
 
+                //Based on the token determine which screen should be shown next
                 accessViewModel.loggedIn = accessViewModel.encodedJwtToken?.isNotEmpty() ?: false
 
-                if(accessViewModel.loggedIn){
-                    accessViewModel.decodeJWT()
-                    OverviewView(accessViewModel,sessionViewModel)
-                }else{
-                    LoginView(accessViewModel)
-                }
+                navController = rememberNavController()
+                SetupNavGraph(
+                    navController = navController,
+                    accessViewModel = accessViewModel,
+                    sessionViewModel = sessionViewModel
+                )
             }
         }
     }

@@ -85,7 +85,7 @@ class AccessViewModel @Inject constructor(
         if (!token.isNullOrEmpty()) {
             decodedJwtToken = JWT(token)
             userId = decodedJwtToken!!.getClaim("UserId").asString()
-            companyId = decodedJwtToken!!.getClaim("UserId").asString()
+            companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
             jwtExpired = decodedJwtToken!!.isExpired(10)
             //val issuer = jwt.issuer
         }
