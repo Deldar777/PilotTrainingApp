@@ -10,8 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -20,15 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.models.Event
-import nl.shekho.videoplayer.ui.theme.deepBlue
-import nl.shekho.videoplayer.ui.theme.highlightItemGray
-import nl.shekho.videoplayer.ui.theme.mediumGray
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.highlightSectionCells.HighlightSection
-import nl.shekho.videoplayer.views.noteCells.FeedbackAndVideoSection
 import nl.shekho.videoplayer.views.overviewCells.SessionItems
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
@@ -111,16 +103,14 @@ fun SessionsAndReview(
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
-                            accessViewModel.name.value?.let {
-                                Text(
-                                    text = "Welcome $it!",
-                                    fontFamily = FontFamily.Monospace,
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 28.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colors.primary,
-                                )
-                            }
+                            Text(
+                                text = "Welcome ${accessViewModel.userId}!",
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = TextAlign.Center,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.primary,
+                            )
                         }
                         //Recent title
                         Row(

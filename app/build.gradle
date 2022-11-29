@@ -83,4 +83,8 @@ dependencies {
 
     //Android Datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha01"
+
+    //JWT decoder
+    implementation 'com.auth0.android:jwtdecode:2.0.1'
+
 }

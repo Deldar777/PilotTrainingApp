@@ -1,56 +1,60 @@
 package nl.shekho.videoplayer.viewModels
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
+import nl.shekho.videoplayer.api.entities.LoginUser
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.helpers.UserPreferences
-import nl.shekho.videoplayer.api.entities.LoginUser
 import javax.inject.Inject
+
 
 @HiltViewModel
 class AccessViewModel @Inject constructor(
     private val connectivityChecker: ConnectivityChecker,
     private val apiService: ApiService,
     private val userPreferences: UserPreferences
-) : ViewModel()  {
+) : ViewModel() {
 
     //Response information
     var succeeded = mutableStateOf(false)
     var failed: String by mutableStateOf("")
 
 
-    //Session information
-    var name: MutableState<String?> = mutableStateOf("")
+    //Access information
     var loggedIn: Boolean by mutableStateOf(false)
-    var jwtToken: String? by mutableStateOf("")
+    var encodedJwtToken: String? by mutableStateOf("")
+    var decodedJwtToken: JWT? = null
 
-    fun logIn(username: String, password: String){
+    //Session information
+    var name = "Deldar"
+    var userId: String? = ""
+    var companyId: String? = ""
+    var jwtExpired: Boolean? = false
+
+    fun logIn(username: String, password: String) {
         viewModelScope.launch {
             try {
-                var userEntity = LoginUser(username,password)
+                var userEntity = LoginUser(username, password)
                 val response = apiService.login(userEntity)
 
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     val body = response.body()
 
-                    if(body != null){
+                    if (body != null) {
                         succeeded.value = true
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
-                        jwtToken = body.token
+                        encodedJwtToken = body.token
                     }
 
-                }else{
+                } else {
                     failed = response.message()
                 }
             } catch (e: java.lang.Exception) {
@@ -63,15 +67,27 @@ class AccessViewModel @Inject constructor(
         return connectivityChecker.isOnline()
     }
 
-    fun save(key: String, value: String){
+    fun save(key: String, value: String) {
         viewModelScope.launch {
             userPreferences.save(key, value)
         }
     }
 
-    fun readJWT(){
+    fun readJWT() {
         viewModelScope.launch {
-            jwtToken = userPreferences.read(SessionInformation.JWTTOKEN)
+            encodedJwtToken = userPreferences.read(SessionInformation.JWTTOKEN)
+        }
+    }
+
+    fun decodeJWT() {
+        val token = encodedJwtToken
+
+        if (!token.isNullOrEmpty()) {
+            decodedJwtToken = JWT(token)
+            userId = decodedJwtToken!!.getClaim("UserId").asString()
+            companyId = decodedJwtToken!!.getClaim("UserId").asString()
+            jwtExpired = decodedJwtToken!!.isExpired(10)
+            //val issuer = jwt.issuer
         }
     }
 }
