@@ -40,7 +40,7 @@ fun OverviewView(
     accessViewModel: AccessViewModel,
     sessionViewModel: SessionViewModel
 ) {
-    if (accessViewModel.loggedIn.value) {
+    if (accessViewModel.loggedIn) {
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colors.background)
@@ -65,7 +65,6 @@ fun OverviewView(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SessionsAndReview(

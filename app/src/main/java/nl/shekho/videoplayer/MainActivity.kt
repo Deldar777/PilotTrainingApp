@@ -43,9 +43,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PilotTrainingTheme {
+                ReadSessionInformation()
+                accessViewModel.loggedIn = accessViewModel.jwtToken?.isNotEmpty() ?: false
 
-                if(accessViewModel.loggedIn.value){
-                    var token = ReadSessionInformation(SessionInformation.JWTTOKEN)
+                print(accessViewModel.loggedIn)
+
+                if(accessViewModel.loggedIn){
                     OverviewView(accessViewModel,sessionViewModel)
                 }else{
                     LoginView(accessViewModel)
@@ -55,10 +58,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun ReadSessionInformation(
-        key: String
     ) {
         lifecycleScope.launchWhenResumed {
-            accessViewModel.name.value = accessViewModel.read(key)
+             accessViewModel.readJWT()
         }
     }
 }

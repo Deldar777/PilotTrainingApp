@@ -1,4 +1,4 @@
-package nl.shekho.videoplayer.models
+package nl.shekho.videoplayer.api.entities
 
 data class LoginUser(
     var username: String,

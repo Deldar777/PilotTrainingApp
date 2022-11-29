@@ -17,6 +17,7 @@ import nl.shekho.videoplayer.ui.theme.customDarkGray
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.helpers.SessionInformation
 
 @Composable
 fun TopBar(
@@ -55,14 +56,15 @@ fun TopBar(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    if (accessViewModel.loggedIn.value) {
+                    if (accessViewModel.loggedIn) {
                         Text(
                             text = stringResource(id = R.string.logout),
                             color = deepBlue,
                             fontWeight = FontWeight.Bold,
                             fontSize = 26.sp,
                             modifier = Modifier.clickable {
-                                accessViewModel.loggedIn.value = false
+                                accessViewModel.loggedIn = false
+                                accessViewModel.save(SessionInformation.JWTTOKEN, "")
                             }
                         )
                     }else{
