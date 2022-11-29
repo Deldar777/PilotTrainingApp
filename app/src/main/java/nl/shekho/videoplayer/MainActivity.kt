@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalTime::class)
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,7 +45,7 @@ class MainActivity : ComponentActivity() {
             PilotTrainingTheme {
 
                 if(accessViewModel.loggedIn.value){
-                    ReadSessionInformation(SessionInformation.NAME)
+                    var token = ReadSessionInformation(SessionInformation.JWTTOKEN)
                     OverviewView(accessViewModel,sessionViewModel)
                 }else{
                     LoginView(accessViewModel)

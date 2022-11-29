@@ -41,8 +41,6 @@ import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun LoginView(accessViewModel: AccessViewModel) {
 
@@ -64,7 +62,6 @@ fun LoginView(accessViewModel: AccessViewModel) {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun LoginBox(
     accessViewModel: AccessViewModel
@@ -197,21 +194,20 @@ fun LoginBox(
 
                     OutlinedButton(
                         onClick = {
-                                  accessViewModel.loggedIn.value = true
-//                            if(accessViewModel.isOnline()){
-//                                if (username != "" && password != "") {
-//
-//                                    accessViewModel.logIn(username,password)
-//
-//                                    if (!accessViewModel.succeeded.value) {
-//                                        messageText = loginFailed
-//                                    }
-//                                } else {
-//                                    messageText = userNameOrPasswordEmpty
-//                                }
-//                            }else{
-//                                messageText = notInternet
-//                            }
+                            if(accessViewModel.isOnline()){
+                                if (username != "" && password != "") {
+
+                                    accessViewModel.logIn(username,password)
+
+                                    if (!accessViewModel.succeeded.value) {
+                                        messageText = loginFailed
+                                    }
+                                } else {
+                                    messageText = userNameOrPasswordEmpty
+                                }
+                            }else{
+                                messageText = notInternet
+                            }
                         },
                         shape = RoundedCornerShape(20.dp),
                         colors = ButtonDefaults.buttonColors(

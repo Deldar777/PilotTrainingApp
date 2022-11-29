@@ -12,8 +12,8 @@ android {
 
     defaultConfig {
         applicationId "nl.shekho.videoplayer"
-        minSdk 21
-        targetSdk 32
+        minSdk 26
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -77,10 +77,9 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
-    //Retrofit
-    def retrofit = "2.9.0"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    // Retrofit and GSON
+    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.2'
 
     //Android Datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha01"

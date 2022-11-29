@@ -14,6 +14,7 @@ import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.helpers.UserPreferences
+import nl.shekho.videoplayer.models.LoginUser
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,13 +31,15 @@ class AccessViewModel @Inject constructor(
 
     //Session information
     var name: MutableState<String?> = mutableStateOf("")
-    var loggedIn = mutableStateOf(true)
+    var loggedIn = mutableStateOf(false)
     var jwtToken: String by mutableStateOf("")
 
     fun logIn(username: String, password: String){
         viewModelScope.launch {
             try {
-                val response = apiService.login(username, password)
+                var loginUser = LoginUser(username,password)
+                val response = apiService.login( loginUser)
+                print(response)
 
                 if(response.isSuccessful){
                     val body = response.body()
@@ -46,6 +49,7 @@ class AccessViewModel @Inject constructor(
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
                         loggedIn.value = true
                         jwtToken = body.token
+
                     }
 
                 }else{
