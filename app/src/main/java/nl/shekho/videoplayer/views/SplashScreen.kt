@@ -39,7 +39,7 @@ fun SplashScreen(
 
     LaunchedEffect(key1 = true) {
         startAnimation = true
-        delay(4000)
+        delay(1000)
         navController.popBackStack()
 
         if (accessViewModel.loggedIn) {

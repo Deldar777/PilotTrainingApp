@@ -25,7 +25,6 @@ class VideoPlayerViewModel @Inject constructor(
     private val connectivityChecker: ConnectivityChecker
 ) : ViewModel() {
 
-    @RequiresApi(Build.VERSION_CODES.M)
     var isOnline = connectivityChecker.isOnline()
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
@@ -41,7 +40,7 @@ class VideoPlayerViewModel @Inject constructor(
 
     init {
         player.prepare()
-        addMockVideo()
+//        addMockVideo()
     }
 
     fun addVideoUri(uri: Uri){
