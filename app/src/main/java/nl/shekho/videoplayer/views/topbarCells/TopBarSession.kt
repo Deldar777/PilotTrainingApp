@@ -24,7 +24,6 @@ import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.views.topbarCells.*
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class)
 @Composable
 fun TopBar(

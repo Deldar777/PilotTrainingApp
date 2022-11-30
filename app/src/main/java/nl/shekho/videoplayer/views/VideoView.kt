@@ -62,74 +62,28 @@ fun VideoView(){
             .background(color = Color.Transparent, RoundedCornerShape(20.dp))
     ) {
 
-        Box(
+        AndroidView(
             modifier = Modifier
-                .weight(2f)
-                .background(MaterialTheme.colors.onBackground, RoundedCornerShape(20.dp))
-                .fillMaxHeight(),
-            contentAlignment = Alignment.TopCenter,
-        ){
-            AndroidView(
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .fillMaxWidth()
-                    .height(400.dp),
-                factory = { context ->
-                    PlayerView(context).also {
-                        it.player = videoPlayerViewModel.player
-                    }
-                },
-                update = {
-                    when (lifeCycle) {
-                        Lifecycle.Event.ON_PAUSE -> {
-                            it.onPause()
-                            it.player?.pause()
-                        }
-
-                        Lifecycle.Event.ON_RESUME -> {
-                            it.onResume()
-                        }
-                        else -> Unit
-                    }
-                },
-            )
-        }
-
-
-        Box(
-            modifier = Modifier
-                .weight(.3f)
-                .background(MaterialTheme.colors.onBackground, RoundedCornerShape(20.dp))
-                .fillMaxHeight(),
-            contentAlignment = Alignment.TopCenter,
-        ){
-            IconButton(onClick = {
-                selectVideoLauncher.launch("video/mp4")
-            }) {
-                Icon(
-                    imageVector = Icons.Default.FileOpen,
-                    contentDescription = "Select video",
-                    tint = Color.Blue
-
-                )
-            }
-
-            LazyRow(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(videoItems) { item ->
-                    Text(
-                        text = item.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                videoPlayerViewModel.playVideo(item.contentUri)
-                            }
-                            .padding(16.dp)
-                    )
+                .clip(shape = RoundedCornerShape(20.dp))
+                .fillMaxSize(),
+            factory = { context ->
+                PlayerView(context).also {
+                    it.player = videoPlayerViewModel.player
                 }
-            }
+            },
+            update = {
+                when (lifeCycle) {
+                    Lifecycle.Event.ON_PAUSE -> {
+                        it.onPause()
+                        it.player?.pause()
+                    }
 
-        }
+                    Lifecycle.Event.ON_RESUME -> {
+                        it.onResume()
+                    }
+                    else -> Unit
+                }
+            },
+        )
     }
 }

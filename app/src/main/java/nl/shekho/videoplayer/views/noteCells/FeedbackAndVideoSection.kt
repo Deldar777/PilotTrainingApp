@@ -22,7 +22,7 @@ fun FeedbackAndVideoSection(
 ){
     val shape = RoundedCornerShape(20.dp)
     Column(
-        verticalArrangement = Arrangement.spacedBy(20.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding()
@@ -31,7 +31,7 @@ fun FeedbackAndVideoSection(
         // Video section
         Box(
             modifier = Modifier
-                .weight(2f)
+                .weight(2.6f)
                 .background(MaterialTheme.colors.onBackground, shape)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
@@ -43,10 +43,10 @@ fun FeedbackAndVideoSection(
         //Feedback section
         Box(
             modifier = Modifier
-                .weight(1.2f)
+                .weight(1f)
                 .background(MaterialTheme.colors.onBackground, shape)
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
             FeedbackSection(sessionViewModel = sessionViewModel)

@@ -38,7 +38,8 @@ fun SetupNavGraph(
         ){
             LoginView(
                 navController = navController,
-                accessViewModel = accessViewModel
+                accessViewModel = accessViewModel,
+                sessionViewModel = sessionViewModel
             )
         }
 

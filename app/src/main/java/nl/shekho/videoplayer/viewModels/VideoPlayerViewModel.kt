@@ -1,14 +1,14 @@
 package nl.shekho.videoplayer.viewModels
 
 import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.system.Os.link
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hilt_aggregated_deps._nl_shekho_videoplayer_viewModels_VideoPlayerViewModel_HiltModules_BindsModule
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -16,6 +16,7 @@ import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
 import nl.shekho.videoplayer.models.VideoItem
 import javax.inject.Inject
+
 
 @HiltViewModel
 class VideoPlayerViewModel @Inject constructor(
@@ -25,7 +26,6 @@ class VideoPlayerViewModel @Inject constructor(
     private val connectivityChecker: ConnectivityChecker
 ) : ViewModel() {
 
-    var isOnline = connectivityChecker.isOnline()
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
     val videoItems = videoUris.map {uris ->
@@ -40,7 +40,7 @@ class VideoPlayerViewModel @Inject constructor(
 
     init {
         player.prepare()
-//        addMockVideo()
+        addMockVideo()
     }
 
     fun addVideoUri(uri: Uri){
@@ -60,8 +60,16 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
     fun addMockVideo(){
-        var uri =  Uri.parse( "https://drive.google.com/file/d/1hxpEgzewkJpJKQ7RGxV_6zeqByJ1turI/view?usp=sharing")
-        addVideoUri(uri)
+        var videoURL =  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+
+        val videoURI: Uri = Uri.parse(videoURL)
+
+        addVideoUri(videoURI)
+
+        playVideo(videoURI)
+
+        player.prepare()
+        player.playWhenReady = true
     }
 
 }

@@ -34,25 +34,33 @@ fun OverviewView(
     sessionViewModel: SessionViewModel,
     navController: NavController
 ) {
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .fillMaxSize()
-    ) {
 
-        Column {
-            // Top bar
-            TopBar(accessViewModel = accessViewModel)
+    if (accessViewModel.loggedIn) {
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize()
+        ) {
 
-            // Side bar and new session and review
-            SessionsAndReview(
-                accessViewModel = accessViewModel,
-                sessionViewModel = sessionViewModel,
-                navController = navController
-            )
+            Column {
+                // Top bar
+                TopBar(accessViewModel = accessViewModel)
+
+                // Side bar and new session and review
+                SessionsAndReview(
+                    accessViewModel = accessViewModel,
+                    sessionViewModel = sessionViewModel,
+                    navController = navController
+                )
+            }
         }
+    } else {
+        LoginView(
+            accessViewModel = accessViewModel,
+            navController = navController,
+            sessionViewModel = sessionViewModel
+        )
     }
-
 }
 
 @OptIn(ExperimentalTime::class)
@@ -153,7 +161,7 @@ fun SessionsAndReview(
                             .height(60.dp)
                             .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
                             .clickable {
-                                       navController.navigate(Screens.Session.route)
+                                navController.navigate(Screens.Session.route)
                             },
                         contentAlignment = Alignment.Center
                     ) {

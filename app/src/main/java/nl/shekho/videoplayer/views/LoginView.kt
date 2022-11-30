@@ -43,25 +43,35 @@ import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun LoginView(
     accessViewModel: AccessViewModel,
-    navController: NavController
+    navController: NavController,
+    sessionViewModel: SessionViewModel
 ) {
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .fillMaxSize()
-    ) {
 
-        Column {
-            // Top bar
-            TopBar(accessViewModel = accessViewModel)
-            // Login block
-            LoginBox(
-                accessViewModel = accessViewModel,
-                navController = navController
-            )
+    if(accessViewModel.loggedIn){
+        OverviewView(
+            accessViewModel = accessViewModel,
+            sessionViewModel = sessionViewModel,
+            navController = navController
+        )
+    }else{
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize()
+        ) {
+            Column {
+                // Top bar
+                TopBar(accessViewModel = accessViewModel)
+                // Login block
+                LoginBox(
+                    accessViewModel = accessViewModel,
+                    navController = navController
+                )
+            }
         }
     }
 }
