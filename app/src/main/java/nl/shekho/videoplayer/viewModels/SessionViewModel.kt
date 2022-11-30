@@ -2,10 +2,7 @@ package nl.shekho.videoplayer.viewModels
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +36,7 @@ class SessionViewModel @Inject constructor(
     private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
     val events: StateFlow<Result<List<Event>>?> = mutableEvents
     var selectedEvent = mutableStateOf(Event(null, null, null, null))
+    var selectedItemIndex = mutableStateOf(100)
 
 
     fun getSessionsMockData(){

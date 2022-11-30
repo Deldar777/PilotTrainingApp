@@ -16,7 +16,6 @@ import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FeedbackSection(
     sessionViewModel: SessionViewModel,
@@ -28,7 +27,7 @@ fun FeedbackSection(
     var selectedTabIndex by remember {
         mutableStateOf(initialSelectedParticipantTab)
     }
-    val participantTabs = listOf<String>("First officer", "Both", "Captain")
+    val participantTabs = listOf("First officer", "Both", "Captain")
 
     Row(
         modifier = Modifier
@@ -73,7 +72,6 @@ fun FeedbackSection(
                         }
                     }
                 }
-
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -83,9 +81,6 @@ fun FeedbackSection(
                 }
 
             }
-
-
-
         }
     }
 }

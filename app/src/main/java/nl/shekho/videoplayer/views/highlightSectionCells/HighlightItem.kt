@@ -23,18 +23,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import nl.shekho.videoplayer.models.Event
+import nl.shekho.videoplayer.models.EventType
+import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.ui.theme.*
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.ExperimentalTime
 
-@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightItem(
     event: Event,
     isSelected: Boolean = false,
     activeHighlightColor: Color = selectedItemLightBlue,
     inactiveColor: Color = highlightItemGray,
-    onItemClick: () -> Unit
+    onItemClick: () -> Unit,
 ) {
 
     var showFeedbackIcon by remember {
@@ -182,7 +186,6 @@ fun HighlightItem(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 private fun formatDate(date: String): String {
     val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
     return parsedDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))

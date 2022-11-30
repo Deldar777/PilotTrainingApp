@@ -49,7 +49,7 @@ fun HighlightSection(
                 .weight(0.3f),
             contentAlignment = Alignment.TopCenter
         ){
-            MarkEventAndAltitudeSection()
+            MarkEventAndAltitudeSection(sessionViewModel = sessionViewModel)
         }
     }
 }

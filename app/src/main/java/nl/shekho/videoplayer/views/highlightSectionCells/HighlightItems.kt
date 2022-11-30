@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Event
+import nl.shekho.videoplayer.models.EventType
 import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
@@ -32,13 +33,6 @@ fun HighlightItems(
 ) {
     val events by sessionViewModel.events.collectAsState()
 
-//    var initialSelectedItemIndex: Int = events.
-//
-    var selectedItemIndex by remember {
-        mutableStateOf(100)
-    }
-
-
     if (sessionViewModel.isOnline()) {
         //Fetch the events from the API
         sessionViewModel.getEventsMockData()
@@ -46,19 +40,19 @@ fun HighlightItems(
 //        sessionViewModel.selectedEvent.value = eventList.get(eventList.lastIndex)
 //        val coroutineScope = rememberCoroutineScope()
 //        val scrollState = rememberLazyListState()
-        events?.let { events ->
-            events
+        events?.let { listEvent ->
+            listEvent
                 .onSuccess {
                     if (it.isNotEmpty()) {
                         LazyColumn {
                             itemsIndexed(items = it) { index, event ->
                                 HighlightItem(
                                     event = event,
-                                    isSelected = index == selectedItemIndex,
+                                    isSelected = index == sessionViewModel.selectedItemIndex.value,
                                     activeHighlightColor = activeHighlightColor,
                                     inactiveColor = inactiveColor,
                                 ){
-                                    selectedItemIndex = index
+                                    sessionViewModel.selectedItemIndex.value = index
                                     sessionViewModel.selectedEvent.value = event
                                 }
                             }

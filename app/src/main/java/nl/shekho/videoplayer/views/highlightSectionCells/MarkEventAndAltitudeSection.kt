@@ -18,10 +18,16 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import androidx.compose.ui.res.stringResource
+import nl.shekho.videoplayer.models.Event
+import nl.shekho.videoplayer.viewModels.SessionViewModel
+import kotlin.time.ExperimentalTime
 
 
+@OptIn(ExperimentalTime::class)
 @Composable
-fun MarkEventAndAltitudeSection(){
+fun MarkEventAndAltitudeSection(
+    sessionViewModel: SessionViewModel
+) {
 
     var currentAltitude by remember {
         mutableStateOf(29550)
@@ -35,6 +41,8 @@ fun MarkEventAndAltitudeSection(){
     ) {
         OutlinedButton(
             onClick = {
+                sessionViewModel.selectedEvent.value = Event(null, null, null, null)
+                sessionViewModel.selectedItemIndex.value = 200
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = deepPurple,
@@ -64,12 +72,12 @@ fun MarkEventAndAltitudeSection(){
         }
 
         Row(
-            horizontalArrangement = Arrangement.Center ,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
                 .background(highlightItemGray)
-        ){
+        ) {
             Text(
                 text = "${stringResource(id = R.string.highlightTitle)} $currentAltitude",
                 color = MaterialTheme.colors.primary,
