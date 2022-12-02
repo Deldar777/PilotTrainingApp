@@ -29,5 +29,6 @@
     <string name="noSessionsYet">There are no sessions in the last 24 hours</string>
     <string name="newSession">New session</string>
     <string name="noEventsYet">No events have occurred yet</string>
+    <string name="recent">Recent</string>
 
 </resources>

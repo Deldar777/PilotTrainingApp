@@ -26,7 +26,6 @@ import nl.shekho.videoplayer.ui.theme.highlightDivider
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import java.time.LocalDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SessionItem(
     session: Session,
@@ -50,7 +49,7 @@ fun SessionItem(
     ){
 
         Text(
-            text = "${session.company.name} - ${formatDate(session.startTime)}",
+            text = "${session.company?.name} - ${session.startTime?.let { formatDate(it) }}",
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
@@ -82,7 +81,6 @@ fun SessionItem(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 private fun formatDate(date: LocalDateTime): String {
     return "${date.dayOfWeek.toString().lowercase().subSequence(0,3)} ${date.dayOfMonth}th"
 }

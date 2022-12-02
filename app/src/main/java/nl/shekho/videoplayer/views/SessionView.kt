@@ -1,7 +1,5 @@
 package nl.shekho.videoplayer.views
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,11 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.*
-import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.highlightSectionCells.*
 import nl.shekho.videoplayer.views.noteCells.FeedbackAndVideoSection

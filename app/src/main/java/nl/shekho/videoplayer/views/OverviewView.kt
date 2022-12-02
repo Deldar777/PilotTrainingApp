@@ -23,6 +23,8 @@ import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.navigation.Screens
+import nl.shekho.videoplayer.views.overviewCells.NewSessionWindow
+import nl.shekho.videoplayer.views.overviewCells.ReviewWindow
 import nl.shekho.videoplayer.views.overviewCells.SessionItems
 import nl.shekho.videoplayer.views.topbarCells.TopBar
 import kotlin.time.ExperimentalTime
@@ -96,13 +98,13 @@ fun SessionsAndReview(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.8f)
+                        .weight(0.5f)
 
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 40.dp)
+                            .padding(top = 20.dp)
                     ) {
                         //Welcome text
                         Row(
@@ -111,7 +113,7 @@ fun SessionsAndReview(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = "Welcome ${accessViewModel.userId}!",
+                                text = "Welcome Andy!",
                                 fontFamily = FontFamily.Monospace,
                                 textAlign = TextAlign.Center,
                                 fontSize = 28.sp,
@@ -126,7 +128,7 @@ fun SessionsAndReview(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = "Recent",
+                                text = stringResource(id = R.string.recent),
                                 fontFamily = FontFamily.Monospace,
                                 textAlign = TextAlign.Center,
                                 fontSize = 26.sp,
@@ -161,7 +163,9 @@ fun SessionsAndReview(
                             .height(60.dp)
                             .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
                             .clickable {
-                                navController.navigate(Screens.Session.route)
+                                sessionViewModel.showNewSessionWindow.value = true
+                                sessionViewModel.showReviewWindow.value = false
+                                sessionViewModel.selectedSessionIndex.value = 1000
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -194,6 +198,14 @@ fun SessionsAndReview(
                 .fillMaxHeight(),
             contentAlignment = Alignment.Center
         ) {
+
+            if(sessionViewModel.showNewSessionWindow.value){
+                NewSessionWindow(users = sessionViewModel.getUsers())
+            }
+
+            if(sessionViewModel.showReviewWindow.value){
+                ReviewWindow(session = sessionViewModel.selectedSession.value)
+            }
 
         }
 

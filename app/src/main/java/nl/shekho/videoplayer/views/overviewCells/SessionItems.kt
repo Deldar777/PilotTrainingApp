@@ -1,29 +1,19 @@
 package nl.shekho.videoplayer.views.overviewCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import kotlinx.coroutines.launch
-import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.NoInternetView
-import nl.shekho.videoplayer.views.highlightSectionCells.HighlightItem
 import kotlin.time.ExperimentalTime
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,16 +21,12 @@ import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
 import nl.shekho.videoplayer.R
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SessionItems(
     activeHighlightColor: Color = selectedItemLightBlue,
     sessionViewModel: SessionViewModel
 ) {
-    var selectedItemIndex by remember {
-        mutableStateOf(100)
-    }
 
     val sessions by sessionViewModel.sessions.collectAsState()
 
@@ -65,10 +51,14 @@ fun SessionItems(
 
                                     SessionItem(
                                         session = session,
-                                        isSelected = index == selectedItemIndex,
+                                        isSelected = index == sessionViewModel.selectedSessionIndex.value,
                                         activeHighlightColor = activeHighlightColor
                                     ) {
-                                        selectedItemIndex = index
+                                        sessionViewModel.selectedSessionIndex.value = index
+                                        sessionViewModel.selectedSession.value = session
+                                        sessionViewModel.showNewSessionWindow.value = false
+                                        sessionViewModel.showReviewWindow.value = true
+
                                     }
                                 }
                             }

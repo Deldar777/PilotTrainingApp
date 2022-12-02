@@ -42,7 +42,7 @@ fun MarkEventAndAltitudeSection(
         OutlinedButton(
             onClick = {
                 sessionViewModel.selectedEvent.value = Event(null, null, null, null)
-                sessionViewModel.selectedItemIndex.value = 200
+                sessionViewModel.selectedItemIndex.value = 400
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = deepPurple,
