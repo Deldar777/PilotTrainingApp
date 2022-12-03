@@ -23,6 +23,7 @@ import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.navigation.Screens
+import nl.shekho.videoplayer.views.overviewCells.NewSessionButton
 import nl.shekho.videoplayer.views.overviewCells.NewSessionWindow
 import nl.shekho.videoplayer.views.overviewCells.ReviewWindow
 import nl.shekho.videoplayer.views.overviewCells.SessionItems
@@ -157,36 +158,11 @@ fun SessionsAndReview(
                         .weight(0.4f)
 
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .width(260.dp)
-                            .height(60.dp)
-                            .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
-                            .clickable {
-                                sessionViewModel.showNewSessionWindow.value = true
-                                sessionViewModel.showReviewWindow.value = false
-                                sessionViewModel.selectedSessionIndex.value = 1000
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_baseline_add_24),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(30.dp)
-                                .align(Alignment.CenterStart),
-                            tint = MaterialTheme.colors.primary
-                        )
-
-                        Text(
-                            text = stringResource(id = R.string.newSession),
-                            color = MaterialTheme.colors.primary,
-                            textAlign = TextAlign.Center,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                    if(accessViewModel.userIsInstructor.value){
+                        NewSessionButton(sessionViewModel = sessionViewModel)
                     }
                 }
+
             }
         }
 
@@ -199,11 +175,11 @@ fun SessionsAndReview(
             contentAlignment = Alignment.Center
         ) {
 
-            if(sessionViewModel.showNewSessionWindow.value){
-                NewSessionWindow(users = sessionViewModel.getUsers())
+            if (sessionViewModel.showNewSessionWindow.value && accessViewModel.userIsInstructor.value) {
+                NewSessionWindow(accessViewModel = accessViewModel)
             }
 
-            if(sessionViewModel.showReviewWindow.value){
+            if (sessionViewModel.showReviewWindow.value) {
                 ReviewWindow(session = sessionViewModel.selectedSession.value)
             }
 

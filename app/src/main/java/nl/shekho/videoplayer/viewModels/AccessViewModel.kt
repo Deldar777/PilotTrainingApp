@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.viewModels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.entities.LoginUser
+import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.helpers.UserPreferences
@@ -27,17 +29,19 @@ class AccessViewModel @Inject constructor(
     var succeeded = mutableStateOf(false)
     var failed: String by mutableStateOf("")
 
-
     //Access information
     var loggedIn: Boolean by mutableStateOf(false)
+    var userIsInstructor: MutableState<Boolean> = mutableStateOf(false)
     var encodedJwtToken: String? by mutableStateOf("")
     var decodedJwtToken: JWT? = null
 
     //Session information
     var name = "Deldar"
     var userId: String? = ""
+    var userRole: String? = ""
     var companyId: String? = ""
     var jwtExpired: Boolean? = false
+    var listUsers: List<UserEntity>? = listOf()
 
     fun logIn(username: String, password: String) {
         viewModelScope.launch {
@@ -56,6 +60,33 @@ class AccessViewModel @Inject constructor(
 
                 } else {
                     failed = response.message()
+                }
+            } catch (e: java.lang.Exception) {
+                failed = e.message.toString()
+            }
+        }
+    }
+
+    private fun getUsersByCompanyId(){
+        viewModelScope.launch{
+            try {
+                if(companyId != null && encodedJwtToken != null){
+                    val response = apiService.getUsersByCompanyId(companyId = companyId!!,token = "Bearer $encodedJwtToken")
+
+                    if (response.isSuccessful) {
+                        val body = response.body()
+
+                        if (body != null) {
+                            succeeded.value = true
+                            var users = response.body()
+                            if (users != null) {
+                                listUsers = users.results
+                            }
+                        }
+
+                    } else {
+                        failed = "Something went wrong! Try to log out and log in again"
+                    }
                 }
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
@@ -84,10 +115,27 @@ class AccessViewModel @Inject constructor(
 
         if (!token.isNullOrEmpty()) {
             decodedJwtToken = JWT(token)
+
             userId = decodedJwtToken!!.getClaim("UserId").asString()
             companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
+            userRole = decodedJwtToken!!.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role").asString()
+
+            if(userRole == "ROLE_INSTRUCTOR"){
+                userIsInstructor.value = true
+            }
+
             jwtExpired = decodedJwtToken!!.isExpired(10)
-            //val issuer = jwt.issuer
+
+            if(jwtExpired == true){
+                loggedIn = false
+            }
+            getUsersForInstructor()
+        }
+    }
+
+    private fun getUsersForInstructor(){
+        if(companyId != "" && userIsInstructor.value){
+            getUsersByCompanyId()
         }
     }
 }

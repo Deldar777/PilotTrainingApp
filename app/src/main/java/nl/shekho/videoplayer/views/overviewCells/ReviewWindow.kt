@@ -35,6 +35,8 @@ fun ReviewWindow(session: Session) {
                 .background(tabBackground)
                 .padding(10.dp)
         ) {
+
+
             Text(
                 text = "${session.company?.name} - ${session.startTime?.let { formatDate(it) }}",
                 fontWeight = FontWeight.Bold,

@@ -22,7 +22,6 @@ import kotlin.time.ExperimentalTime
 
 
 @ExperimentalTime
-@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class SessionViewModel @Inject constructor(
     private val connectivityChecker: ConnectivityChecker
