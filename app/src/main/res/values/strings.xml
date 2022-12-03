@@ -30,5 +30,12 @@
     <string name="newSession">New session</string>
     <string name="noEventsYet">No events have occurred yet</string>
     <string name="recent">Recent</string>
+    <string name="loginSucceeded">You have logged in successfully! you will be redirected to the review page in a moment</string>
+    <string name="enterSessionName">Enter the session name</string>
+    <string name="sessionName">Session name</string>
+    <string name="firstOfficer">First officer</string>
+    <string name="selectParticipant1">Select participant 1</string>
+    <string name="captain">Captain</string>
+    <string name="selectParticipant2">Select participant 2</string>
 
 </resources>

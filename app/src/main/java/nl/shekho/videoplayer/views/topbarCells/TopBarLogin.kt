@@ -2,14 +2,11 @@ package nl.shekho.videoplayer.views.topbarCells
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,12 +16,9 @@ import nl.shekho.videoplayer.ui.theme.customDarkGray
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.helpers.SessionInformation
 
 @Composable
-fun TopBar(
-    accessViewModel: AccessViewModel
-) {
+fun TopBarLogin(){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -57,33 +51,19 @@ fun TopBar(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    if (accessViewModel.loggedIn) {
-                        Text(
-                            text = stringResource(id = R.string.logout),
-                            color = deepBlue,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 26.sp,
-                            modifier = Modifier.clickable {
-                                accessViewModel.loggedIn = false
-                                accessViewModel.save(SessionInformation.JWTTOKEN, "")
-                            }
-                        )
-                    }else{
-                        Text(
-                            text = stringResource(id = R.string.about),
-                            color = deepBlue,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 26.sp
-                        )
+                    Text(
+                        text = stringResource(id = R.string.about),
+                        color = deepBlue,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp
+                    )
 
-                        Text(
-                            text = stringResource(id = R.string.contact),
-                            color = deepBlue,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 26.sp
-                        )
-
-                    }
+                    Text(
+                        text = stringResource(id = R.string.contact),
+                        color = deepBlue,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp
+                    )
                 }
             }
         }

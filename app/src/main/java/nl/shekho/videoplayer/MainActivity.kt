@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                 ReadSessionInformation()
 
                 //Based on the token determine which screen should be shown next
-                accessViewModel.loggedIn = accessViewModel.encodedJwtToken?.isNotEmpty() ?: false
+                accessViewModel.loggedIn.value = accessViewModel.encodedJwtToken?.isNotEmpty() ?: false
 
                 navController = rememberNavController()
                 SetupNavGraph(

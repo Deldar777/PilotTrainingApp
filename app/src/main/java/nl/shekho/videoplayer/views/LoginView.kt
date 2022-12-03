@@ -1,9 +1,5 @@
 package nl.shekho.videoplayer.views
 
-import android.content.Context
-import android.os.Build
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,50 +24,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.deepBlue
-import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
-import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
+import nl.shekho.videoplayer.views.topbarCells.TopBarLogout
 import nl.shekho.videoplayer.views.navigation.Screens
-import nl.shekho.videoplayer.views.topbarCells.TopBar
+import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun LoginView(
     accessViewModel: AccessViewModel,
-    navController: NavController,
-    sessionViewModel: SessionViewModel
+    navController: NavController
 ) {
 
-    if(accessViewModel.loggedIn){
-        OverviewView(
-            accessViewModel = accessViewModel,
-            sessionViewModel = sessionViewModel,
-            navController = navController
-        )
-    }else{
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colors.background)
-                .fillMaxSize()
-        ) {
-            Column {
-                // Top bar
-                TopBar(accessViewModel = accessViewModel)
-                // Login block
-                LoginBox(
-                    accessViewModel = accessViewModel,
-                    navController = navController
-                )
-            }
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+    ) {
+        Column {
+            // Top bar
+            TopBarLogin()
+            // Login block
+            LoginBox(
+                accessViewModel = accessViewModel,
+                navController = navController
+            )
         }
     }
 }
@@ -86,7 +71,7 @@ fun LoginBox(
     var messageColor by remember { mutableStateOf(Color.Red) }
     var messageText by remember { mutableStateOf("") }
 
-    //Logon text fields
+    //Login text fields
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -94,6 +79,7 @@ fun LoginBox(
     val userNameOrPasswordEmpty = stringResource(id = R.string.emptyFields)
     val notInternet = stringResource(id = R.string.noInternet)
     val loginFailed = stringResource(id = R.string.loginFailed)
+    val loginSucceeded = stringResource(id = R.string.loginSucceeded)
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -215,10 +201,15 @@ fun LoginBox(
                                     accessViewModel.logIn(username, password)
 
                                     if (accessViewModel.succeeded.value) {
+                                        accessViewModel.loggedIn.value = true
+                                        messageText = loginSucceeded
+                                        messageColor = Color.Green
+
                                         navController.navigate(Screens.Overview.route)
-                                    }else{
-                                        messageText =loginFailed
+                                    } else {
+                                        messageText = loginFailed
                                     }
+
                                 } else {
                                     messageText = userNameOrPasswordEmpty
                                 }

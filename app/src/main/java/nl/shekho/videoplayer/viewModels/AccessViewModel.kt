@@ -30,12 +30,12 @@ class AccessViewModel @Inject constructor(
     var failed: String by mutableStateOf("")
 
     //Access information
-    var loggedIn: Boolean by mutableStateOf(false)
-    var userIsInstructor: MutableState<Boolean> = mutableStateOf(false)
+    var loggedIn = mutableStateOf(false)
     var encodedJwtToken: String? by mutableStateOf("")
     var decodedJwtToken: JWT? = null
 
     //Session information
+    var userIsInstructor: MutableState<Boolean> = mutableStateOf(false)
     var name = "Deldar"
     var userId: String? = ""
     var userRole: String? = ""
@@ -77,7 +77,6 @@ class AccessViewModel @Inject constructor(
                         val body = response.body()
 
                         if (body != null) {
-                            succeeded.value = true
                             var users = response.body()
                             if (users != null) {
                                 listUsers = users.results
@@ -127,7 +126,7 @@ class AccessViewModel @Inject constructor(
             jwtExpired = decodedJwtToken!!.isExpired(10)
 
             if(jwtExpired == true){
-                loggedIn = false
+                loggedIn.value = false
             }
             getUsersForInstructor()
         }

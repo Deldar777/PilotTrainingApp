@@ -26,7 +26,7 @@ import nl.shekho.videoplayer.views.topbarCells.*
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun TopBar(
+fun TopBarLogin(
     modifier: Modifier = Modifier,
     sessionViewModel: SessionViewModel
 ) {

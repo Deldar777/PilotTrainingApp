@@ -13,7 +13,7 @@ import nl.shekho.videoplayer.ui.theme.*
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.highlightSectionCells.*
 import nl.shekho.videoplayer.views.noteCells.FeedbackAndVideoSection
-import nl.shekho.videoplayer.views.topbarCells.TopBar
+import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -30,7 +30,7 @@ fun SessionView(
         Column {
 
             // Top bar
-            TopBar(sessionViewModel = sessionViewModel)
+            TopBarLogin(sessionViewModel = sessionViewModel)
 
             // Middle part of the screen (highlight - video and add feedback block)
             HighlightAndVideo(

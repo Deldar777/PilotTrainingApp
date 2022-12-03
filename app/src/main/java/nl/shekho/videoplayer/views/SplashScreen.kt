@@ -42,8 +42,7 @@ fun SplashScreen(
         delay(1000)
         navController.popBackStack()
 
-        if (accessViewModel.loggedIn) {
-            accessViewModel.decodeJWT()
+        if (accessViewModel.loggedIn.value) {
             navController.navigate(Screens.Overview.route)
         }else{
             navController.navigate(Screens.Login.route)

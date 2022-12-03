@@ -1,16 +1,12 @@
 package nl.shekho.videoplayer.views
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -19,15 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.overviewCells.NewSessionButton
 import nl.shekho.videoplayer.views.overviewCells.NewSessionWindow
 import nl.shekho.videoplayer.views.overviewCells.ReviewWindow
 import nl.shekho.videoplayer.views.overviewCells.SessionItems
-import nl.shekho.videoplayer.views.topbarCells.TopBar
+import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
+import nl.shekho.videoplayer.views.topbarCells.TopBarLogout
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -38,31 +33,26 @@ fun OverviewView(
     navController: NavController
 ) {
 
-    if (accessViewModel.loggedIn) {
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colors.background)
-                .fillMaxSize()
-        ) {
+    //Fetch the needed session information form the stored encoded JWT token
+    accessViewModel.decodeJWT()
 
-            Column {
-                // Top bar
-                TopBar(accessViewModel = accessViewModel)
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+    ) {
 
-                // Side bar and new session and review
-                SessionsAndReview(
-                    accessViewModel = accessViewModel,
-                    sessionViewModel = sessionViewModel,
-                    navController = navController
-                )
-            }
+        Column {
+            // Top bar
+            TopBarLogout(accessViewModel = accessViewModel,navController = navController)
+
+            // Side bar and new session and review
+            SessionsAndReview(
+                accessViewModel = accessViewModel,
+                sessionViewModel = sessionViewModel,
+                navController = navController
+            )
         }
-    } else {
-        LoginView(
-            accessViewModel = accessViewModel,
-            navController = navController,
-            sessionViewModel = sessionViewModel
-        )
     }
 }
 
@@ -114,7 +104,7 @@ fun SessionsAndReview(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = "Welcome Andy!",
+                                text = "Welcome ${accessViewModel.userRole}",
                                 fontFamily = FontFamily.Monospace,
                                 textAlign = TextAlign.Center,
                                 fontSize = 28.sp,
