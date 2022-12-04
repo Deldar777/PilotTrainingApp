@@ -15,6 +15,7 @@ import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.helpers.UserPreferences
+import nl.shekho.videoplayer.models.Role
 import javax.inject.Inject
 
 
@@ -119,7 +120,7 @@ class AccessViewModel @Inject constructor(
             companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
             userRole = decodedJwtToken!!.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role").asString()
 
-            if(userRole == "ROLE_INSTRUCTOR"){
+            if(userRole == Role.INSTRUCTOR.type){
                 userIsInstructor.value = true
             }
 

@@ -1,30 +1,32 @@
 package nl.shekho.videoplayer.views.overviewCells
 
-import android.util.Size
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.entities.UserEntity
+import nl.shekho.videoplayer.models.Role
+import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
@@ -175,7 +177,7 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                                 }
                             },
                             trailingIcon = {
-                                Icon(icon1,"contentDescription",
+                                Icon(icon1,null,
                                     Modifier.clickable { expanded1 = !expanded1 },
                                     tint = textSecondaryDarkMode
                                 )
@@ -196,6 +198,9 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                             }
                         }
                     }
+
+                    //Consent participant 1
+                    Consent()
 
                     //Dropdown participant2
                     Column() {
@@ -229,7 +234,7 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                                 }
                             },
                             trailingIcon = {
-                                Icon(icon2,"contentDescription",
+                                Icon(icon2,null,
                                     Modifier.clickable { expanded2 = !expanded2 },
                                     tint = textSecondaryDarkMode
                                 )
@@ -251,13 +256,32 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                         }
                     }
 
+                    //Consent participant 2
+                    Consent()
+
+                    //Start button
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 40.dp)
+                            .width(260.dp)
+                            .height(60.dp)
+                            .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
+                            .clickable {
+
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.start),
+                            color = MaterialTheme.colors.primary,
+                            textAlign = TextAlign.Center,
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
-
-
             }
         }
-
-
         ShowFeedback(text = accessViewModel.failed, color = Color.Red)
     }
 }
@@ -266,7 +290,7 @@ fun formatUsers(users: List<UserEntity>): List<String> {
     val formattedUsers = mutableListOf<String>()
 
     users.forEach { user ->
-        if (user.role == "ROLE_PILOT") {
+        if (user.role == Role.PILOT.type) {
             formattedUsers += "${user.firstname} ${user.lastname}"
         }
     }
