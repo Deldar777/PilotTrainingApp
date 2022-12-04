@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,14 +28,27 @@ import nl.shekho.videoplayer.models.Role
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
-fun NewSessionWindow(accessViewModel: AccessViewModel) {
+fun NewSessionWindow(
+    accessViewModel: AccessViewModel,
+    sessionViewModel: SessionViewModel
+) {
+
+    //Feedback variables
+    var messageColor by remember { mutableStateOf(Color.Red) }
+    var messageText by remember { mutableStateOf("") }
+    val emptyFields = stringResource(id = R.string.sessionEmptyFields)
+    val sameParticipant = stringResource(id = R.string.sameParticipant)
+    val noInternet = stringResource(id = R.string.noInternet)
 
     //session name text field
     var sessionName by remember { mutableStateOf("") }
-    val users = accessViewModel.listUsers?.let { formatUsers(it) }
+    val mappedUsers = accessViewModel.listUsers?.let { mapUsers(it) }
 
 
     //Dropdown participant 1
@@ -177,7 +189,8 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                                 }
                             },
                             trailingIcon = {
-                                Icon(icon1,null,
+                                Icon(
+                                    icon1, null,
                                     Modifier.clickable { expanded1 = !expanded1 },
                                     tint = textSecondaryDarkMode
                                 )
@@ -187,13 +200,13 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                             expanded = expanded1,
                             onDismissRequest = { expanded1 = false },
                             modifier = Modifier
-                                .width(with(LocalDensity.current){textfieldSize1.width.toDp()})
+                                .width(with(LocalDensity.current) { textfieldSize1.width.toDp() })
                         ) {
-                            users?.forEach { label ->
+                            mappedUsers?.forEach { label ->
                                 DropdownMenuItem(onClick = {
-                                    participant1 = label
+                                    participant1 = label.key
                                 }) {
-                                    Text(text = label)
+                                    Text(text = label.key)
                                 }
                             }
                         }
@@ -234,7 +247,8 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                                 }
                             },
                             trailingIcon = {
-                                Icon(icon2,null,
+                                Icon(
+                                    icon2, null,
                                     Modifier.clickable { expanded2 = !expanded2 },
                                     tint = textSecondaryDarkMode
                                 )
@@ -244,13 +258,13 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                             expanded = expanded2,
                             onDismissRequest = { expanded2 = false },
                             modifier = Modifier
-                                .width(with(LocalDensity.current){textfieldSize2.width.toDp()})
+                                .width(with(LocalDensity.current) { textfieldSize2.width.toDp() })
                         ) {
-                            users?.forEach { label ->
+                            mappedUsers?.forEach { label ->
                                 DropdownMenuItem(onClick = {
-                                    participant2 = label
+                                    participant2 = label.key
                                 }) {
-                                    Text(text = label)
+                                    Text(text = label.key)
                                 }
                             }
                         }
@@ -267,7 +281,23 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                             .height(60.dp)
                             .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
                             .clickable {
+                                if(accessViewModel.isOnline()){
+                                    if (participant1 != "" && participant2 != "" && sessionName != "") {
 
+                                        if(participant1 != participant2){
+
+                                            accessViewModel.participant1 = mappedUsers?.get(participant1)
+                                            accessViewModel.participant2 = mappedUsers?.get(participant2)
+                                        }else{
+                                            messageText = sameParticipant
+                                        }
+
+                                    } else {
+                                        messageText = emptyFields
+                                    }
+                                }else{
+                                    messageText = noInternet
+                                }
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -281,18 +311,19 @@ fun NewSessionWindow(accessViewModel: AccessViewModel) {
                     }
                 }
             }
+            ShowFeedback(text = messageText, color = messageColor)
+
         }
-        ShowFeedback(text = accessViewModel.failed, color = Color.Red)
     }
 }
 
-fun formatUsers(users: List<UserEntity>): List<String> {
-    val formattedUsers = mutableListOf<String>()
+fun mapUsers(users: List<UserEntity>): MutableMap<String, UserEntity> {
+    val mappedUsers = mutableMapOf<String, UserEntity>()
 
     users.forEach { user ->
         if (user.role == Role.PILOT.type) {
-            formattedUsers += "${user.firstname} ${user.lastname}"
+            mappedUsers["${user.firstname} ${user.lastname}"] = user
         }
     }
-    return formattedUsers
+    return mappedUsers
 }

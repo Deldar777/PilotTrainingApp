@@ -44,7 +44,7 @@ fun OverviewView(
 
         Column {
             // Top bar
-            TopBarLogout(accessViewModel = accessViewModel,navController = navController)
+            TopBarLogout(accessViewModel = accessViewModel, navController = navController)
 
             // Side bar and new session and review
             SessionsAndReview(
@@ -104,7 +104,7 @@ fun SessionsAndReview(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = "Welcome ${accessViewModel.userRole}",
+                                text = "Welcome ${accessViewModel.loggedInUser?.firstname ?: ""}",
                                 fontFamily = FontFamily.Monospace,
                                 textAlign = TextAlign.Center,
                                 fontSize = 28.sp,
@@ -148,7 +148,7 @@ fun SessionsAndReview(
                         .weight(0.4f)
 
                 ) {
-                    if(accessViewModel.userIsInstructor.value){
+                    if (accessViewModel.userIsInstructor.value) {
                         NewSessionButton(sessionViewModel = sessionViewModel)
                     }
                 }
@@ -166,7 +166,10 @@ fun SessionsAndReview(
         ) {
 
             if (sessionViewModel.showNewSessionWindow.value && accessViewModel.userIsInstructor.value) {
-                NewSessionWindow(accessViewModel = accessViewModel)
+                NewSessionWindow(
+                    accessViewModel = accessViewModel,
+                    sessionViewModel = sessionViewModel
+                )
             }
 
             if (sessionViewModel.showReviewWindow.value) {

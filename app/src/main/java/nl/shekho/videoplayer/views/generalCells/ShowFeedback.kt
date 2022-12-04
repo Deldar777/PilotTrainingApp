@@ -1,9 +1,6 @@
 package nl.shekho.videoplayer.views.generalCells
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,16 +15,15 @@ import androidx.compose.ui.unit.dp
 fun ShowFeedback(text: String, color: Color) {
     Row(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(40.dp),
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.h5,
+            style = MaterialTheme.typography.body1,
             color =color,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )

@@ -39,5 +39,7 @@
     <string name="selectParticipant2">Select participant 2</string>
     <string name="consent">I give consent to be recorded during this session</string>
     <string name="start">Start</string>
+    <string name="sessionEmptyFields">Please fill all fields before pressing start</string>
+    <string name="sameParticipant">Please choose two different participants</string>
 
 </resources>

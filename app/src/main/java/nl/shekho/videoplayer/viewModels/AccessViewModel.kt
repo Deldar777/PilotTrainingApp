@@ -10,7 +10,7 @@ import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
-import nl.shekho.videoplayer.api.entities.LoginUser
+import nl.shekho.videoplayer.api.entities.LoginEntity
 import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.SessionInformation
@@ -36,9 +36,12 @@ class AccessViewModel @Inject constructor(
     var decodedJwtToken: JWT? = null
 
     //Session information
+    var sessionId: String? = ""
     var userIsInstructor: MutableState<Boolean> = mutableStateOf(false)
-    var name = "Deldar"
-    var userId: String? = ""
+    var loggedInUserId: String? = ""
+    var loggedInUser: UserEntity? by mutableStateOf(null)
+    var participant1: UserEntity? by mutableStateOf(null)
+    var participant2: UserEntity? by mutableStateOf(null)
     var userRole: String? = ""
     var companyId: String? = ""
     var jwtExpired: Boolean? = false
@@ -47,7 +50,7 @@ class AccessViewModel @Inject constructor(
     fun logIn(username: String, password: String) {
         viewModelScope.launch {
             try {
-                var userEntity = LoginUser(username, password)
+                var userEntity = LoginEntity(username, password)
                 val response = apiService.login(userEntity)
 
                 if (response.isSuccessful) {
@@ -68,11 +71,14 @@ class AccessViewModel @Inject constructor(
         }
     }
 
-    private fun getUsersByCompanyId(){
-        viewModelScope.launch{
+    private fun getUsersByCompanyId() {
+        viewModelScope.launch {
             try {
-                if(companyId != null && encodedJwtToken != null){
-                    val response = apiService.getUsersByCompanyId(companyId = companyId!!,token = "Bearer $encodedJwtToken")
+                if (companyId != null && encodedJwtToken != null) {
+                    val response = apiService.getUsersByCompanyId(
+                        companyId = companyId!!,
+                        token = "Bearer $encodedJwtToken"
+                    )
 
                     if (response.isSuccessful) {
                         val body = response.body()
@@ -81,6 +87,7 @@ class AccessViewModel @Inject constructor(
                             var users = response.body()
                             if (users != null) {
                                 listUsers = users.results
+                                loggedInUser = listUsers!!.firstOrNull { it.id == loggedInUserId }
                             }
                         }
 
@@ -116,25 +123,28 @@ class AccessViewModel @Inject constructor(
         if (!token.isNullOrEmpty()) {
             decodedJwtToken = JWT(token)
 
-            userId = decodedJwtToken!!.getClaim("UserId").asString()
+            loggedInUserId = decodedJwtToken!!.getClaim("UserId").asString()
             companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
-            userRole = decodedJwtToken!!.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role").asString()
+            userRole =
+                decodedJwtToken!!.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+                    .asString()
 
-            if(userRole == Role.INSTRUCTOR.type){
+            if (userRole == Role.INSTRUCTOR.type) {
                 userIsInstructor.value = true
             }
 
             jwtExpired = decodedJwtToken!!.isExpired(10)
 
-            if(jwtExpired == true){
+            if (jwtExpired == true) {
                 loggedIn.value = false
+            } else {
+                getUsers()
             }
-            getUsersForInstructor()
         }
     }
 
-    private fun getUsersForInstructor(){
-        if(companyId != "" && userIsInstructor.value){
+    private fun getUsers() {
+        if (companyId != "") {
             getUsersByCompanyId()
         }
     }
