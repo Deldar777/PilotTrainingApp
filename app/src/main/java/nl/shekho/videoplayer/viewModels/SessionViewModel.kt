@@ -72,30 +72,7 @@ class SessionViewModel @Inject constructor(
         }
     }
 
-//    fun getSessionsMockData() {
-//        val flightWare = Company("1", "Flightware")
-//        val users = getUsers()
-//        val sessions = listOf(
-//            Session("1", LocalDateTime.now().minusHours(48), users, flightWare, null),
-//            Session("1", LocalDateTime.now().minusHours(25), users, flightWare, null),
-//            Session("1", LocalDateTime.now(), users, flightWare, null),
-//        )
-//
-//        viewModelScope.launch {
-//            delay(2000)
-//            val result = Result.success(sessions)
-//            mutableSessions.emit(result)
-//        }
-//    }
 
-//    fun getUsers(): List<User> {
-//        val flightWare = Company("1", "Flightware")
-//        return listOf(
-//            User("andy", "12345", "andy@gmail.com", "Andy", "Henson", Role.INSTRUCTOR, flightWare),
-//            User("daan", "12345", "daan@gmail.com", "Daan", "Baer", Role.FIRSTOFFICER, flightWare),
-//            User("lisa", "12345", "lisa@gmail.com", "Lisa", "Bakke", Role.CAPTAIN, flightWare)
-//        )
-//    }
 
     fun getEventsMockData() {
         val events = listOf(

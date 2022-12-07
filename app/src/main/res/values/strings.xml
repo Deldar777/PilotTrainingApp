@@ -41,5 +41,6 @@
     <string name="start">Start</string>
     <string name="sessionEmptyFields">Please fill all fields before pressing start</string>
     <string name="sameParticipant">Please choose two different participants</string>
+    <string name="sessionDate">Session date</string>
 
 </resources>

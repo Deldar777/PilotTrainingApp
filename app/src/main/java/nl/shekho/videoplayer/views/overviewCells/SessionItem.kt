@@ -23,9 +23,10 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.ui.theme.highlightDivider
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
-import java.time.OffsetDateTime
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 @Composable
 fun SessionItem(
@@ -50,7 +51,7 @@ fun SessionItem(
     ) {
 
         Text(
-            text = "Session - ${session.startTime?.let { it }}",
+            text = "${session.startTime?.let { formatDate(it) }}",
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
@@ -83,12 +84,17 @@ fun SessionItem(
 }
 
 @SuppressLint("SimpleDateFormat")
-private fun formatDate(date: String): String {
-    val formatter: DateTimeFormatter =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
-    val formattedDate: OffsetDateTime = OffsetDateTime.parse(date, formatter)
+private fun formatDate(date: String): String? {
+    var stringDate = date
+    stringDate = stringDate.replaceAfter(delimiter = ".", "")
+    stringDate = stringDate.replace("T", " ")
+    stringDate = stringDate.replace(".", "")
 
-    return "${
-        formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)
-    } ${formattedDate.dayOfMonth}th"
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val formattedDate = LocalDateTime.parse(stringDate, formatter)
+
+//    return "Session - ${formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${formattedDate.dayOfMonth}th"
+
+    var formattedMinutes = String.format("%02d", formattedDate.minute)
+    return "Session - ${formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${formattedDate.dayOfMonth}th - ${formattedDate.hour}:${formattedMinutes}"
 }

@@ -30,6 +30,7 @@ import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
+import java.time.LocalDateTime
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -125,14 +126,17 @@ fun NewSessionWindow(
                         .fillMaxSize()
                         .padding(bottom = 10.dp, top = 10.dp, start = 100.dp, end = 100.dp)
                 ) {
+
                     // sessionName textField
+                    sessionName = formatDate(LocalDateTime.now())
                     OutlinedTextField(
+                        enabled = false,
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.White,
                             textColor = MaterialTheme.colors.primaryVariant
                         ),
-                        value = sessionName,
-                        onValueChange = { sessionName = it },
+                        value = formatDate(LocalDateTime.now()),
+                        onValueChange = { },
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.primaryVariant,
                             fontWeight = FontWeight.Bold
@@ -144,11 +148,11 @@ fun NewSessionWindow(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.sessionName),
+                                    text = stringResource(id = R.string.sessionDate),
                                     color = Color.Black
                                 )
                                 Text(
-                                    text = stringResource(id = R.string.enterSessionName),
+                                    text = stringResource(id = R.string.sessionDate),
                                     color = textSecondaryDarkMode
                                 )
                             }
@@ -326,4 +330,9 @@ fun mapUsers(users: List<UserEntity>): MutableMap<String, UserEntity> {
         }
     }
     return mappedUsers
+}
+
+fun formatDate(date: LocalDateTime): String{
+    var formattedMinutes = String.format("%02d", date.minute)
+    return "Session - ${date.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${date.dayOfMonth}th - ${date.hour}:${formattedMinutes}"
 }

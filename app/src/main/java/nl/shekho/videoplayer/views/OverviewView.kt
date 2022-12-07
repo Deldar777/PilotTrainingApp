@@ -104,7 +104,7 @@ fun SessionsAndReview(
                                 text = "Welcome ${accessViewModel.loggedInUser?.firstname ?: ""}",
                                 fontFamily = FontFamily.Monospace,
                                 textAlign = TextAlign.Center,
-                                fontSize = 28.sp,
+                                fontSize = 22.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colors.primary,
                             )
@@ -119,7 +119,7 @@ fun SessionsAndReview(
                                 text = stringResource(id = R.string.recent),
                                 fontFamily = FontFamily.Monospace,
                                 textAlign = TextAlign.Center,
-                                fontSize = 26.sp,
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colors.secondary,
                                 modifier = Modifier.padding(20.dp)
