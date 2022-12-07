@@ -1,7 +1,6 @@
 package nl.shekho.videoplayer.views.overviewCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,7 +23,9 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.ui.theme.highlightDivider
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Composable
 fun SessionItem(
@@ -32,7 +33,7 @@ fun SessionItem(
     isSelected: Boolean = false,
     activeHighlightColor: Color = selectedItemLightBlue,
     onItemClick: () -> Unit
-){
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -46,10 +47,10 @@ fun SessionItem(
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(10.dp)
-    ){
+    ) {
 
         Text(
-            text = "${session.company?.name} - ${session.startTime?.let { formatDate(it) }}",
+            text = "Session - ${session.startTime?.let { it }}",
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
@@ -61,7 +62,7 @@ fun SessionItem(
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
-        ){
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
                 contentDescription = "",
@@ -81,6 +82,13 @@ fun SessionItem(
 
 }
 
-private fun formatDate(date: LocalDateTime): String {
-    return "${date.dayOfWeek.toString().lowercase().subSequence(0,3)} ${date.dayOfMonth}th"
+@SuppressLint("SimpleDateFormat")
+private fun formatDate(date: String): String {
+    val formatter: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+    val formattedDate: OffsetDateTime = OffsetDateTime.parse(date, formatter)
+
+    return "${
+        formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)
+    } ${formattedDate.dayOfMonth}th"
 }

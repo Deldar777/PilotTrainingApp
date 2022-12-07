@@ -1,7 +1,5 @@
 package nl.shekho.videoplayer.viewModels
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +8,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import nl.shekho.videoplayer.api.ApiService
+import nl.shekho.videoplayer.api.SessionMapper
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.models.*
 import java.time.LocalDateTime
@@ -24,7 +24,9 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 @HiltViewModel
 class SessionViewModel @Inject constructor(
-    private val connectivityChecker: ConnectivityChecker
+    private val connectivityChecker: ConnectivityChecker,
+    private val apiService: ApiService,
+    private val sessionMapper: SessionMapper
 ) : ViewModel() {
 
     //New session and review windows
@@ -34,7 +36,7 @@ class SessionViewModel @Inject constructor(
     //Sessions
     private val mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
     val sessions: StateFlow<Result<List<Session>>?> = mutableSessions
-    val selectedSession = mutableStateOf(Session(null,null,null,null,null))
+    val selectedSession = mutableStateOf(Session(null, null, null, null))
     var selectedSessionIndex = mutableStateOf(100)
 
 
@@ -45,31 +47,57 @@ class SessionViewModel @Inject constructor(
     var selectedItemIndex = mutableStateOf(100)
 
 
-    fun getSessionsMockData(){
-        val flightWare = Company("1", "Flightware")
-        val users = getUsers()
-        val sessions = listOf(
-            Session("1", LocalDateTime.now().minusHours(48),  users, flightWare, null),
-            Session("1", LocalDateTime.now().minusHours(25),  users, flightWare, null),
-            Session("1", LocalDateTime.now(),  users, flightWare, null),
-        )
-
+    fun fetchSessionsByUserId(userId: String,token: String) {
         viewModelScope.launch {
-            delay(2000)
-            val result = Result.success(sessions)
+
+            val response = apiService.getSessionsByUserId(
+                userId = userId,
+                token = token,
+            )
+
+            val result = when {
+                response.isSuccessful -> {
+                    val body = response.body()
+                    if (body != null) {
+                        sessionMapper.map(body)
+                    } else {
+                        Result.failure(Exception("Body was empty"))
+                    }
+
+                }
+                else -> Result.failure(Exception("Something went wrong: Code ${response.code()}"))
+            }
+
             mutableSessions.emit(result)
         }
     }
 
-    fun getUsers(): List<User>{
-        val flightWare = Company("1", "Flightware")
-        return listOf(
-        User("andy", "12345", "andy@gmail.com","Andy", "Henson", Role.INSTRUCTOR, flightWare),
-        User("daan", "12345", "daan@gmail.com","Daan" ,"Baer", Role.FIRSTOFFICER, flightWare),
-        User("lisa", "12345", "lisa@gmail.com","Lisa" ,"Bakke", Role.CAPTAIN, flightWare))
-    }
+//    fun getSessionsMockData() {
+//        val flightWare = Company("1", "Flightware")
+//        val users = getUsers()
+//        val sessions = listOf(
+//            Session("1", LocalDateTime.now().minusHours(48), users, flightWare, null),
+//            Session("1", LocalDateTime.now().minusHours(25), users, flightWare, null),
+//            Session("1", LocalDateTime.now(), users, flightWare, null),
+//        )
+//
+//        viewModelScope.launch {
+//            delay(2000)
+//            val result = Result.success(sessions)
+//            mutableSessions.emit(result)
+//        }
+//    }
 
-    fun getEventsMockData(){
+//    fun getUsers(): List<User> {
+//        val flightWare = Company("1", "Flightware")
+//        return listOf(
+//            User("andy", "12345", "andy@gmail.com", "Andy", "Henson", Role.INSTRUCTOR, flightWare),
+//            User("daan", "12345", "daan@gmail.com", "Daan", "Baer", Role.FIRSTOFFICER, flightWare),
+//            User("lisa", "12345", "lisa@gmail.com", "Lisa", "Bakke", Role.CAPTAIN, flightWare)
+//        )
+//    }
+
+    fun getEventsMockData() {
         val events = listOf(
             Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
             Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 4343, "Good job"),

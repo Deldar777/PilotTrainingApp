@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 data class SessionEntity(
     var id: String,
-    var startTime: LocalDateTime,
+    var startTime: String,
     var companyId: String,
     var videos: List<String>?
 )

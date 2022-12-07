@@ -20,14 +20,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SessionItems(
     activeHighlightColor: Color = selectedItemLightBlue,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    accessViewModel: AccessViewModel
 ) {
 
+    //Get session that the logged in user has participated in
     val sessions by sessionViewModel.sessions.collectAsState()
 
     Box(
@@ -38,9 +41,7 @@ fun SessionItems(
     ) {
 
         if (sessionViewModel.isOnline()) {
-
-            //Fetch the sessions from the API
-            sessionViewModel.getSessionsMockData()
+            sessionViewModel.fetchSessionsByUserId(userId = accessViewModel.loggedInUserId!!, token = accessViewModel.encodedJwtToken!!)
 
             sessions?.let { sessions ->
                 sessions

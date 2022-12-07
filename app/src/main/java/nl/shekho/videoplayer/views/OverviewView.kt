@@ -33,9 +33,6 @@ fun OverviewView(
     navController: NavController
 ) {
 
-    //Fetch the needed session information form the stored encoded JWT token
-    accessViewModel.decodeJWT()
-
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
@@ -138,7 +135,10 @@ fun SessionsAndReview(
                         .weight(2.0f)
 
                 ) {
-                    SessionItems(sessionViewModel = sessionViewModel)
+                    SessionItems(
+                        sessionViewModel = sessionViewModel,
+                        accessViewModel = accessViewModel
+                    )
                 }
 
                 Box(
@@ -149,7 +149,9 @@ fun SessionsAndReview(
 
                 ) {
                     if (accessViewModel.userIsInstructor.value) {
-                        NewSessionButton(sessionViewModel = sessionViewModel)
+                        NewSessionButton(
+                            sessionViewModel = sessionViewModel
+                        )
                     }
                 }
 

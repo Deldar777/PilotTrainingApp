@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import nl.shekho.videoplayer.api.SessionMapper
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
 
@@ -32,5 +33,11 @@ object ViewModelModule {
     @ViewModelScoped
     fun providerConnectivityChecker(app: Application): ConnectivityChecker{
         return ConnectivityChecker(app)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providerSessionMapper(): SessionMapper{
+        return SessionMapper()
     }
 }

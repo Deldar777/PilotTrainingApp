@@ -12,7 +12,9 @@ import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.models.User
 import nl.shekho.videoplayer.ui.theme.tabBackground
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ReviewWindow(session: Session) {
@@ -38,7 +40,7 @@ fun ReviewWindow(session: Session) {
 
 
             Text(
-                text = "${session.company?.name} - ${session.startTime?.let { formatDate(it) }}",
+                text = "Session - ${session.startTime?.let { it }}",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.h4,
@@ -48,6 +50,9 @@ fun ReviewWindow(session: Session) {
 }
 
 
-private fun formatDate(date: LocalDateTime): String {
-    return "${date.dayOfWeek.toString().lowercase().subSequence(0,3)} ${date.dayOfMonth}th"
+private fun formatDate(date: String): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    val parsedDate = LocalDateTime.parse(date, formatter);
+
+    return "${parsedDate.dayOfWeek.toString().lowercase().subSequence(0,3)} ${parsedDate.dayOfMonth}th"
 }

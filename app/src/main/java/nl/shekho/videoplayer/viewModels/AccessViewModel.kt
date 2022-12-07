@@ -1,9 +1,6 @@
 package nl.shekho.videoplayer.viewModels
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.jwt.JWT
@@ -115,29 +112,32 @@ class AccessViewModel @Inject constructor(
         viewModelScope.launch {
             encodedJwtToken = userPreferences.read(SessionInformation.JWTTOKEN)
         }
+        decodeJWT()
     }
 
-    fun decodeJWT() {
+    private fun decodeJWT() {
         val token = encodedJwtToken
 
+
+        //Decode the token if it is not empty
         if (!token.isNullOrEmpty()) {
+
             decodedJwtToken = JWT(token)
 
-            loggedInUserId = decodedJwtToken!!.getClaim("UserId").asString()
-            companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
-            userRole =
-                decodedJwtToken!!.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
-                    .asString()
-
-            if (userRole == Role.INSTRUCTOR.type) {
-                userIsInstructor.value = true
-            }
-
+            //Stop decoding if token si expired
             jwtExpired = decodedJwtToken!!.isExpired(10)
 
-            if (jwtExpired == true) {
-                loggedIn.value = false
-            } else {
+            if(jwtExpired != true){
+                loggedInUserId = decodedJwtToken!!.getClaim("UserId").asString()
+                companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
+                userRole =
+                    decodedJwtToken!!.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+                        .asString()
+
+                if (userRole == Role.INSTRUCTOR.type) {
+                    userIsInstructor.value = true
+                }
+
                 getUsers()
             }
         }
