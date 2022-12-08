@@ -170,7 +170,8 @@ fun SessionsAndReview(
             if (sessionViewModel.showNewSessionWindow.value && accessViewModel.userIsInstructor.value) {
                 NewSessionWindow(
                     accessViewModel = accessViewModel,
-                    sessionViewModel = sessionViewModel
+                    sessionViewModel = sessionViewModel,
+                    navController = navController
                 )
             }
 

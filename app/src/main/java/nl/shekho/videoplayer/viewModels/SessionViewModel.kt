@@ -10,8 +10,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.SessionMapper
+import nl.shekho.videoplayer.api.entities.LoginEntity
+import nl.shekho.videoplayer.api.entities.NewSessionEntity
+import nl.shekho.videoplayer.api.entities.SessionEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
+import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.models.*
+import nl.shekho.videoplayer.views.navigation.Screens
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
@@ -29,6 +34,10 @@ class SessionViewModel @Inject constructor(
     private val sessionMapper: SessionMapper
 ) : ViewModel() {
 
+    //Response information
+    var succeeded = mutableStateOf(false)
+    var failed: String by mutableStateOf("")
+
     //New session and review windows
     var showNewSessionWindow: MutableState<Boolean> = mutableStateOf(false)
     var showReviewWindow: MutableState<Boolean> = mutableStateOf(false)
@@ -37,6 +46,7 @@ class SessionViewModel @Inject constructor(
     private val mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
     val sessions: StateFlow<Result<List<Session>>?> = mutableSessions
     val selectedSession = mutableStateOf(Session(null, null, null, null))
+    var runningSession: SessionEntity? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
 
 
@@ -45,6 +55,34 @@ class SessionViewModel @Inject constructor(
     val events: StateFlow<Result<List<Event>>?> = mutableEvents
     var selectedEvent = mutableStateOf(Event(null, null, null, null))
     var selectedItemIndex = mutableStateOf(100)
+
+    fun createSession(newSessionEntity: NewSessionEntity, token: String) {
+        viewModelScope.launch {
+
+            try {
+                val response = apiService.createSession(
+                    body = newSessionEntity,
+                    token = token,
+                )
+
+                if (response.isSuccessful) {
+                    val body = response.body()
+
+                    if (body != null) {
+                        succeeded.value = true
+                        runningSession = body
+                    }else{
+                        failed = "Body was empty"
+                    }
+
+                } else {
+                    failed = response.message()
+                }
+            } catch (e: java.lang.Exception) {
+            failed = e.message.toString()
+        }
+        }
+    }
 
 
     fun fetchSessionsByUserId(userId: String,token: String) {

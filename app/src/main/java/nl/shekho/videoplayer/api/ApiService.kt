@@ -33,9 +33,7 @@ interface ApiService {
     suspend fun createSession(
         @Body body: NewSessionEntity,
         @Header("Authorization") token: String?
-    ):Response<List<SessionEntity>>
-
-
+    ):Response<SessionEntity>
 
     @FormUrlEncoded
     @POST("GetSessionByCompanyId/{companyId}")
@@ -43,10 +41,4 @@ interface ApiService {
         @Path("companyId") companyId: Int,
     )
 
-    @FormUrlEncoded
-    @POST("CreateSession")
-    suspend fun createSession(
-        @Field("UserIds") userIds: List<String>,
-        @Field("CompanyId") companyId: String
-    ): Response<Session>
 }

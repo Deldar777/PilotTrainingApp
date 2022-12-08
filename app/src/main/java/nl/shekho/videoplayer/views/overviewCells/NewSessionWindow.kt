@@ -21,8 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.navigation.NavController
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.api.entities.NewSessionEntity
 import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.models.Role
 import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
@@ -30,6 +32,7 @@ import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
+import nl.shekho.videoplayer.views.navigation.Screens
 import java.time.LocalDateTime
 import kotlin.time.ExperimentalTime
 
@@ -37,7 +40,8 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun NewSessionWindow(
     accessViewModel: AccessViewModel,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    navController: NavController
 ) {
 
     //Feedback variables
@@ -46,6 +50,8 @@ fun NewSessionWindow(
     val emptyFields = stringResource(id = R.string.sessionEmptyFields)
     val sameParticipant = stringResource(id = R.string.sameParticipant)
     val noInternet = stringResource(id = R.string.noInternet)
+    val generalError = stringResource(id = R.string.generalError)
+    val sessionCreated = stringResource(id = R.string.sessionCreated)
 
     //session name text field
     var sessionName by remember { mutableStateOf("") }
@@ -285,21 +291,52 @@ fun NewSessionWindow(
                             .height(60.dp)
                             .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
                             .clickable {
-                                if(accessViewModel.isOnline()){
+//                                navController.navigate(Screens.Session.route)
+
+                                if (accessViewModel.isOnline()) {
                                     if (participant1 != "" && participant2 != "" && sessionName != "") {
 
-                                        if(participant1 != participant2){
+                                        if (participant1 != participant2) {
+                                            val instructorId = accessViewModel.loggedInUserId
+                                            val participant1Id = mappedUsers?.get(participant1)?.id
+                                            val participant2Id = mappedUsers?.get(participant2)?.id
+                                            val companyId = accessViewModel.companyId
+                                            var token = accessViewModel.encodedJwtToken
 
-                                            accessViewModel.participant1 = mappedUsers?.get(participant1)
-                                            accessViewModel.participant2 = mappedUsers?.get(participant2)
-                                        }else{
+                                            if (token.isNullOrEmpty() || instructorId.isNullOrEmpty() || participant1Id.isNullOrEmpty() || participant2Id.isNullOrEmpty() || companyId.isNullOrEmpty()) {
+                                                messageText = generalError
+
+                                            } else {
+                                                val newSessionEntity = NewSessionEntity(
+                                                    UserIds = listOf(
+                                                        instructorId,
+                                                        participant1Id,
+                                                        participant2Id
+                                                    ),
+                                                    CompanyId = companyId
+                                                )
+
+                                                sessionViewModel.createSession(newSessionEntity, token)
+
+                                                if(sessionViewModel.succeeded.value){
+                                                    messageColor = Color.Green
+                                                    messageText = sessionCreated
+
+                                                    sessionViewModel.fetchSessionsByUserId(instructorId, token)
+                                                }else{
+                                                    messageText = sessionViewModel.failed
+                                                }
+                                                accessViewModel.participant1 = mappedUsers.get(participant1)
+                                                accessViewModel.participant2 = mappedUsers.get(participant2)
+                                            }
+                                        } else {
                                             messageText = sameParticipant
                                         }
 
                                     } else {
                                         messageText = emptyFields
                                     }
-                                }else{
+                                } else {
                                     messageText = noInternet
                                 }
                             },
@@ -332,7 +369,9 @@ fun mapUsers(users: List<UserEntity>): MutableMap<String, UserEntity> {
     return mappedUsers
 }
 
-fun formatDate(date: LocalDateTime): String{
+fun formatDate(date: LocalDateTime): String {
     var formattedMinutes = String.format("%02d", date.minute)
-    return "Session - ${date.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${date.dayOfMonth}th - ${date.hour}:${formattedMinutes}"
+    return "Session - ${
+        date.dayOfWeek.toString().lowercase().subSequence(0, 3)
+    } ${date.dayOfMonth}th - ${date.hour}:${formattedMinutes}"
 }
