@@ -32,6 +32,7 @@ import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
+import nl.shekho.videoplayer.views.generalCells.Loading
 import nl.shekho.videoplayer.views.topbarCells.TopBarLogout
 import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
@@ -238,7 +239,11 @@ fun LoginBox(
                         )
                     }
                 }
-                FeedbackMessage(color = messageColor, text = messageText)
+                if (accessViewModel.loading) {
+                    Loading()
+                } else {
+                    FeedbackMessage(color = messageColor, text = messageText)
+                }
             }
         }
 

@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,7 +45,11 @@ fun OverviewView(
 
         Column {
             // Top bar
-            TopBarLogout(accessViewModel = accessViewModel, navController = navController)
+            TopBarLogout(
+                accessViewModel = accessViewModel,
+                navController = navController,
+                sessionViewModel = sessionViewModel
+            )
 
             // Side bar and new session and review
             SessionsAndReview(
@@ -61,6 +69,9 @@ fun SessionsAndReview(
     navController: NavController
 ) {
     val shape = RoundedCornerShape(20.dp)
+    var showNewSessionButton by remember {
+        mutableStateOf(accessViewModel.userIsInstructor)
+    }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -148,7 +159,7 @@ fun SessionsAndReview(
                         .weight(0.4f)
 
                 ) {
-                    if (accessViewModel.userIsInstructor.value) {
+                    if (showNewSessionButton) {
                         NewSessionButton(
                             sessionViewModel = sessionViewModel
                         )
@@ -167,7 +178,7 @@ fun SessionsAndReview(
             contentAlignment = Alignment.Center
         ) {
 
-            if (sessionViewModel.showNewSessionWindow.value && accessViewModel.userIsInstructor.value) {
+            if (sessionViewModel.showNewSessionWindow.value) {
                 NewSessionWindow(
                     accessViewModel = accessViewModel,
                     sessionViewModel = sessionViewModel,

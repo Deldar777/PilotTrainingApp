@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.entities.LoginEntity
@@ -26,6 +27,7 @@ class AccessViewModel @Inject constructor(
     //Response information
     var succeeded = mutableStateOf(false)
     var failed: String by mutableStateOf("")
+    var loading: Boolean by mutableStateOf(false)
 
     //Access information
     var loggedIn = mutableStateOf(false)
@@ -34,7 +36,7 @@ class AccessViewModel @Inject constructor(
 
     //Session information
     var sessionId: String? = ""
-    var userIsInstructor: MutableState<Boolean> = mutableStateOf(false)
+    var userIsInstructor: Boolean by mutableStateOf(false)
     var loggedInUserId: String? = ""
     var loggedInUser: UserEntity? by mutableStateOf(null)
     var participant1: UserEntity? by mutableStateOf(null)
@@ -44,8 +46,24 @@ class AccessViewModel @Inject constructor(
     var jwtExpired: Boolean? = false
     var listUsers: List<UserEntity>? = listOf()
 
+    fun resetSessionInformation(){
+        loggedIn.value = false
+        encodedJwtToken = null
+        decodedJwtToken = null
+        userIsInstructor = false
+        loggedInUser = null
+        participant1 = null
+        participant2 = null
+        userRole = null
+        companyId = null
+        jwtExpired = false
+        listUsers = null
+        save(SessionInformation.JWTTOKEN, "")
+    }
+
     fun logIn(username: String, password: String) {
         viewModelScope.launch {
+            loading = true
             try {
                 var userEntity = LoginEntity(username, password)
                 val response = apiService.login(userEntity)
@@ -65,6 +83,9 @@ class AccessViewModel @Inject constructor(
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
+
+            delay(3000)
+            loading = false
         }
     }
 
@@ -135,7 +156,7 @@ class AccessViewModel @Inject constructor(
                         .asString()
 
                 if (userRole == Role.INSTRUCTOR.type) {
-                    userIsInstructor.value = true
+                    userIsInstructor = true
                 }
 
                 getUsers()

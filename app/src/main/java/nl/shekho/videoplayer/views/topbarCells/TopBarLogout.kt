@@ -19,12 +19,16 @@ import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.navigation.Screens
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun TopBarLogout(
     accessViewModel: AccessViewModel,
-    navController: NavController
+    navController: NavController,
+    sessionViewModel: SessionViewModel
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -64,8 +68,8 @@ fun TopBarLogout(
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
                         modifier = Modifier.clickable {
-                            accessViewModel.loggedIn.value = false
-                            accessViewModel.save(SessionInformation.JWTTOKEN, "")
+                            accessViewModel.resetSessionInformation()
+                            sessionViewModel.resetViewWindowsValues()
                             navController.navigate(Screens.Login.route)
                         }
                     )

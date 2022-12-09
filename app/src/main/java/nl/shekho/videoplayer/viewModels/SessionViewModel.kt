@@ -56,6 +56,11 @@ class SessionViewModel @Inject constructor(
     var selectedEvent = mutableStateOf(Event(null, null, null, null))
     var selectedItemIndex = mutableStateOf(100)
 
+    fun resetViewWindowsValues(){
+        showNewSessionWindow.value = false
+        showReviewWindow.value = false
+    }
+
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {
         viewModelScope.launch {
 
