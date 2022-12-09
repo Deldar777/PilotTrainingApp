@@ -6,10 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.LoginView
-import nl.shekho.videoplayer.views.OverviewView
-import nl.shekho.videoplayer.views.SessionView
-import nl.shekho.videoplayer.views.SplashScreen
+import nl.shekho.videoplayer.views.*
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -34,21 +31,12 @@ fun SetupNavGraph(
         }
 
         composable(
-            route = Screens.Login.route
+            route = Screens.StartView.route
         ){
-            LoginView(
+            StartView(
                 navController = navController,
-                accessViewModel = accessViewModel
-            )
-        }
-
-        composable(
-            route = Screens.Overview.route
-        ){
-            OverviewView(
                 accessViewModel = accessViewModel,
-                sessionViewModel = sessionViewModel,
-                navController = navController
+                sessionViewModel = sessionViewModel
             )
         }
 

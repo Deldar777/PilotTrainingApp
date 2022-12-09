@@ -36,7 +36,7 @@ class AccessViewModel @Inject constructor(
 
     //Session information
     var sessionId: String? = ""
-    var userIsInstructor: Boolean by mutableStateOf(false)
+    var userIsInstructor = mutableStateOf(false)
     var loggedInUserId: String? = ""
     var loggedInUser: UserEntity? by mutableStateOf(null)
     var participant1: UserEntity? by mutableStateOf(null)
@@ -47,10 +47,10 @@ class AccessViewModel @Inject constructor(
     var listUsers: List<UserEntity>? = listOf()
 
     fun resetSessionInformation(){
+        userIsInstructor.value = false
         loggedIn.value = false
         encodedJwtToken = null
         decodedJwtToken = null
-        userIsInstructor = false
         loggedInUser = null
         participant1 = null
         participant2 = null
@@ -72,6 +72,7 @@ class AccessViewModel @Inject constructor(
                     val body = response.body()
 
                     if (body != null) {
+                        loggedIn.value = true
                         succeeded.value = true
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
                         encodedJwtToken = body.token
@@ -84,9 +85,12 @@ class AccessViewModel @Inject constructor(
                 failed = e.message.toString()
             }
 
-            delay(3000)
             loading = false
         }
+    }
+
+    private fun getUserByUserId() {
+
     }
 
     private fun getUsersByCompanyId() {
@@ -156,11 +160,18 @@ class AccessViewModel @Inject constructor(
                         .asString()
 
                 if (userRole == Role.INSTRUCTOR.type) {
-                    userIsInstructor = true
+                    userIsInstructor.value = true
+                    getUsers()
+                }else{
+                    getUser()
                 }
-
-                getUsers()
             }
+        }
+    }
+
+    private fun getUser(){
+        if(loggedInUserId != ""){
+            getUserByUserId()
         }
     }
 

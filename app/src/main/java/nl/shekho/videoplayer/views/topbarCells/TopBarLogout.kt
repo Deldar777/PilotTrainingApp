@@ -70,7 +70,6 @@ fun TopBarLogout(
                         modifier = Modifier.clickable {
                             accessViewModel.resetSessionInformation()
                             sessionViewModel.resetViewWindowsValues()
-                            navController.navigate(Screens.Login.route)
                         }
                     )
                 }

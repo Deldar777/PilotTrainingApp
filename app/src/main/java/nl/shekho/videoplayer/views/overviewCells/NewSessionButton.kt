@@ -35,6 +35,7 @@ fun NewSessionButton(sessionViewModel: SessionViewModel){
             .clickable {
                 sessionViewModel.showNewSessionWindow.value = true
                 sessionViewModel.showReviewWindow.value = false
+                sessionViewModel.showEmptyReview.value = false
                 sessionViewModel.selectedSessionIndex.value = 1000
             },
         contentAlignment = Alignment.Center

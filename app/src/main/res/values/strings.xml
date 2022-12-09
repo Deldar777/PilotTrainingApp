@@ -43,5 +43,7 @@
     <string name="sameParticipant">Please choose two different participants</string>
     <string name="sessionDate">Session date</string>
     <string name="sessionCreated">The session has been created successfully</string>
+    <string name="instructorEmptyReview">Select a session to review or make a new session</string>
+    <string name="pilotEmptyReview">Select a session to review</string>
 
 </resources>

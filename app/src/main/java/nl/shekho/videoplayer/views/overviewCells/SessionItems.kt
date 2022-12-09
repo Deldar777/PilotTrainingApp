@@ -58,6 +58,7 @@ fun SessionItems(
                                         sessionViewModel.selectedSessionIndex.value = index
                                         sessionViewModel.selectedSession.value = session
                                         sessionViewModel.showNewSessionWindow.value = false
+                                        sessionViewModel.showEmptyReview.value = false
                                         sessionViewModel.showReviewWindow.value = true
 
                                     }

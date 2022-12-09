@@ -49,10 +49,3 @@ fun ReviewWindow(session: Session) {
     }
 }
 
-
-private fun formatDate(date: String): String {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-    val parsedDate = LocalDateTime.parse(date, formatter);
-
-    return "${parsedDate.dayOfWeek.toString().lowercase().subSequence(0,3)} ${parsedDate.dayOfMonth}th"
-}

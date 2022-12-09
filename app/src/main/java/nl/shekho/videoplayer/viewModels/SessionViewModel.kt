@@ -41,6 +41,7 @@ class SessionViewModel @Inject constructor(
     //New session and review windows
     var showNewSessionWindow: MutableState<Boolean> = mutableStateOf(false)
     var showReviewWindow: MutableState<Boolean> = mutableStateOf(false)
+    var showEmptyReview: MutableState<Boolean> = mutableStateOf(true)
 
     //Sessions
     private val mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
@@ -59,6 +60,7 @@ class SessionViewModel @Inject constructor(
     fun resetViewWindowsValues(){
         showNewSessionWindow.value = false
         showReviewWindow.value = false
+        showEmptyReview.value = true
     }
 
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {

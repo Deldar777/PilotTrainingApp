@@ -83,7 +83,6 @@ fun SessionItem(
 
 }
 
-@SuppressLint("SimpleDateFormat")
 private fun formatDate(date: String): String? {
     var stringDate = date
     stringDate = stringDate.replaceAfter(delimiter = ".", "")

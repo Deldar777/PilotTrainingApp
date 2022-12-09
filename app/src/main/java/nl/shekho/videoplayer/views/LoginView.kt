@@ -38,33 +38,9 @@ import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
+
 @Composable
 fun LoginView(
-    accessViewModel: AccessViewModel,
-    navController: NavController
-) {
-
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .fillMaxSize()
-    ) {
-        Column {
-            // Top bar
-            TopBarLogin()
-            // Login block
-            LoginBox(
-                accessViewModel = accessViewModel,
-                navController = navController
-            )
-        }
-    }
-}
-
-
-@Composable
-fun LoginBox(
     accessViewModel: AccessViewModel,
     navController: NavController
 ) {
@@ -82,170 +58,169 @@ fun LoginBox(
     val loginFailed = stringResource(id = R.string.loginFailed)
     val loginSucceeded = stringResource(id = R.string.loginSucceeded)
 
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)
-            .padding(top = 80.dp)
-    ) {
-        Box(
+    Column {
+        // Top bar
+        TopBarLogin()
+        // Login block
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .width(width = 700.dp)
-                .height(height = 500.dp)
-                .clip(shape = RoundedCornerShape(20.dp))
-                .background(
-                    color = MaterialTheme.colors.onBackground
-                )
+                .fillMaxWidth()
+                .padding(15.dp)
+                .padding(top = 80.dp)
         ) {
-            Column {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 40.dp),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.vrefSolutions),
-                        fontFamily = FontFamily.Monospace,
-                        textAlign = TextAlign.Center,
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = deepBlue,
-                        modifier = Modifier.padding(top = 60.dp)
+            Box(
+                modifier = Modifier
+                    .width(width = 700.dp)
+                    .height(height = 500.dp)
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .background(
+                        color = MaterialTheme.colors.onBackground
                     )
-                }
+            ) {
+                Column {
 
-
-                // Username textField
-                OutlinedTextField(
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White,
-                        textColor = MaterialTheme.colors.primaryVariant
-                    ),
-                    shape = RoundedCornerShape(20.dp),
-                    value = username,
-                    onValueChange = { username = it },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.primaryVariant,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.usernameExample),
-                            color = textSecondaryDarkMode
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Default.Email,
-                            contentDescription = stringResource(id = R.string.username),
-                            tint = textSecondaryDarkMode
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp, top = 10.dp, start = 40.dp, end = 40.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                )
-
-                // Password textField
-                OutlinedTextField(
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White,
-                        textColor = MaterialTheme.colors.primaryVariant
-                    ),
-                    shape = RoundedCornerShape(20.dp),
-                    value = password,
-                    onValueChange = { password = it },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.primaryVariant,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.enterPassword),
-                            color = textSecondaryDarkMode
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Default.Info,
-                            contentDescription = stringResource(id = R.string.password),
-                            tint = textSecondaryDarkMode
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp, top = 10.dp, start = 40.dp, end = 40.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                )
-
-                // Login button
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp)
-                ) {
-
-                    OutlinedButton(
-                        onClick = {
-                            if (accessViewModel.isOnline()) {
-                                if (username != "" && password != "") {
-
-                                    accessViewModel.logIn(username, password)
-
-                                    if (accessViewModel.succeeded.value) {
-                                        accessViewModel.loggedIn.value = true
-                                        messageText = loginSucceeded
-                                        messageColor = Color.Green
-
-                                        navController.navigate(Screens.Overview.route)
-                                    } else {
-                                        messageText = loginFailed
-                                    }
-
-                                } else {
-                                    messageText = userNameOrPasswordEmpty
-                                }
-                            } else {
-                                messageText = notInternet
-                            }
-                        },
-                        shape = RoundedCornerShape(20.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = deepBlue,
-                            contentColor = MaterialTheme.colors.primary
-                        ),
+                    Row(
                         modifier = Modifier
-                            .width(300.dp)
+                            .fillMaxWidth()
+                            .padding(bottom = 40.dp),
+                        horizontalArrangement = Arrangement.Center,
                     ) {
                         Text(
-                            text = stringResource(id = R.string.login),
+                            text = stringResource(id = R.string.vrefSolutions),
                             fontFamily = FontFamily.Monospace,
                             textAlign = TextAlign.Center,
-                            fontSize = 24.sp,
+                            fontSize = 40.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .clip(RoundedCornerShape(10.dp))
+                            color = deepBlue,
+                            modifier = Modifier.padding(top = 60.dp)
                         )
                     }
-                }
-                if (accessViewModel.loading) {
-                    Loading()
-                } else {
-                    FeedbackMessage(color = messageColor, text = messageText)
+
+
+                    // Username textField
+                    OutlinedTextField(
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White,
+                            textColor = MaterialTheme.colors.primaryVariant
+                        ),
+                        shape = RoundedCornerShape(20.dp),
+                        value = username,
+                        onValueChange = { username = it },
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colors.primaryVariant,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.usernameExample),
+                                color = textSecondaryDarkMode
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Email,
+                                contentDescription = stringResource(id = R.string.username),
+                                tint = textSecondaryDarkMode
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp, top = 10.dp, start = 40.dp, end = 40.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                    )
+
+                    // Password textField
+                    OutlinedTextField(
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White,
+                            textColor = MaterialTheme.colors.primaryVariant
+                        ),
+                        shape = RoundedCornerShape(20.dp),
+                        value = password,
+                        onValueChange = { password = it },
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colors.primaryVariant,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.enterPassword),
+                                color = textSecondaryDarkMode
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Info,
+                                contentDescription = stringResource(id = R.string.password),
+                                tint = textSecondaryDarkMode
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp, top = 10.dp, start = 40.dp, end = 40.dp)
+                            .clip(RoundedCornerShape(10.dp)),
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    )
+
+                    // Login button
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp)
+                    ) {
+
+                        OutlinedButton(
+                            onClick = {
+                                if (accessViewModel.isOnline()) {
+                                    if (username != "" && password != "") {
+
+                                        accessViewModel.logIn(username, password)
+
+                                        if (!accessViewModel.succeeded.value) {
+                                            messageText = loginFailed
+                                        }
+
+                                    } else {
+                                        messageText = userNameOrPasswordEmpty
+                                    }
+                                } else {
+                                    messageText = notInternet
+                                }
+                            },
+                            shape = RoundedCornerShape(20.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = deepBlue,
+                                contentColor = MaterialTheme.colors.primary
+                            ),
+                            modifier = Modifier
+                                .width(300.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.login),
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = TextAlign.Center,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.primary,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                            )
+                        }
+                    }
+                    if (accessViewModel.loading) {
+                        Loading()
+                    } else {
+                        FeedbackMessage(color = messageColor, text = messageText)
+                    }
                 }
             }
-        }
 
+        }
     }
 }
