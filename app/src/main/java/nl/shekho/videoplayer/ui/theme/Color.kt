@@ -10,7 +10,7 @@ val Teal200 = Color(0xFF03DAC5)
 
 //Pilot training custom colors
 val textSecondaryDarkMode = Color(0xFFAFAFB5)
-val selectedItemLightBlue = Color(0xFF007AFF)
+val lightBlue = Color(0xFF007AFF)
 val tabBackground = Color(0xFF555555)
 val deepBlue = Color(0xFF1313F6)
 val lightPurple = Color(0xFFBE38F3)

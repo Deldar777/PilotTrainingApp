@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 
@@ -31,7 +31,7 @@ fun NewSessionButton(sessionViewModel: SessionViewModel){
         modifier = Modifier
             .width(260.dp)
             .height(60.dp)
-            .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
+            .background(lightBlue, shape = RoundedCornerShape(20.dp))
             .clickable {
                 sessionViewModel.showNewSessionWindow.value = true
                 sessionViewModel.showReviewWindow.value = false

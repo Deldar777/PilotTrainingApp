@@ -14,14 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.ui.theme.tabBackground
 
 @Composable
 fun ParticipantTabs(
     tabName: String,
     isSelected: Boolean = false,
-    activeHighlightColor: Color = selectedItemLightBlue,
+    activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = tabBackground,
     onItemClick: () -> Unit
 ){

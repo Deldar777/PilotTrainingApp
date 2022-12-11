@@ -42,7 +42,11 @@ class MainActivity : ComponentActivity() {
                 navController = rememberNavController()
 
 
-                SessionView(sessionViewModel = sessionViewModel, navController = navController)
+                SessionView(
+                    sessionViewModel = sessionViewModel,
+                    navController = navController,
+                    accessViewModel = accessViewModel
+                )
 //                //Check if the user has token stored
 //                ReadSessionInformation()
 //

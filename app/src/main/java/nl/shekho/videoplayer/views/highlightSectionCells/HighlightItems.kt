@@ -1,33 +1,26 @@
 package nl.shekho.videoplayer.views.highlightSectionCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.models.Event
-import nl.shekho.videoplayer.models.EventType
 import nl.shekho.videoplayer.ui.theme.highlightItemGray
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.views.generalCells.NoInternetView
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
-import nl.shekho.videoplayer.views.overviewCells.SessionItem
 
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightItems(
-    activeHighlightColor: Color = selectedItemLightBlue,
+    activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = highlightItemGray,
     sessionViewModel: SessionViewModel
 ) {

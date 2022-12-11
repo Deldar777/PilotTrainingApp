@@ -45,7 +45,8 @@ fun SetupNavGraph(
         ){
             SessionView(
                 sessionViewModel = sessionViewModel,
-                navController = navController
+                navController = navController,
+                accessViewModel = accessViewModel
             )
         }
 

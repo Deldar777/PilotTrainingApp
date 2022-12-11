@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.ui.theme.customDarkGray
 import nl.shekho.videoplayer.ui.theme.deepBlue
-import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.R
 
 @Composable

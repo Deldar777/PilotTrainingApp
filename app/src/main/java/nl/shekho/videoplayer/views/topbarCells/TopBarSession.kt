@@ -1,9 +1,5 @@
-@file:OptIn(ExperimentalAnimationApi::class)
-
 package nl.shekho.videoplayer.views.topbarCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,23 +8,23 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.customDarkGray
-import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.views.topbarCells.*
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun TopBarLogin(
+fun TopBarSession(
     modifier: Modifier = Modifier,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    accessViewModel: AccessViewModel
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -36,40 +32,35 @@ fun TopBarLogin(
         modifier = modifier
             .fillMaxWidth()
             .background(customDarkGray)
+            .height(75.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.vref_logo),
+            painter = painterResource(id = R.drawable.vref_logo_short_version),
             contentDescription = "",
             modifier = Modifier
-                .width(200.dp)
+                .size(50.dp)
         )
 
         Row(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(customDarkGray)
-                .padding(15.dp)
-
         ) {
             Box(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(0.75f)
                     .background(customDarkGray),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "First section",
-                    color = MaterialTheme.colors.primary,
-                    fontWeight = FontWeight.Bold
-                )
+                SessionTopBarFirstSection(accessViewModel = accessViewModel)
             }
 
             // Second section
             Box(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1.5f)
                     .background(customDarkGray),
                 contentAlignment = Alignment.Center
             ) {
@@ -86,7 +77,7 @@ fun TopBarLogin(
 
             Box(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(0.75f)
                     .background(customDarkGray),
                 contentAlignment = Alignment.Center
             ) {

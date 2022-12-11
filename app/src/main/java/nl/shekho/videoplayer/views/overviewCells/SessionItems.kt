@@ -3,29 +3,21 @@ package nl.shekho.videoplayer.views.overviewCells
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.generalCells.NoInternetView
 import kotlin.time.ExperimentalTime
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import nl.shekho.videoplayer.views.generalCells.ShowFeedback
-import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SessionItems(
-    activeHighlightColor: Color = selectedItemLightBlue,
+    activeHighlightColor: Color = lightBlue,
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel
 ) {

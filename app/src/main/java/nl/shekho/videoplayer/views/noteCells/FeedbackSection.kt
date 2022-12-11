@@ -1,7 +1,5 @@
 package nl.shekho.videoplayer.views.noteCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -10,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import nl.shekho.videoplayer.ui.theme.feedbackBlockBackground
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
@@ -20,7 +18,7 @@ import kotlin.time.ExperimentalTime
 fun FeedbackSection(
     sessionViewModel: SessionViewModel,
     initialSelectedParticipantTab: Int = 1,
-    activeHighlightColor: Color = selectedItemLightBlue,
+    activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = tabBackground,
     ) {
 

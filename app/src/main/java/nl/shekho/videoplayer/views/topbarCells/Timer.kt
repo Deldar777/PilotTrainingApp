@@ -38,7 +38,6 @@ fun Timer(
         Row(
             modifier = Modifier
                 .background(color = Color.Gray.copy(alpha = 0.4f), shape = RoundedCornerShape(20))
-                .padding(4.dp)
         ) {
             val numberTransitionSpec: AnimatedContentScope<String>.() -> ContentTransform = {
                 slideInVertically() + fadeIn() with slideOutVertically() + fadeOut() using SizeTransform(false)
@@ -59,11 +58,8 @@ fun Timer(
             }
         }
 
-        Spacer(modifier = Modifier.weight(0.5f))
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(1.dp),
-        ) {
+        Row{
             AnimatedContent(targetState = isPlaying) {
                 if (it) {
                     IconButton(onClick = onPause) {
@@ -84,8 +80,6 @@ fun Timer(
 
                 }
             }
-
-
             IconButton(onClick = onStop) {
                 Icon(
                     imageVector = Icons.Filled.Stop,

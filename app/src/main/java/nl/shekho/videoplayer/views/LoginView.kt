@@ -33,10 +33,7 @@ import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
 import nl.shekho.videoplayer.views.generalCells.Loading
-import nl.shekho.videoplayer.views.topbarCells.TopBarLogout
-import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
-import kotlin.time.ExperimentalTime
 
 
 @Composable

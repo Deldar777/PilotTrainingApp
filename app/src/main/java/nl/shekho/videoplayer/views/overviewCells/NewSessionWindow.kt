@@ -27,12 +27,11 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
 import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.models.Role
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
-import nl.shekho.videoplayer.views.navigation.Screens
 import java.time.LocalDateTime
 import kotlin.time.ExperimentalTime
 
@@ -289,7 +288,7 @@ fun NewSessionWindow(
                             .padding(top = 40.dp)
                             .width(260.dp)
                             .height(60.dp)
-                            .background(selectedItemLightBlue, shape = RoundedCornerShape(20.dp))
+                            .background(lightBlue, shape = RoundedCornerShape(20.dp))
                             .clickable {
 //                                navController.navigate(Screens.Session.route)
 

@@ -2,7 +2,6 @@ package nl.shekho.videoplayer.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -10,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)

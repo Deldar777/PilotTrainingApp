@@ -1,7 +1,5 @@
 package nl.shekho.videoplayer.views.highlightSectionCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,10 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import nl.shekho.videoplayer.models.Event
-import nl.shekho.videoplayer.models.EventType
-import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.ui.theme.*
-import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.time.ExperimentalTime
@@ -36,7 +31,7 @@ import kotlin.time.ExperimentalTime
 fun HighlightItem(
     event: Event,
     isSelected: Boolean = false,
-    activeHighlightColor: Color = selectedItemLightBlue,
+    activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = highlightItemGray,
     onItemClick: () -> Unit,
 ) {

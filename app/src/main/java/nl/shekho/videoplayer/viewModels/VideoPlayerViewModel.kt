@@ -40,7 +40,7 @@ class VideoPlayerViewModel @Inject constructor(
 
     init {
         player.prepare()
-        addMockVideo()
+//        addMockVideo()
     }
 
     fun addVideoUri(uri: Uri){

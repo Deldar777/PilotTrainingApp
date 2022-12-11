@@ -10,17 +10,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.ui.theme.*
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.highlightSectionCells.*
 import nl.shekho.videoplayer.views.noteCells.FeedbackAndVideoSection
 import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
+import nl.shekho.videoplayer.views.topbarCells.TopBarSession
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SessionView(
     sessionViewModel: SessionViewModel,
-    navController: NavController
+    navController: NavController,
+    accessViewModel: AccessViewModel
 ) {
     Box(
         modifier = Modifier
@@ -30,7 +33,7 @@ fun SessionView(
         Column {
 
             // Top bar
-            TopBarLogin(sessionViewModel = sessionViewModel)
+            TopBarSession(sessionViewModel = sessionViewModel, accessViewModel = accessViewModel)
 
             // Middle part of the screen (highlight - video and add feedback block)
             HighlightAndVideo(

@@ -46,6 +46,16 @@ class AccessViewModel @Inject constructor(
     var jwtExpired: Boolean? = false
     var listUsers: List<UserEntity>? = listOf()
 
+    init {
+        getParticipantMockData()
+    }
+    private fun getParticipantMockData(){
+        val participant1Mock = UserEntity("1","", firstname = "Daan","Daan","","",Role.PILOT.type,"" )
+        val participant2Mock = UserEntity("1","", firstname = "Lisa","Lisa","","",Role.PILOT.type,"" )
+        participant1 = participant1Mock
+        participant2 = participant2Mock
+    }
+
     fun resetSessionInformation() {
         userIsInstructor.value = false
         loggedIn.value = false

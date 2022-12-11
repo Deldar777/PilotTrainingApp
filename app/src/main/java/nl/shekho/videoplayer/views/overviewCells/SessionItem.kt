@@ -1,6 +1,5 @@
 package nl.shekho.videoplayer.views.overviewCells
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,17 +21,16 @@ import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.ui.theme.highlightDivider
-import nl.shekho.videoplayer.ui.theme.selectedItemLightBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import java.time.*
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 
 @Composable
 fun SessionItem(
     session: Session,
     isSelected: Boolean = false,
-    activeHighlightColor: Color = selectedItemLightBlue,
+    activeHighlightColor: Color = lightBlue,
     onItemClick: () -> Unit
 ) {
     Row(
