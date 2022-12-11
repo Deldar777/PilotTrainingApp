@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.customDarkGray
 import nl.shekho.videoplayer.viewModels.AccessViewModel
@@ -24,7 +25,8 @@ import nl.shekho.videoplayer.views.topbarCells.*
 fun TopBarSession(
     modifier: Modifier = Modifier,
     sessionViewModel: SessionViewModel,
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    navController: NavController
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -78,15 +80,14 @@ fun TopBarSession(
             Box(
                 modifier = Modifier
                     .weight(0.75f)
-                    .background(customDarkGray),
-                contentAlignment = Alignment.Center
+                    .background(customDarkGray)
+                    .padding(end = 10.dp),
+                contentAlignment = Alignment.CenterEnd
             ) {
-                Text(
-                    text = "Third section",
-                    color = MaterialTheme.colors.primary,
-                    fontWeight = FontWeight.Bold
+                SessionTopBarThirdSection(
+                    sessionViewModel = sessionViewModel,
+                    navController = navController
                 )
-
             }
         }
     }

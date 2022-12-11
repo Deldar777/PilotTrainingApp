@@ -33,7 +33,11 @@ fun SessionView(
         Column {
 
             // Top bar
-            TopBarSession(sessionViewModel = sessionViewModel, accessViewModel = accessViewModel)
+            TopBarSession(
+                sessionViewModel = sessionViewModel,
+                accessViewModel = accessViewModel,
+                navController = navController
+            )
 
             // Middle part of the screen (highlight - video and add feedback block)
             HighlightAndVideo(

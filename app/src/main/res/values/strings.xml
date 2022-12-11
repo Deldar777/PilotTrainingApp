@@ -46,5 +46,6 @@
     <string name="instructorEmptyReview">Select a session to review or make a new session</string>
     <string name="pilotEmptyReview">Select a session to review</string>
     <string name="participants">Participants</string>
+    <string name="endSession">End session</string>
 
 </resources>
