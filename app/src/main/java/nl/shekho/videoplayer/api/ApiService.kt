@@ -1,10 +1,7 @@
 package nl.shekho.videoplayer.api
 
+import nl.shekho.videoplayer.api.entities.*
 import nl.shekho.videoplayer.models.JwtToken
-import nl.shekho.videoplayer.api.entities.LoginEntity
-import nl.shekho.videoplayer.api.entities.NewSessionEntity
-import nl.shekho.videoplayer.api.entities.SessionEntity
-import nl.shekho.videoplayer.api.entities.UsersEntity
 import nl.shekho.videoplayer.models.Session
 import retrofit2.Response
 import retrofit2.http.*
@@ -22,6 +19,12 @@ interface ApiService {
         @Path("CompanyId") companyId: String,
         @Header("Authorization") token: String?
     ):Response<UsersEntity>
+
+    @GET("GetUserByID/{UserId}")
+    suspend fun getUserById(
+        @Path("UserId") userId: String,
+        @Header("Authorization") token: String?
+    ):Response<OneUserEntity>
 
     @GET("GetSessionByUserId/{UserId}")
     suspend fun getSessionsByUserId(

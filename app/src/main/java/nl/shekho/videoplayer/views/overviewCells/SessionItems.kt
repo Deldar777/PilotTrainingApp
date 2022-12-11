@@ -30,7 +30,7 @@ fun SessionItems(
     accessViewModel: AccessViewModel
 ) {
 
-    //Get session that the logged in user has participated in
+    //Get sessions that the logged in user has participated in
     val sessions by sessionViewModel.sessions.collectAsState()
 
     Box(
@@ -40,52 +40,52 @@ fun SessionItems(
             .padding(10.dp)
     ) {
 
-        if (sessionViewModel.isOnline()) {
-            sessionViewModel.fetchSessionsByUserId(userId = accessViewModel.loggedInUserId!!, token = accessViewModel.encodedJwtToken!!)
-
-            sessions?.let { sessions ->
-                sessions
-                    .onSuccess {
-                        if (it.isNotEmpty()) {
-                            LazyColumn {
-                                itemsIndexed(items = it) { index, session ->
-
-                                    SessionItem(
-                                        session = session,
-                                        isSelected = index == sessionViewModel.selectedSessionIndex.value,
-                                        activeHighlightColor = activeHighlightColor
-                                    ) {
-                                        sessionViewModel.selectedSessionIndex.value = index
-                                        sessionViewModel.selectedSession.value = session
-                                        sessionViewModel.showNewSessionWindow.value = false
-                                        sessionViewModel.showEmptyReview.value = false
-                                        sessionViewModel.showReviewWindow.value = true
-
-                                    }
-                                }
-                            }
-
-                        } else {
-                            ShowFeedback(
-                                text = stringResource(id = R.string.noSessionsYet),
-                                color = MaterialTheme.colors.primary
-                            )
-                        }
-                    }
-                    .onFailure {
-                        ShowFeedback(
-                            text = stringResource(id = R.string.generalError),
-                            color = Color.Red
-                        )
-                    }
-
-            } ?: run {
-                CircularProgressIndicator(color = Color.White)
-            }
-
-        } else {
-            NoInternetView()
-        }
+//        if (sessionViewModel.isOnline()) {
+//            sessionViewModel.fetchSessionsByUserId(userId = accessViewModel.loggedInUserId!!, token = accessViewModel.encodedJwtToken!!)
+//
+//            sessions?.let { sessions ->
+//                sessions
+//                    .onSuccess {
+//                        if (it.isNotEmpty()) {
+//                            LazyColumn {
+//                                itemsIndexed(items = it) { index, session ->
+//
+//                                    SessionItem(
+//                                        session = session,
+//                                        isSelected = index == sessionViewModel.selectedSessionIndex.value,
+//                                        activeHighlightColor = activeHighlightColor
+//                                    ) {
+//                                        sessionViewModel.selectedSessionIndex.value = index
+//                                        sessionViewModel.selectedSession.value = session
+//                                        sessionViewModel.showNewSessionWindow.value = false
+//                                        sessionViewModel.showEmptyReview.value = false
+//                                        sessionViewModel.showReviewWindow.value = true
+//
+//                                    }
+//                                }
+//                            }
+//
+//                        } else {
+//                            ShowFeedback(
+//                                text = stringResource(id = R.string.noSessionsYet),
+//                                color = MaterialTheme.colors.primary
+//                            )
+//                        }
+//                    }
+//                    .onFailure {
+//                        ShowFeedback(
+//                            text = stringResource(id = R.string.generalError),
+//                            color = Color.Red
+//                        )
+//                    }
+//
+//            } ?: run {
+//                CircularProgressIndicator(color = Color.White)
+//            }
+//
+//        } else {
+//            NoInternetView()
+//        }
     }
 
 }

@@ -18,6 +18,7 @@ import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.LoginView
 import nl.shekho.videoplayer.views.OverviewView
+import nl.shekho.videoplayer.views.SessionView
 import nl.shekho.videoplayer.views.navigation.SetupNavGraph
 import kotlin.time.ExperimentalTime
 
@@ -38,20 +39,23 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PilotTrainingTheme {
-                //Check if the user has token stored
-                ReadSessionInformation()
-
-                //Based on the token determine which screen should be shown next
-                accessViewModel.loggedIn.value =
-                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
-                        ?: false)
-
                 navController = rememberNavController()
-                SetupNavGraph(
-                    navController = navController,
-                    accessViewModel = accessViewModel,
-                    sessionViewModel = sessionViewModel
-                )
+
+
+                SessionView(sessionViewModel = sessionViewModel, navController = navController)
+//                //Check if the user has token stored
+//                ReadSessionInformation()
+//
+//                //Based on the token determine which screen should be shown next
+//                accessViewModel.loggedIn.value =
+//                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
+//                        ?: false)
+//
+//                SetupNavGraph(
+//                    navController = navController,
+//                    accessViewModel = accessViewModel,
+//                    sessionViewModel = sessionViewModel
+//                )
             }
         }
     }
@@ -59,7 +63,7 @@ class MainActivity : ComponentActivity() {
     private fun ReadSessionInformation(
     ) {
         lifecycleScope.launchWhenResumed {
-             accessViewModel.readJWT()
+            accessViewModel.readJWT()
         }
     }
 }

@@ -35,7 +35,6 @@ fun OverviewView(
     showNewSessionButton: Boolean
 ) {
     var isInstructor by remember { mutableStateOf(accessViewModel.userIsInstructor) }
-
     val shape = RoundedCornerShape(20.dp)
 
     Column {
