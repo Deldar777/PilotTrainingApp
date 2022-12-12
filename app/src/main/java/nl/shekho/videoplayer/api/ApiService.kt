@@ -46,13 +46,11 @@ interface ApiService {
 
 
     // Asset endpoints
-
     // 1-Create empty asset
     @POST("/CreateEmptyAsset")
     suspend fun createEmptyAsset(
         @Path("companyId") companyId: Int,
     )
-
 
     // Live streaming endpoints
 

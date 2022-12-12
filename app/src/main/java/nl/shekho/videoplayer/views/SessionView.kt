@@ -25,6 +25,7 @@ fun SessionView(
     navController: NavController,
     accessViewModel: AccessViewModel
 ) {
+
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)

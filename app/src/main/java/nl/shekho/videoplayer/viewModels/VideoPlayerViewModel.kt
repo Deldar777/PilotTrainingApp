@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
+import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.models.LiveStreamingSetup
 import nl.shekho.videoplayer.models.VideoItem
 import javax.inject.Inject
@@ -34,7 +35,8 @@ class VideoPlayerViewModel @Inject constructor(
 
     //Response information
     var succeeded = mutableStateOf(false)
-    var failed: String by mutableStateOf("")
+    var failed: Boolean by mutableStateOf(false)
+    var failedMessage: String by mutableStateOf("")
     var loading: Boolean by mutableStateOf(false)
 
     //Progress bar
@@ -44,6 +46,10 @@ class VideoPlayerViewModel @Inject constructor(
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
     init {
+        startLiveStreamingProcess()
+    }
+
+    private fun startLiveStreamingProcess(){
         viewModelScope.launch {
             loading = true
             step1CreateEmptyAsset()
@@ -59,12 +65,16 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
     suspend fun step1CreateEmptyAsset() {
+
+        val token = SessionInformation.sessionToken
         delay(3000)
         currentStep.value = LiveStreamingSetup.CREATEASSET.type
         accomplishedSteps.value = 1
     }
     suspend fun step2PublishAsset() {
         delay(3000)
+        failed = true
+        loading = false
         currentStep.value = LiveStreamingSetup.PUBLISHASSET.type
         accomplishedSteps.value = 2
     }
