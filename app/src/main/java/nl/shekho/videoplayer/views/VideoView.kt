@@ -67,7 +67,7 @@ fun VideoView(){
                     .fillMaxSize()
             ){
                 Text(
-                    text = stringResource(id = R.string.generalError),
+                    text = videoPlayerViewModel.failedMessage,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Red

@@ -1,8 +1,8 @@
 package nl.shekho.videoplayer.api
 
 import nl.shekho.videoplayer.api.entities.*
+import nl.shekho.videoplayer.models.Asset
 import nl.shekho.videoplayer.models.JwtToken
-import nl.shekho.videoplayer.models.Session
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -32,26 +32,12 @@ interface ApiService {
         @Header("Authorization") token: String?
     ): Response<List<SessionEntity>>
 
+
     @POST("CreateSession")
     suspend fun createSession(
         @Body body: NewSessionEntity,
         @Header("Authorization") token: String?
     ):Response<SessionEntity>
 
-    @FormUrlEncoded
-    @POST("GetSessionByCompanyId/{companyId}")
-    suspend fun getSessionsByCompanyId(
-        @Path("companyId") companyId: Int,
-    )
-
-
-    // Asset endpoints
-    // 1-Create empty asset
-    @POST("/CreateEmptyAsset")
-    suspend fun createEmptyAsset(
-        @Path("companyId") companyId: Int,
-    )
-
-    // Live streaming endpoints
 
 }

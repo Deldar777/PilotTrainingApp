@@ -1,7 +1,6 @@
 package nl.shekho.videoplayer.viewModels
 
 import android.net.Uri
-import android.system.Os.link
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,18 +10,23 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hilt_aggregated_deps._nl_shekho_videoplayer_viewModels_VideoPlayerViewModel_HiltModules_BindsModule
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import nl.shekho.videoplayer.api.ApiService
+import nl.shekho.videoplayer.api.entities.AssetRequestBodyEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
-import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.models.LiveStreamingSetup
 import nl.shekho.videoplayer.models.VideoItem
 import javax.inject.Inject
+import nl.shekho.videoplayer.PilotTrainingApp.Companion.globalToken
+import nl.shekho.videoplayer.api.ApiMediaService
+import nl.shekho.videoplayer.api.entities.SessionEntity
+import nl.shekho.videoplayer.models.Asset
+import java.util.UUID
 
 
 @HiltViewModel
@@ -30,7 +34,8 @@ class VideoPlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     val player: Player,
     private val metaDataReader: MetaDataReader,
-    private val connectivityChecker: ConnectivityChecker
+    private val connectivityChecker: ConnectivityChecker,
+    private val apiMediaService: ApiMediaService
 ) : ViewModel() {
 
     //Response information
@@ -43,6 +48,10 @@ class VideoPlayerViewModel @Inject constructor(
     var accomplishedSteps = mutableStateOf(0)
     var currentStep = mutableStateOf("")
 
+    //Asset and live streaming variables
+    var asset: Asset? by mutableStateOf(null)
+
+
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
     init {
@@ -50,6 +59,7 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
     private fun startLiveStreamingProcess(){
+        player.prepare()
         viewModelScope.launch {
             loading = true
             step1CreateEmptyAsset()
@@ -66,11 +76,37 @@ class VideoPlayerViewModel @Inject constructor(
 
     suspend fun step1CreateEmptyAsset() {
 
-        val token = SessionInformation.sessionToken
+        if(!isOnline()){
+            terminateLiveStreamingProcess("You have no internet connection! connect to the internet and relaunch the app!")
+        }else{
+            try {
+
+                val response = apiMediaService.createEmptyAsset(
+                    body = AssetRequestBodyEntity(
+                        ContainerName = "container",
+                        assetName = "instructor"
+                    ),
+                    token = "Bearer $globalToken"
+                )
+                print(response)
+
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    currentStep.value = LiveStreamingSetup.CREATEASSET.type
+                    accomplishedSteps.value = 1
+                    asset = body
+
+                } else {
+                    terminateLiveStreamingProcess("Something went wrong!")
+                }
+            } catch (e: java.lang.Exception) {
+                terminateLiveStreamingProcess("Something went wrong!")
+            }
+        }
         delay(3000)
-        currentStep.value = LiveStreamingSetup.CREATEASSET.type
-        accomplishedSteps.value = 1
     }
+
+
     suspend fun step2PublishAsset() {
         delay(3000)
         failed = true
@@ -104,6 +140,12 @@ class VideoPlayerViewModel @Inject constructor(
         accomplishedSteps.value = 7
     }
 
+    private fun terminateLiveStreamingProcess(message: String){
+        failed = true
+        loading = false
+        failedMessage = message
+    }
+
 
     val videoItems = videoUris.map { uris ->
         uris.map { uri ->
@@ -114,11 +156,6 @@ class VideoPlayerViewModel @Inject constructor(
             )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    init {
-        player.prepare()
-        addMockVideo()
-    }
 
     fun addVideoUri(uri: Uri) {
         savedStateHandle["videoUris"] = videoUris.value + uri
@@ -144,5 +181,9 @@ class VideoPlayerViewModel @Inject constructor(
         playVideo(videoURI)
         player.prepare()
         player.playWhenReady = true
+    }
+
+    fun isOnline(): Boolean {
+        return connectivityChecker.isOnline()
     }
 }

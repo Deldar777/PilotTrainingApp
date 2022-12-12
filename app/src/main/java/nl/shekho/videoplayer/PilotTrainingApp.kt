@@ -4,4 +4,8 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class PilotTrainingApp: Application()
+class PilotTrainingApp: Application(){
+    companion object {
+        var globalToken = ""
+    }
+}
