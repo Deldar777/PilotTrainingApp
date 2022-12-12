@@ -17,9 +17,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.ui.PlayerView
 import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
+import nl.shekho.videoplayer.views.generalCells.LiveStreamingProgressBar
 
 @Composable
 fun VideoView(){
+
     val videoPlayerViewModel = hiltViewModel<VideoPlayerViewModel>()
     val videoItems by videoPlayerViewModel.videoItems.collectAsState()
     val selectVideoLauncher = rememberLauncherForActivityResult(
@@ -46,33 +48,39 @@ fun VideoView(){
         }
     }
 
-    Column(
-        modifier = Modifier
-            .background(color = Color.Transparent, RoundedCornerShape(20.dp))
-    ) {
-
-        AndroidView(
-            modifier = Modifier
-                .clip(shape = RoundedCornerShape(20.dp))
-                .fillMaxSize(),
-            factory = { context ->
-                PlayerView(context).also {
-                    it.player = videoPlayerViewModel.player
-                }
-            },
-            update = {
-                when (lifeCycle) {
-                    Lifecycle.Event.ON_PAUSE -> {
-                        it.onPause()
-                        it.player?.pause()
-                    }
-
-                    Lifecycle.Event.ON_RESUME -> {
-                        it.onResume()
-                    }
-                    else -> Unit
-                }
-            },
+    if(videoPlayerViewModel.loading){
+        LiveStreamingProgressBar(
+            videoPlayerViewModel = videoPlayerViewModel
         )
+    }else{
+        Column(
+            modifier = Modifier
+                .background(color = Color.Transparent, RoundedCornerShape(20.dp))
+        ) {
+
+            AndroidView(
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .fillMaxSize(),
+                factory = { context ->
+                    PlayerView(context).also {
+                        it.player = videoPlayerViewModel.player
+                    }
+                },
+                update = {
+                    when (lifeCycle) {
+                        Lifecycle.Event.ON_PAUSE -> {
+                            it.onPause()
+                            it.player?.pause()
+                        }
+
+                        Lifecycle.Event.ON_RESUME -> {
+                            it.onResume()
+                        }
+                        else -> Unit
+                    }
+                },
+            )
+        }
     }
 }

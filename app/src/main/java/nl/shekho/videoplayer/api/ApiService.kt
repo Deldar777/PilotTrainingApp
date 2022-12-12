@@ -44,4 +44,16 @@ interface ApiService {
         @Path("companyId") companyId: Int,
     )
 
+
+    // Asset endpoints
+
+    // 1-Create empty asset
+    @POST("/CreateEmptyAsset")
+    suspend fun createEmptyAsset(
+        @Path("companyId") companyId: Int,
+    )
+
+
+    // Live streaming endpoints
+
 }
