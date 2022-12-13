@@ -48,5 +48,7 @@
     <string name="pilotEmptyReview">Select a session to review</string>
     <string name="participants">Participants</string>
     <string name="endSession">End session</string>
+    <string name="enterIngestUrl">Please enter the provided URL into the streaming platform (OBS) and then press continue</string>
+    <string name="continueProcess">continue</string>
 
 </resources>

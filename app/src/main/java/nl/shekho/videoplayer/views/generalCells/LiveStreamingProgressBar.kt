@@ -4,12 +4,8 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -27,6 +26,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
+import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.ui.theme.lightPurple
+import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
+import nl.shekho.videoplayer.views.overviewCells.formatDate
+import java.time.LocalDateTime
 
 @Composable
 fun LiveStreamingProgressBar(
@@ -52,6 +56,11 @@ fun LiveStreamingProgressBar(
     //current step name
     var stepDescription by remember {
         mutableStateOf(videoPlayerViewModel.currentStep)
+    }
+
+    //Show the generated ingest url
+    var showIngestUrl by remember {
+        mutableStateOf(videoPlayerViewModel.showIngestUrl)
     }
 
     var allowedIndicatorValue by remember {
@@ -118,6 +127,63 @@ fun LiveStreamingProgressBar(
             stepDescriptionColor = stepDescriptionColor,
             stepDescriptionFontSize = stepDescriptionFontSize
         )
+
+        if (videoPlayerViewModel.showIngestUrl) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.enterIngestUrl),
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Button(
+                    onClick = {
+                        videoPlayerViewModel.showIngestUrl = false
+                        videoPlayerViewModel.continueStreamingProcess()
+
+                    }, colors = ButtonDefaults.textButtonColors(
+                        backgroundColor = lightPurple
+                    )
+                ) {
+                    Text(stringResource(id = R.string.continueProcess))
+                }
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                videoPlayerViewModel.liveEvent?.let {
+                    OutlinedTextField(
+                        value = it.IngestURL,
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White,
+                            textColor = MaterialTheme.colors.primaryVariant
+                        ),
+                        onValueChange = { },
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colors.primaryVariant,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+            }
+        }
+
     }
 }
 
