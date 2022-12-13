@@ -128,6 +128,20 @@ fun LiveStreamingProgressBar(
             stepDescriptionFontSize = stepDescriptionFontSize
         )
 
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+        ){
+            videoPlayerViewModel.runningStreaming?.let {
+                Text(
+                    text = it.PreviewURL,
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
         if (videoPlayerViewModel.showIngestUrl) {
             Row(
                 horizontalArrangement = Arrangement.Center,

@@ -1,6 +1,7 @@
 package nl.shekho.videoplayer.viewModels
 
 import android.net.Uri
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,6 +25,8 @@ import javax.inject.Inject
 import nl.shekho.videoplayer.api.ApiMediaService
 import nl.shekho.videoplayer.api.entities.*
 import nl.shekho.videoplayer.models.Asset
+import nl.shekho.videoplayer.models.LiveStreamingStatus
+import java.time.LocalDateTime
 
 
 @HiltViewModel
@@ -34,6 +37,9 @@ class VideoPlayerViewModel @Inject constructor(
     private val connectivityChecker: ConnectivityChecker,
     private val apiMediaService: ApiMediaService
 ) : ViewModel() {
+
+    var token =
+        "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJST0xFX0lOU1RSVUNUT1IiLCJDb21wYW55SWQiOiJkNjg0ZGFlMy03NDJiLTQ4ZDQtYjVjMC0wYmJkMDZiYzVjM2EiLCJVc2VySWQiOiI0ZmI4ZGRjNy02NzFhLTQ0ZWMtODBhYy0zMzE2NGE1NjYxODIiLCJuYmYiOjE2NzA5NjYwNDQsImV4cCI6MTY3MTA1MjQ0NCwiaWF0IjoxNjcwOTY2MDQ0LCJpc3MiOiJodHRwczovL3ZyZWZzb2x1dGlvbnNkZXYwMDEuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpLyIsImF1ZCI6Imh0dHBzOi8vdnJlZnNvbHV0aW9uc2RldjAwMS5henVyZXdlYnNpdGVzLm5ldC9hcGkvIn0.7-AWoUw1a9dp2_MnhyVyJNlSVz-MGbFOuvgBFbZSmXA"
 
     //Response information
     var succeeded = mutableStateOf(false)
@@ -46,10 +52,13 @@ class VideoPlayerViewModel @Inject constructor(
     var currentStep = mutableStateOf("")
 
     //Asset and live streaming variables
+    val streamingEndpoints: MutableState<List<StreamingEntity>> = mutableStateOf(ArrayList())
     var asset: Asset? by mutableStateOf(null)
     var liveEventName: String by mutableStateOf("")
     var liveEvent: LiveEventResponseEntity? by mutableStateOf(null)
     var showIngestUrl: Boolean by mutableStateOf(false)
+    var liveEventStatus: LiveEventUpdateEntity? by mutableStateOf(null)
+    var runningStreaming: StreamingEntity? by mutableStateOf(null)
 
 
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
@@ -69,8 +78,8 @@ class VideoPlayerViewModel @Inject constructor(
 
     fun continueStreamingProcess() {
         viewModelScope.launch {
-            step5UpdateLiveEvent()
-            step6FetchLiveStreamingUrl()
+            step5UpdateLiveEvent("false")
+            step6FetchStreamingEndpoints()
             step7StartStreamingPlatform()
             loading = false
         }
@@ -78,113 +87,86 @@ class VideoPlayerViewModel @Inject constructor(
 
     suspend fun step1CreateEmptyAsset() {
 
-//        if (!isOnline()) {
-//            terminateLiveStreamingProcess("You have no internet connection! connect to the internet and relaunch the app!")
-//        } else {
-//            try {
-//                currentStep.value = LiveStreamingSetup.CREATEASSET.type
-//                accomplishedSteps.value = 1
-//
-//                val response = apiMediaService.createEmptyAsset(
-//                    body = AssetRequestBodyEntity(
-//                        ContainerName = "container",
-//                        assetName = "instructor"
-//                    ),
-//                    token = "Bearer $globalToken"
-//                )
-//
-//                if (response.isSuccessful && response.body() != null) {
-//                    asset = response.body()
-//                } else {
-//                    terminateLiveStreamingProcess("Step 1 went wrong!")
-//                }
-//            } catch (e: java.lang.Exception) {
-//                terminateLiveStreamingProcess("Something went wrong!")
-//            }
-//        }
+        if (!isOnline()) {
+            terminateLiveStreamingProcess("You have no internet connection! connect to the internet and relaunch the app!")
+        } else {
+            try {
 
-        currentStep.value = LiveStreamingSetup.CREATEASSET.type
-        accomplishedSteps.value = 1
+                currentStep.value = LiveStreamingSetup.CREATEASSET.type
+                accomplishedSteps.value = 1
 
-        var fetchedAsset = Asset(
-            assetName = "instructor-8a67afeb-e472",
-            assetId = "cff0bd1d-b02c-420b-85b9-425b750400a7",
-            container = "asset-cff0bd1d-b02c-420b-85b9-425b750400a7"
-        )
-        asset = fetchedAsset
-        delay(3000)
+                val response = apiMediaService.createEmptyAsset(
+                    body = AssetRequestBodyEntity(
+                        assetName = "instructor"
+                    ),
+                    token = "Bearer $token"
+                )
+
+                if (response.isSuccessful && response.body() != null) {
+                    asset = response.body()
+                } else {
+                    terminateLiveStreamingProcess("Step 1 went wrong!")
+                }
+            } catch (e: java.lang.Exception) {
+                terminateLiveStreamingProcess("Something went wrong!")
+            }
+        }
+        delay(5000)
     }
 
 
     suspend fun step2PublishAsset() {
-//        try {
-//            currentStep.value = LiveStreamingSetup.PUBLISHASSET.type
-//            accomplishedSteps.value = 2
-//
-//            val response = apiMediaService.publishAsset(
-//                body = AssetRequestPublishedEntity(
-//                    AssetName = asset!!.assetName
-//                ),
-//                token = "Bearer $globalToken"
-//            )
-//
-//            if (!response.isSuccessful) {
-//                terminateLiveStreamingProcess("Step 2 went wrong!")
-//            }
-//        } catch (e: java.lang.Exception) {
-//            terminateLiveStreamingProcess("Something went wrong!")
-//        }
+        try {
+            currentStep.value = LiveStreamingSetup.PUBLISHASSET.type
+            accomplishedSteps.value = 2
 
-        currentStep.value = LiveStreamingSetup.PUBLISHASSET.type
-        accomplishedSteps.value = 2
-        delay(3000)
+            val response = apiMediaService.publishAsset(
+                body = AssetRequestPublishedEntity(
+                    AssetName = asset!!.assetName
+                ),
+                token = "Bearer $token"
+            )
+
+            if (!response.isSuccessful) {
+                terminateLiveStreamingProcess("Step 2 went wrong!")
+            }
+        } catch (e: java.lang.Exception) {
+            terminateLiveStreamingProcess("Something went wrong!")
+        }
+        delay(5000)
     }
 
     suspend fun step3CreateLiveEvent() {
 
-//        try {
-//            currentStep.value = LiveStreamingSetup.CREATELIVEEVENT.type
-//            accomplishedSteps.value = 3
-//
-//            var liveEventNameCreated = "instructorLiveEvent${LocalDateTime.now().dayOfWeek}"
-//            liveEventName = liveEventNameCreated
-//            val response = apiMediaService.createLiveEvent(
-//                body = LiveEventRequestEntity(
-//                    liveEventName = liveEventName,
-//                    LiveOutputAssetName = asset!!.assetName
-//                ),
-//                token = "Bearer $globalToken"
-//            )
-//
-//            if (response.isSuccessful && response.body() != null) {
-//                liveEvent = response.body()
-//                showIngestUrl = true
-//            } else {
-//                terminateLiveStreamingProcess("Step 3 went wrong!")
-//            }
-//        } catch (e: java.lang.Exception) {
-//            terminateLiveStreamingProcess("Something went wrong!")
-//        }
+        try {
+            currentStep.value = LiveStreamingSetup.CREATELIVEEVENT.type
+            accomplishedSteps.value = 3
 
-        currentStep.value = LiveStreamingSetup.CREATELIVEEVENT.type
-        accomplishedSteps.value = 3
-        delay(3000)
+            val liveEventNameCreated = "instructorLiveEvent${LocalDateTime.now().dayOfWeek}"
+            liveEventName = liveEventNameCreated
+            val response = apiMediaService.createLiveEvent(
+                body = LiveEventRequestEntity(
+                    liveEventName = liveEventName,
+                    LiveOutputAssetName = asset!!.assetName
+                ),
+                token = "Bearer $token"
+            )
 
-
-        var fetchedLiveEvent = LiveEventResponseEntity(
-            IngestURL = "rtmp://instrcutorliveevent-msvrefsolutions002-euwe.channel.media.azure.net:1935/live/acf7b6ef8a37425fb8fc51c2d6a5a86a"
-        )
-        liveEvent = fetchedLiveEvent
-        liveEventName = "instructorLiveEvent"
-
-
-        currentStep.value = LiveStreamingSetup.SETUPSTREAMINGPLATFORM.type
-        accomplishedSteps.value = 4
-        showIngestUrl = true
+            if (response.isSuccessful && response.body() != null) {
+                liveEvent = response.body()
+                showIngestUrl = true
+                currentStep.value = LiveStreamingSetup.SETUPSTREAMINGPLATFORM.type
+                accomplishedSteps.value = 4
+            } else {
+                terminateLiveStreamingProcess("Step 3 went wrong!")
+            }
+        } catch (e: java.lang.Exception) {
+            terminateLiveStreamingProcess("Something went wrong!")
+        }
     }
 
 
-    suspend fun step5UpdateLiveEvent() {
+    suspend fun step5UpdateLiveEvent(stopLiveBool: String) {
 
         try {
             currentStep.value = LiveStreamingSetup.STARTLIVEEVENT.type
@@ -193,11 +175,17 @@ class VideoPlayerViewModel @Inject constructor(
             val response = apiMediaService.updateLiveEvent(
                 body = LiveEventUpdateEntity(
                     LiveEventName = liveEventName,
+                    StopLiveBool = stopLiveBool
                 ),
-                token = "Bearer $globalToken"
+                token = "Bearer $token"
             )
-
             if (response.isSuccessful && response.body() != null) {
+                if (response.body()!!.StopLiveBool == LiveStreamingStatus.RUNNING.type) {
+                    liveEventStatus = response.body()
+                }else{
+                    terminateLiveStreamingProcess("Can't start the live streaming!")
+                }
+
             } else {
                 terminateLiveStreamingProcess("Step 5 went wrong!")
             }
@@ -208,10 +196,26 @@ class VideoPlayerViewModel @Inject constructor(
 
     }
 
-    suspend fun step6FetchLiveStreamingUrl() {
+    suspend fun step6FetchStreamingEndpoints() {
+
+        try {
+            currentStep.value = LiveStreamingSetup.FETCHLIVESTREAMINGURL.type
+            accomplishedSteps.value = 6
+
+            val response = apiMediaService.fetchStreamingEndpoints(
+                token = "Bearer $token"
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                streamingEndpoints.value = response.body()!!
+                runningStreaming = response.body()!!.firstOrNull { it.StreamName == liveEventName}
+            } else {
+                terminateLiveStreamingProcess("Step 6 went wrong!")
+            }
+        } catch (e: java.lang.Exception) {
+            terminateLiveStreamingProcess("Something went wrong!")
+        }
         delay(3000)
-        currentStep.value = LiveStreamingSetup.FETCHLIVESTREAMINGURL.type
-        accomplishedSteps.value = 6
     }
 
     suspend fun step7StartStreamingPlatform() {

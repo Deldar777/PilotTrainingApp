@@ -39,5 +39,4 @@ interface ApiService {
         @Header("Authorization") token: String?
     ):Response<SessionEntity>
 
-
 }

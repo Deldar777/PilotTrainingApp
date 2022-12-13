@@ -11,14 +11,14 @@ interface ApiMediaService {
     // Asset ive streaming endpoints
 
 
-//    @Headers(
-//        "Accept-Encoding: gzip",
-//        "Accept: application/json",
-//        "Content-Type: text/plain; charset=utf-8",
-//        "Transfer-Encoding: chunked"
-//    )
+
 
     // 1-Create empty asset
+    @Headers(
+        "Content-Type: application/json; charset=utf-8",
+        "Transfer-Encoding: chunked",
+        "Vary: Accept-Encoding"
+    )
     @POST("CreateEmptyAsset")
     suspend fun createEmptyAsset(
         @Header("Authorization") token: String?,
@@ -44,5 +44,11 @@ interface ApiMediaService {
     suspend fun updateLiveEvent(
         @Header("Authorization") token: String?,
         @Body body: LiveEventUpdateEntity,
-    ):Response<LiveEventResponseEntity>
+    ):Response<LiveEventUpdateEntity>
+
+    // 5-Update live event
+    @POST("ListStreamingEndpoints")
+    suspend fun fetchStreamingEndpoints(
+        @Header("Authorization") token: String?,
+    ):Response<List<StreamingEntity>>
 }
