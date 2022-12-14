@@ -42,7 +42,8 @@ fun SessionView(
 
             // Middle part of the screen (highlight - video and add feedback block)
             HighlightAndVideo(
-                sessionViewModel = sessionViewModel
+                sessionViewModel = sessionViewModel,
+                accessViewModel = accessViewModel
             )
         }
     }
@@ -52,7 +53,8 @@ fun SessionView(
 @OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightAndVideo(
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    accessViewModel: AccessViewModel
 ) {
     val shape = RoundedCornerShape(20.dp)
 
@@ -88,7 +90,8 @@ fun HighlightAndVideo(
         ) {
             //Feedback and video section
             FeedbackAndVideoSection(
-                sessionViewModel = sessionViewModel
+                sessionViewModel = sessionViewModel,
+                accessViewModel = accessViewModel
             )
         }
     }

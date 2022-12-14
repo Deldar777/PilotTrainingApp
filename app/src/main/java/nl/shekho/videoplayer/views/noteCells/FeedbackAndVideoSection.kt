@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.VideoView
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
@@ -18,7 +19,8 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 @Composable
 fun FeedbackAndVideoSection(
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    accessViewModel: AccessViewModel
 ){
     val shape = RoundedCornerShape(20.dp)
     Column(
@@ -37,7 +39,7 @@ fun FeedbackAndVideoSection(
             contentAlignment = Alignment.Center
         ) {
 
-            VideoView()
+            VideoView(accessViewModel = accessViewModel)
         }
 
         //Feedback section

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.entities.LoginEntity
@@ -29,6 +30,9 @@ class AccessViewModel @Inject constructor(
     var failed: String by mutableStateOf("")
     var loading: Boolean by mutableStateOf(false)
 
+    //overview screen
+    var showOverviewScreen: MutableState<Boolean> = mutableStateOf(false)
+
     //Access information
     var loggedIn = mutableStateOf(false)
     var encodedJwtToken: String? by mutableStateOf("")
@@ -49,6 +53,11 @@ class AccessViewModel @Inject constructor(
     init {
         getParticipantMockData()
     }
+
+    fun showOverviewScreen(showOverview: Boolean){
+        showOverviewScreen.value = showOverview
+    }
+
     private fun getParticipantMockData(){
         val participant1Mock = UserEntity("1","", firstname = "Daan","Daan","","",Role.PILOT.type,"" )
         val participant2Mock = UserEntity("1","", firstname = "Lisa","Lisa","","",Role.PILOT.type,"" )
@@ -79,15 +88,17 @@ class AccessViewModel @Inject constructor(
                 val response = apiService.login(userEntity)
 
                 if (response.isSuccessful) {
+                    succeeded.value = true
                     val body = response.body()
-
                     if (body != null) {
                         loggedIn.value = true
-                        succeeded.value = true
+
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
                         encodedJwtToken = body.token
                         globalToken = body.token
                         decodeJWT()
+
+                        delay(2000)
                     }
 
                 } else {

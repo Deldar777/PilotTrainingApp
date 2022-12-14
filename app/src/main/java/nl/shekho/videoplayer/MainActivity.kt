@@ -16,8 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import nl.shekho.videoplayer.ui.theme.pilotTrainingThemes.PilotTrainingTheme
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.LoginView
-import nl.shekho.videoplayer.views.OverviewView
 import nl.shekho.videoplayer.views.SessionView
 import nl.shekho.videoplayer.views.navigation.SetupNavGraph
 import kotlin.time.ExperimentalTime
@@ -41,7 +39,6 @@ class MainActivity : ComponentActivity() {
             PilotTrainingTheme {
                 navController = rememberNavController()
 
-
                 //Check if the user has token stored
                 ReadSessionInformation()
 
@@ -50,13 +47,11 @@ class MainActivity : ComponentActivity() {
                     accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
                         ?: false)
 
-
                 SessionView(
                     sessionViewModel = sessionViewModel,
                     navController = navController,
                     accessViewModel = accessViewModel
                 )
-
 //                SetupNavGraph(
 //                    navController = navController,
 //                    accessViewModel = accessViewModel,

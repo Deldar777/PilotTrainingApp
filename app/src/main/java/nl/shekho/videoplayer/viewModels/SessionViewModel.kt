@@ -10,13 +10,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.SessionMapper
-import nl.shekho.videoplayer.api.entities.LoginEntity
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
 import nl.shekho.videoplayer.api.entities.SessionEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
-import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.models.*
-import nl.shekho.videoplayer.views.navigation.Screens
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
@@ -62,6 +59,7 @@ class SessionViewModel @Inject constructor(
         showReviewWindow.value = false
         showEmptyReview.value = true
     }
+
 
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {
         viewModelScope.launch {

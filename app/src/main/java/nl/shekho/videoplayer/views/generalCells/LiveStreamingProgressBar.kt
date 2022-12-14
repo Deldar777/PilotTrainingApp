@@ -29,11 +29,13 @@ import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.lightPurple
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.overviewCells.formatDate
 import java.time.LocalDateTime
 
 @Composable
 fun LiveStreamingProgressBar(
+    accessViewModel: AccessViewModel,
     videoPlayerViewModel: VideoPlayerViewModel,
     canvasSize: Dp = 300.dp,
     maxIndicatorValue: Int = 7,
@@ -132,7 +134,7 @@ fun LiveStreamingProgressBar(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-        ){
+        ) {
             videoPlayerViewModel.runningStreaming?.let {
                 Text(
                     text = it.PreviewURL,
@@ -164,7 +166,11 @@ fun LiveStreamingProgressBar(
                 Button(
                     onClick = {
                         videoPlayerViewModel.showIngestUrl = false
-                        videoPlayerViewModel.continueStreamingProcess()
+                        accessViewModel.encodedJwtToken?.let {
+                            videoPlayerViewModel.continueStreamingProcess(
+                                it
+                            )
+                        }
 
                     }, colors = ButtonDefaults.textButtonColors(
                         backgroundColor = lightPurple

@@ -26,19 +26,17 @@ fun StartView(
             .background(MaterialTheme.colors.background)
             .fillMaxSize()
     ) {
-        if (showOverview.value) {
+        if (!accessViewModel.loggedIn.value) {
+            LoginView(
+                accessViewModel = accessViewModel,
+                navController = navController
+            )
+        } else {
             OverviewView(
                 accessViewModel = accessViewModel,
                 sessionViewModel = sessionViewModel,
                 navController = navController,
                 showNewSessionButton = showNewSessionButton.value
-            )
-
-        } else {
-
-            LoginView(
-                accessViewModel = accessViewModel,
-                navController = navController
             )
         }
     }

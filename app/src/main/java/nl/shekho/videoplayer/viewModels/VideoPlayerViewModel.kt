@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import nl.shekho.videoplayer.PilotTrainingApp.Companion.globalToken
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
 import nl.shekho.videoplayer.models.LiveStreamingSetup
@@ -38,14 +37,11 @@ class VideoPlayerViewModel @Inject constructor(
     private val apiMediaService: ApiMediaService
 ) : ViewModel() {
 
-    var token =
-        "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJST0xFX0lOU1RSVUNUT1IiLCJDb21wYW55SWQiOiJkNjg0ZGFlMy03NDJiLTQ4ZDQtYjVjMC0wYmJkMDZiYzVjM2EiLCJVc2VySWQiOiI0ZmI4ZGRjNy02NzFhLTQ0ZWMtODBhYy0zMzE2NGE1NjYxODIiLCJuYmYiOjE2NzA5NjYwNDQsImV4cCI6MTY3MTA1MjQ0NCwiaWF0IjoxNjcwOTY2MDQ0LCJpc3MiOiJodHRwczovL3ZyZWZzb2x1dGlvbnNkZXYwMDEuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpLyIsImF1ZCI6Imh0dHBzOi8vdnJlZnNvbHV0aW9uc2RldjAwMS5henVyZXdlYnNpdGVzLm5ldC9hcGkvIn0.7-AWoUw1a9dp2_MnhyVyJNlSVz-MGbFOuvgBFbZSmXA"
-
     //Response information
     var succeeded = mutableStateOf(false)
     var failed: Boolean by mutableStateOf(false)
     var failedMessage: String by mutableStateOf("")
-    var loading: Boolean by mutableStateOf(false)
+    var loading: Boolean by mutableStateOf(true)
 
     //Progress bar
     var accomplishedSteps = mutableStateOf(0)
@@ -63,29 +59,31 @@ class VideoPlayerViewModel @Inject constructor(
 
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
+    var token =
+        "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJST0xFX0lOU1RSVUNUT1IiLCJDb21wYW55SWQiOiJkNjg0ZGFlMy03NDJiLTQ4ZDQtYjVjMC0wYmJkMDZiYzVjM2EiLCJVc2VySWQiOiI0ZmI4ZGRjNy02NzFhLTQ0ZWMtODBhYy0zMzE2NGE1NjYxODIiLCJuYmYiOjE2NzEwMjQ0MzUsImV4cCI6MTY3MTExMDgzNSwiaWF0IjoxNjcxMDI0NDM1LCJpc3MiOiJodHRwczovL3ZyZWZzb2x1dGlvbnNkZXYwMDEuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpLyIsImF1ZCI6Imh0dHBzOi8vdnJlZnNvbHV0aW9uc2RldjAwMS5henVyZXdlYnNpdGVzLm5ldC9hcGkvIn0.LMxs9b1tBUuLiYmtGkGml35uNqFICbQrl8WFSeYJbJc"
+
     init {
-        startLiveStreamingProcess()
+        startLiveStreamingProcess(token)
     }
 
-    private fun startLiveStreamingProcess() {
+    private fun startLiveStreamingProcess(token: String) {
         viewModelScope.launch {
-            loading = true
-            step1CreateEmptyAsset()
-            step2PublishAsset()
-            step3CreateLiveEvent()
+            step1CreateEmptyAsset(token)
+            step2PublishAsset(token)
+            step3CreateLiveEvent(token)
         }
     }
 
-    fun continueStreamingProcess() {
+    fun continueStreamingProcess(token: String) {
         viewModelScope.launch {
-            step5UpdateLiveEvent("false")
-            step6FetchStreamingEndpoints()
+            step5UpdateLiveEvent("false", token)
+            step6FetchStreamingEndpoints(token)
             step7StartStreamingPlatform()
             loading = false
         }
     }
 
-    suspend fun step1CreateEmptyAsset() {
+    private suspend fun step1CreateEmptyAsset(token: String) {
 
         if (!isOnline()) {
             terminateLiveStreamingProcess("You have no internet connection! connect to the internet and relaunch the app!")
@@ -105,17 +103,19 @@ class VideoPlayerViewModel @Inject constructor(
                 if (response.isSuccessful && response.body() != null) {
                     asset = response.body()
                 } else {
-                    terminateLiveStreamingProcess("Step 1 went wrong!")
+                    terminateLiveStreamingProcess("Step 1 went wrong: ${response.errorBody()}")
                 }
             } catch (e: java.lang.Exception) {
-                terminateLiveStreamingProcess("Something went wrong!")
+                terminateLiveStreamingProcess("Something went wrong in step 1: ${e.message}")
             }
         }
-        delay(5000)
+//        currentStep.value = LiveStreamingSetup.CREATEASSET.type
+//        accomplishedSteps.value = 1
+        delay(3000)
     }
 
 
-    suspend fun step2PublishAsset() {
+    private suspend fun step2PublishAsset(token: String) {
         try {
             currentStep.value = LiveStreamingSetup.PUBLISHASSET.type
             accomplishedSteps.value = 2
@@ -128,21 +128,25 @@ class VideoPlayerViewModel @Inject constructor(
             )
 
             if (!response.isSuccessful) {
-                terminateLiveStreamingProcess("Step 2 went wrong!")
+                terminateLiveStreamingProcess("Step 2 went wrong: ${response.errorBody()}")
             }
         } catch (e: java.lang.Exception) {
-            terminateLiveStreamingProcess("Something went wrong!")
+            terminateLiveStreamingProcess("Something went wrong in step 2: ${e.message}")
         }
-        delay(5000)
+
+//        currentStep.value = LiveStreamingSetup.PUBLISHASSET.type
+//        accomplishedSteps.value = 2
+        delay(3000)
     }
 
-    suspend fun step3CreateLiveEvent() {
+    private suspend fun step3CreateLiveEvent(token: String) {
 
         try {
             currentStep.value = LiveStreamingSetup.CREATELIVEEVENT.type
             accomplishedSteps.value = 3
 
-            val liveEventNameCreated = "instructorLiveEvent${LocalDateTime.now().dayOfWeek}"
+            val liveEventNameCreated =
+                "instructorLiveEvent${LocalDateTime.now().dayOfWeek}${LocalDateTime.now().hour}-${LocalDateTime.now().minute}"
             liveEventName = liveEventNameCreated
             val response = apiMediaService.createLiveEvent(
                 body = LiveEventRequestEntity(
@@ -152,21 +156,27 @@ class VideoPlayerViewModel @Inject constructor(
                 token = "Bearer $token"
             )
 
+            delay(3000)
+
             if (response.isSuccessful && response.body() != null) {
                 liveEvent = response.body()
-                showIngestUrl = true
-                currentStep.value = LiveStreamingSetup.SETUPSTREAMINGPLATFORM.type
-                accomplishedSteps.value = 4
+                step5SetupLiveStreamingPlatform()
             } else {
-                terminateLiveStreamingProcess("Step 3 went wrong!")
+                terminateLiveStreamingProcess("Step 3 went wrong: ${response.errorBody()}")
             }
         } catch (e: java.lang.Exception) {
-            terminateLiveStreamingProcess("Something went wrong!")
+            terminateLiveStreamingProcess("Something went wrong in step 3: ${e.message}")
         }
     }
 
+    private fun step5SetupLiveStreamingPlatform(){
+        currentStep.value = LiveStreamingSetup.SETUPSTREAMINGPLATFORM.type
+        accomplishedSteps.value = 4
+        showIngestUrl = true
+    }
 
-    suspend fun step5UpdateLiveEvent(stopLiveBool: String) {
+
+    private suspend fun step5UpdateLiveEvent(stopLiveBool: String, token: String) {
 
         try {
             currentStep.value = LiveStreamingSetup.STARTLIVEEVENT.type
@@ -179,24 +189,24 @@ class VideoPlayerViewModel @Inject constructor(
                 ),
                 token = "Bearer $token"
             )
+
             if (response.isSuccessful && response.body() != null) {
                 if (response.body()!!.StopLiveBool == LiveStreamingStatus.RUNNING.type) {
                     liveEventStatus = response.body()
-                }else{
+                } else {
                     terminateLiveStreamingProcess("Can't start the live streaming!")
                 }
 
             } else {
-                terminateLiveStreamingProcess("Step 5 went wrong!")
+                terminateLiveStreamingProcess("Step 5 went wrong: ${response.errorBody()}")
             }
         } catch (e: java.lang.Exception) {
-            terminateLiveStreamingProcess("Something went wrong!")
+            terminateLiveStreamingProcess("Something went wrong 5: ${e.message}")
         }
         delay(3000)
-
     }
 
-    suspend fun step6FetchStreamingEndpoints() {
+    private suspend fun step6FetchStreamingEndpoints(token: String) {
 
         try {
             currentStep.value = LiveStreamingSetup.FETCHLIVESTREAMINGURL.type
@@ -208,17 +218,17 @@ class VideoPlayerViewModel @Inject constructor(
 
             if (response.isSuccessful && response.body() != null) {
                 streamingEndpoints.value = response.body()!!
-                runningStreaming = response.body()!!.firstOrNull { it.StreamName == liveEventName}
+                runningStreaming = response.body()!!.firstOrNull { it.StreamName == liveEventName }
             } else {
-                terminateLiveStreamingProcess("Step 6 went wrong!")
+                terminateLiveStreamingProcess("Step 6 went wrong: ${response.errorBody()}")
             }
         } catch (e: java.lang.Exception) {
-            terminateLiveStreamingProcess("Something went wrong!")
+            terminateLiveStreamingProcess("Something went wrong 6: ${e.message}")
         }
         delay(3000)
     }
 
-    suspend fun step7StartStreamingPlatform() {
+    private suspend fun step7StartStreamingPlatform() {
         delay(3000)
         currentStep.value = LiveStreamingSetup.STARTSTREAMINGPLATFORM.type
         accomplishedSteps.value = 7
@@ -239,7 +249,7 @@ class VideoPlayerViewModel @Inject constructor(
                 name = metaDataReader.getMetaDataFromUri(uri)?.fileName ?: "No name"
             )
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(3000), emptyList())
 
     fun addVideoUri(uri: Uri) {
         savedStateHandle["videoUris"] = videoUris.value + uri

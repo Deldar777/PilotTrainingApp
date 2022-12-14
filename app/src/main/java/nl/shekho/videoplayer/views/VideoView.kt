@@ -24,9 +24,12 @@ import androidx.media3.ui.PlayerView
 import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.generalCells.LiveStreamingProgressBar
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 
 @Composable
-fun VideoView(){
+fun VideoView(
+    accessViewModel: AccessViewModel
+){
 
     val videoPlayerViewModel = hiltViewModel<VideoPlayerViewModel>()
     val videoItems by videoPlayerViewModel.videoItems.collectAsState()
@@ -56,7 +59,8 @@ fun VideoView(){
 
     if(videoPlayerViewModel.loading){
         LiveStreamingProgressBar(
-            videoPlayerViewModel = videoPlayerViewModel
+            videoPlayerViewModel = videoPlayerViewModel,
+            accessViewModel = accessViewModel
         )
     }else{
 
