@@ -50,5 +50,10 @@
     <string name="endSession">End session</string>
     <string name="enterIngestUrl">Please enter the provided URL into the streaming platform (OBS) and then press continue</string>
     <string name="continueProcess">continue</string>
+    <string name="session">Session</string>
+    <string name="role">Role</string>
+    <string name="instructor">Instructor</string>
+    <string name="name">Name</string>
+    <string name="review">Review</string>
 
 </resources>

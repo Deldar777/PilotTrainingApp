@@ -92,13 +92,10 @@ class AccessViewModel @Inject constructor(
                     val body = response.body()
                     if (body != null) {
                         loggedIn.value = true
-
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
                         encodedJwtToken = body.token
                         globalToken = body.token
                         decodeJWT()
-
-                        delay(2000)
                     }
 
                 } else {

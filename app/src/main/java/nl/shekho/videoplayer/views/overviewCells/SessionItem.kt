@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.ui.theme.highlightDivider
 import nl.shekho.videoplayer.ui.theme.lightBlue
@@ -49,7 +50,7 @@ fun SessionItem(
     ) {
 
         Text(
-            text = "${session.startTime?.let { formatDate(it) }}",
+            text = "${session.startTime?.let { Helpers.formatDateTimeSession(it) }}",
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
@@ -77,21 +78,4 @@ fun SessionItem(
     ) {
         Divider(color = highlightDivider, thickness = 1.dp)
     }
-
-
-}
-
-private fun formatDate(date: String): String? {
-    var stringDate = date
-    stringDate = stringDate.replaceAfter(delimiter = ".", "")
-    stringDate = stringDate.replace("T", " ")
-    stringDate = stringDate.replace(".", "")
-
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-    val formattedDate = LocalDateTime.parse(stringDate, formatter)
-
-//    return "Session - ${formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${formattedDate.dayOfMonth}th"
-
-    var formattedMinutes = String.format("%02d", formattedDate.minute)
-    return "Session - ${formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${formattedDate.dayOfMonth}th - ${formattedDate.hour}:${formattedMinutes}"
 }

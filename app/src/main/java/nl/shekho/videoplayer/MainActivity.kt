@@ -47,16 +47,17 @@ class MainActivity : ComponentActivity() {
                     accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
                         ?: false)
 
-                SessionView(
-                    sessionViewModel = sessionViewModel,
-                    navController = navController,
-                    accessViewModel = accessViewModel
-                )
-//                SetupNavGraph(
+//                SessionView(
+//                    sessionViewModel = sessionViewModel,
 //                    navController = navController,
-//                    accessViewModel = accessViewModel,
-//                    sessionViewModel = sessionViewModel
+//                    accessViewModel = accessViewModel
 //                )
+
+                SetupNavGraph(
+                    navController = navController,
+                    accessViewModel = accessViewModel,
+                    sessionViewModel = sessionViewModel
+                )
             }
         }
     }
