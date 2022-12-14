@@ -17,7 +17,7 @@ class Helpers{
 
 
             val formattedMinutes = String.format("%02d", formattedDate.minute)
-            return "Session - ${formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${formattedDate.dayOfMonth}th - ${formattedDate.hour}:${formattedMinutes}"
+            return "Session - ${formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)} ${formattedDate.dayOfMonth}th-${formattedDate.hour}:${formattedMinutes}"
         }
 
         fun formatDateTimeSessionShort(date: String): String?{
