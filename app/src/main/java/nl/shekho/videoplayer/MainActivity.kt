@@ -39,26 +39,26 @@ class MainActivity : ComponentActivity() {
             PilotTrainingTheme {
                 navController = rememberNavController()
 
-                //Check if the user has token stored
-                ReadSessionInformation()
+//                //Check if the user has token stored
+//                ReadSessionInformation()
+//
+//                //Based on the token determine which screen should be shown next
+//                accessViewModel.loggedIn.value =
+//                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
+//                        ?: false)
 
-                //Based on the token determine which screen should be shown next
-                accessViewModel.loggedIn.value =
-                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
-                        ?: false)
-
-//                SessionView(
-//                    sessionViewModel = sessionViewModel,
-//                    navController = navController,
-//                    accessViewModel = accessViewModel
-//                )
-
-                SetupNavGraph(
-                    navController = navController,
-                    accessViewModel = accessViewModel,
+                SessionView(
                     sessionViewModel = sessionViewModel,
-                    context = this
+                    navController = navController,
+                    accessViewModel = accessViewModel
                 )
+
+//                SetupNavGraph(
+//                    navController = navController,
+//                    accessViewModel = accessViewModel,
+//                    sessionViewModel = sessionViewModel,
+//                    context = this
+//                )
             }
         }
     }

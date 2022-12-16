@@ -19,6 +19,7 @@ import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import androidx.compose.ui.res.stringResource
 import nl.shekho.videoplayer.models.Event
+import nl.shekho.videoplayer.models.EventType
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 
@@ -40,8 +41,9 @@ fun MarkEventAndAltitudeSection(
             .fillMaxWidth()
     ) {
         OutlinedButton(
+            enabled = sessionViewModel.selectedEvent.value.eventType.type != EventType.MARKEDEVENT.type,
             onClick = {
-                sessionViewModel.selectedEvent.value = Event(null, null, null, null)
+                sessionViewModel.selectedEvent.value = Event(EventType.MARKEDEVENT, null, null, null)
                 sessionViewModel.selectedItemIndex.value = 400
             },
             colors = ButtonDefaults.buttonColors(
@@ -62,7 +64,7 @@ fun MarkEventAndAltitudeSection(
                     .padding(end = 4.dp)
             )
             Text(
-                text = "Mark event",
+                text = stringResource(id = R.string.markEvent),
                 fontFamily = FontFamily.Monospace,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,

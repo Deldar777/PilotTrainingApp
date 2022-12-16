@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -79,20 +80,18 @@ fun LoginView(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 40.dp),
+                            .padding(bottom = 20.dp),
                         horizontalArrangement = Arrangement.Center,
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.vrefSolutions),
-                            fontFamily = FontFamily.Monospace,
-                            textAlign = TextAlign.Center,
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = deepBlue,
-                            modifier = Modifier.padding(top = 60.dp)
+                        Image(
+                            painter = painterResource(id = R.drawable.vref_logo_medium_gray),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .width(500.dp)
+                                .height(120.dp)
                         )
                     }
-
 
                     // Username textField
                     OutlinedTextField(

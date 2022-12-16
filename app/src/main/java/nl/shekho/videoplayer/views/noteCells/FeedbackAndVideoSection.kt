@@ -21,7 +21,7 @@ import kotlin.time.ExperimentalTime
 fun FeedbackAndVideoSection(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel
-){
+) {
     val shape = RoundedCornerShape(20.dp)
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -33,7 +33,7 @@ fun FeedbackAndVideoSection(
         // Video section
         Box(
             modifier = Modifier
-                .weight(2.6f)
+                .weight(2f)
                 .background(MaterialTheme.colors.onBackground, shape)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
@@ -45,13 +45,16 @@ fun FeedbackAndVideoSection(
         //Feedback section
         Box(
             modifier = Modifier
-                .weight(1f)
+                .weight(1.2f)
                 .background(MaterialTheme.colors.onBackground, shape)
                 .fillMaxWidth()
                 .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
-            FeedbackSection(sessionViewModel = sessionViewModel)
+            FeedbackSection(
+                sessionViewModel = sessionViewModel,
+                accessViewModel = accessViewModel
+            )
         }
     }
 }

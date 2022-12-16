@@ -51,7 +51,7 @@ class SessionViewModel @Inject constructor(
     //Events
     private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
     val events: StateFlow<Result<List<Event>>?> = mutableEvents
-    var selectedEvent = mutableStateOf(Event(null, null, null, null))
+    var selectedEvent = mutableStateOf(Event(EventType.MARKEDEVENT, null, null, null))
     var selectedItemIndex = mutableStateOf(100)
 
     fun resetViewWindowsValues(){
@@ -119,7 +119,7 @@ class SessionViewModel @Inject constructor(
 
     fun getEventsMockData() {
         val events = listOf(
-            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, null),
+            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, feedback = ""),
             Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 4343, "Good job"),
             Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 434, null),
             Event(EventType.LANDING, LocalDateTime.now().toString(), 7676, "More attention"),
@@ -183,5 +183,9 @@ class SessionViewModel @Inject constructor(
 
     fun isOnline(): Boolean {
         return connectivityChecker.isOnline()
+    }
+
+    init {
+//        start()
     }
 }

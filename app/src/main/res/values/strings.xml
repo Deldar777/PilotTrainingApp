@@ -55,5 +55,12 @@
     <string name="instructor">Instructor</string>
     <string name="name">Name</string>
     <string name="review">Review</string>
+    <string name="participant1">Participant 1</string>
+    <string name="participant2">Participant 2</string>
+    <string name="both">Both</string>
+    <string name="selectFeedback">Select feedback</string>
+    <string name="writeFeedback">Write feedback</string>
+    <string name="note">Note</string>
+    <string name="rating">Rating</string>
 
 </resources>

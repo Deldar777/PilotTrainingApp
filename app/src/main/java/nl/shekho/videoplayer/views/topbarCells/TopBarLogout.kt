@@ -27,7 +27,6 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun TopBarLogout(
     accessViewModel: AccessViewModel,
-    navController: NavController,
     sessionViewModel: SessionViewModel
 ){
     Row(

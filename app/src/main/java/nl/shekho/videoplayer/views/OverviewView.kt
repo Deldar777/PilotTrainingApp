@@ -41,7 +41,6 @@ fun OverviewView(
         // Top bar
         TopBarLogout(
             accessViewModel = accessViewModel,
-            navController = navController,
             sessionViewModel = sessionViewModel
         )
 
