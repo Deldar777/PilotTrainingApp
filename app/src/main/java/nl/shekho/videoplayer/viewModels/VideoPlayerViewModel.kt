@@ -33,8 +33,7 @@ class VideoPlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     val player: Player,
     private val metaDataReader: MetaDataReader,
-    private val connectivityChecker: ConnectivityChecker,
-    private val apiMediaService: ApiMediaService
+    private val connectivityChecker: ConnectivityChecker
 ) : ViewModel() {
 
     //Response information
@@ -43,32 +42,25 @@ class VideoPlayerViewModel @Inject constructor(
     var failedMessage: String by mutableStateOf("")
     var loading: Boolean by mutableStateOf(false)
 
-    //Progress bar
-    var accomplishedSteps = mutableStateOf(0)
-    var currentStep = mutableStateOf("")
-
-    //Asset and live streaming variables
-    val streamingEndpoints: MutableState<List<StreamingEntity>> = mutableStateOf(ArrayList())
-    var asset: Asset? by mutableStateOf(null)
-    var liveEventName: String by mutableStateOf("")
-    var liveEvent: LiveEventResponseEntity? by mutableStateOf(null)
-    var showIngestUrl: Boolean by mutableStateOf(false)
-    var liveEventStatus: LiveEventUpdateEntity? by mutableStateOf(null)
-    var runningStreaming: StreamingEntity? by mutableStateOf(null)
-
 
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
-
-    val videoItems = videoUris.map { uris ->
-        uris.map { uri ->
+    val videoItems = videoUris.map {uris ->
+        uris.map {uri ->
             VideoItem(
                 contentUri = uri,
                 mediaItem = MediaItem.fromUri(uri),
                 name = metaDataReader.getMetaDataFromUri(uri)?.fileName ?: "No name"
             )
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(3000), emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    init {
+        loading = true
+        player.prepare()
+        addMockVideo()
+        loading = false
+    }
 
     fun addVideoUri(uri: Uri) {
         savedStateHandle["videoUris"] = videoUris.value + uri
@@ -86,9 +78,9 @@ class VideoPlayerViewModel @Inject constructor(
         player.release()
     }
 
-    fun addMockVideo() {
-        var videoURL =
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    fun addMockVideo(){
+        var videoURL =  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+
         val videoURI: Uri = Uri.parse(videoURL)
         addVideoUri(videoURI)
         playVideo(videoURI)

@@ -62,5 +62,11 @@
     <string name="writeFeedback">Write feedback</string>
     <string name="note">Note</string>
     <string name="rating">Rating</string>
+    <string name="commonFeedback">Select common feedback</string>
+    <string name="highSpeed">High speed</string>
+    <string name="AltitudeHigh">Altitude too high</string>
+    <string name="altitudeLow">Altitude too low</string>
+    <string name="noteBoth">Add feedback for both pilots</string>
+    <string name="noteParticipants">"Add notes for "</string>
 
 </resources>

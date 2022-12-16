@@ -6,28 +6,39 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import nl.shekho.videoplayer.ui.theme.feedbackBlockBackground
-import nl.shekho.videoplayer.ui.theme.lightBlue
-import nl.shekho.videoplayer.ui.theme.tabBackground
+import androidx.compose.ui.unit.toSize
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.models.Event
+import nl.shekho.videoplayer.models.EventType
+import nl.shekho.videoplayer.ui.theme.*
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalTime::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -41,6 +52,11 @@ fun FeedbackSection(
     accessViewModel: AccessViewModel
 ) {
 
+    //Add note button states
+    var addNoteButtonEnabled by remember {
+        mutableStateOf(false)
+    }
+
     //Rating states
     var ratingState by remember { mutableStateOf(initialRating) }
     var selectedRating by remember { mutableStateOf(false) }
@@ -48,6 +64,31 @@ fun FeedbackSection(
         targetValue = if (selectedRating) 60.dp else 52.dp,
         spring(Spring.DampingRatioMediumBouncy)
     )
+
+    //Feedback blocks states
+    var showCommonFeedback by remember { mutableStateOf(true) }
+
+    //Written feedback text field
+    var writtenFeedback by remember { mutableStateOf("") }
+
+    // Common feedback dropdown 1
+    val commonFeedbackList = listOf<String>(
+        stringResource(id = R.string.highSpeed),
+        stringResource(id = R.string.AltitudeHigh),
+        stringResource(id = R.string.altitudeLow),
+    )
+    val noteBoth = stringResource(id = R.string.noteBoth)
+    val noteParticipant = stringResource(id = R.string.noteParticipants)
+    var feedbackInstruction by remember {
+        mutableStateOf(noteBoth)
+    }
+    var expanded1 by remember { mutableStateOf(false) }
+    var selectedCommonFeedback by remember { mutableStateOf("") }
+    var textfieldSize1 by remember { mutableStateOf(androidx.compose.ui.geometry.Size.Zero) }
+    val icon1 = if (expanded1)
+        Icons.Filled.ArrowDropUp
+    else
+        Icons.Filled.ArrowDropDown
 
     var selectedParticipantTabIndex by remember { mutableStateOf(initialSelectedTab) }
     var selectedFeedbackSelectionTabIndex by remember { mutableStateOf(initialSelectedTabFeedback) }
@@ -108,6 +149,12 @@ fun FeedbackSection(
                             inactiveColor = inactiveColor,
                         ) {
                             selectedParticipantTabIndex = index
+                            if (index == 0 || index == 2) {
+                                feedbackInstruction =
+                                    "$noteParticipant ${participantTabs.get(index)}..."
+                            } else {
+                                feedbackInstruction = noteBoth
+                            }
                         }
                     }
                 }
@@ -126,8 +173,7 @@ fun FeedbackSection(
                             .fillMaxHeight()
                     ) {
                         Column(
-                            modifier = Modifier.
-                                    fillMaxSize()
+                            modifier = Modifier.fillMaxSize()
                         ) {
 
                             //Note selections
@@ -135,10 +181,9 @@ fun FeedbackSection(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(0.5f)
-                            ){
+                            ) {
                                 Row(
-                                    modifier = Modifier.
-                                        padding(6.dp),
+                                    modifier = Modifier.padding(6.dp),
                                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                                 ) {
                                     Box(
@@ -146,7 +191,7 @@ fun FeedbackSection(
                                         modifier = Modifier
                                             .weight(0.2f)
                                             .fillMaxHeight()
-                                    ){
+                                    ) {
                                         //Note title
                                         Text(
                                             text = "${stringResource(id = R.string.note)}:",
@@ -161,7 +206,7 @@ fun FeedbackSection(
                                         modifier = Modifier
                                             .weight(1f)
                                             .fillMaxHeight()
-                                    ){
+                                    ) {
                                         //Feedback selection tabs
                                         Row(
                                             modifier = Modifier.fillMaxWidth()
@@ -174,7 +219,9 @@ fun FeedbackSection(
                                                     activeHighlightColor = activeHighlightColor,
                                                     inactiveColor = inactiveColor,
                                                 ) {
-                                                    selectedFeedbackSelectionTabIndex = indexFeedback
+                                                    selectedFeedbackSelectionTabIndex =
+                                                        indexFeedback
+                                                    showCommonFeedback = indexFeedback == 0
                                                 }
                                             }
                                         }
@@ -187,7 +234,7 @@ fun FeedbackSection(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
-                            ){
+                            ) {
 
                                 Column(
                                     modifier = Modifier
@@ -197,7 +244,7 @@ fun FeedbackSection(
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                    ){
+                                    ) {
                                         //Rating title
                                         Text(
                                             text = "${stringResource(id = R.string.rating)}:",
@@ -207,13 +254,11 @@ fun FeedbackSection(
                                         )
 
                                     }
-
-
                                     //Rating stars
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                    ){
+                                    ) {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.Start
@@ -226,6 +271,7 @@ fun FeedbackSection(
                                                         .width(size)
                                                         .height(size)
                                                         .pointerInteropFilter {
+                                                            addNoteButtonEnabled = true
                                                             when (it.action) {
                                                                 MotionEvent.ACTION_DOWN -> {
                                                                     selectedRating = true
@@ -237,7 +283,9 @@ fun FeedbackSection(
                                                             }
                                                             true
                                                         },
-                                                    tint = if (i <= ratingState) Color(0xFFFFD700) else Color(0xFFA2ADB1)
+                                                    tint = if (i <= ratingState) Color(0xFFFFD700) else Color(
+                                                        0xFFA2ADB1
+                                                    )
                                                 )
                                             }
                                         }
@@ -245,12 +293,8 @@ fun FeedbackSection(
 
                                     }
                                 }
-
-
-
                             }
                         }
-
                     }
 
                     //Feedback block and submit button
@@ -260,8 +304,159 @@ fun FeedbackSection(
                             .fillMaxHeight()
                     ) {
 
-                    }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(6.dp)
+                        ) {
+                            //Dropdown and text field section
+                            Box(
+                                contentAlignment = Alignment.TopCenter,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                            ) {
+                                if (showCommonFeedback) {
+                                    Column {
+                                        OutlinedTextField(
+                                            colors = TextFieldDefaults.textFieldColors(
+                                                backgroundColor = Color.White,
+                                                textColor = MaterialTheme.colors.primaryVariant
+                                            ),
+                                            value = selectedCommonFeedback,
+                                            onValueChange = {
+                                                selectedCommonFeedback = it
+                                                addNoteButtonEnabled = true
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .onGloballyPositioned { coordinates ->
+                                                    //This value is used to assign to the DropDown the same width
+                                                    textfieldSize1 = coordinates.size.toSize()
+                                                },
+                                            label = {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                ) {
 
+                                                    Text(
+                                                        text = stringResource(id = R.string.commonFeedback),
+                                                        color = textSecondaryDarkMode
+                                                    )
+                                                }
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    icon1, null,
+                                                    Modifier.clickable { expanded1 = !expanded1 },
+                                                    tint = textSecondaryDarkMode
+                                                )
+                                            }
+                                        )
+                                        DropdownMenu(
+                                            expanded = expanded1,
+                                            onDismissRequest = { expanded1 = false },
+                                            modifier = Modifier
+                                                .width(with(LocalDensity.current) { textfieldSize1.width.toDp() })
+                                        ) {
+                                            commonFeedbackList.forEach { label ->
+                                                DropdownMenuItem(onClick = {
+                                                    selectedCommonFeedback = label
+                                                }) {
+                                                    Text(text = label)
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                } else {
+
+                                    // written feedback textField
+                                    OutlinedTextField(
+                                        colors = TextFieldDefaults.textFieldColors(
+                                            backgroundColor = Color.White,
+                                            textColor = MaterialTheme.colors.primaryVariant
+                                        ),
+                                        value = writtenFeedback,
+                                        onValueChange = {
+                                            writtenFeedback = it
+                                            if (it != "") {
+                                                addNoteButtonEnabled = true
+                                            }
+                                        },
+                                        textStyle = TextStyle(
+                                            color = MaterialTheme.colors.primaryVariant,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        label = {
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                            ) {
+                                                Text(
+                                                    text = feedbackInstruction,
+                                                    color = textSecondaryDarkMode
+                                                )
+                                            }
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                    )
+
+                                }
+                            }
+
+                            //Add note button section
+                            Box(
+                                contentAlignment = Alignment.BottomEnd,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(0.5f)
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    OutlinedButton(
+                                        enabled = addNoteButtonEnabled,
+                                        onClick = {
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            backgroundColor = deepPurple,
+                                            contentColor = MaterialTheme.colors.primary,
+                                        ),
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .width(160.dp)
+                                            .height(40.dp)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.feedback_logo),
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colors.primary,
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .padding(end = 4.dp)
+                                        )
+                                        Text(
+                                            text = stringResource(id = R.string.addNote),
+                                            fontFamily = FontFamily.Monospace,
+                                            textAlign = TextAlign.Center,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colors.primary,
+                                        )
+                                    }
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,8 +23,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.ui.PlayerView
 import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
-import nl.shekho.videoplayer.views.generalCells.LiveStreamingProgressBar
-import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 
 @Composable
@@ -58,10 +57,7 @@ fun VideoView(
     }
 
     if(videoPlayerViewModel.loading){
-        LiveStreamingProgressBar(
-            videoPlayerViewModel = videoPlayerViewModel,
-            accessViewModel = accessViewModel
-        )
+        CircularProgressIndicator()
     }else{
 
         if(videoPlayerViewModel.failed){
