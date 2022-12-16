@@ -45,6 +45,7 @@ fun HighlightItems(
                                     activeHighlightColor = activeHighlightColor,
                                     inactiveColor = inactiveColor,
                                 ){
+                                    sessionViewModel.addNoteButtonEnabled.value = false
                                     sessionViewModel.selectedItemIndex.value = index
                                     sessionViewModel.selectedEvent.value = event
                                 }

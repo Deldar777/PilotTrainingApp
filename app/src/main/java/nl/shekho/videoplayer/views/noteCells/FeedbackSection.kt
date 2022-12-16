@@ -52,10 +52,6 @@ fun FeedbackSection(
     accessViewModel: AccessViewModel
 ) {
 
-    //Add note button states
-    var addNoteButtonEnabled by remember {
-        mutableStateOf(false)
-    }
 
     //Rating states
     var ratingState by remember { mutableStateOf(initialRating) }
@@ -271,7 +267,7 @@ fun FeedbackSection(
                                                         .width(size)
                                                         .height(size)
                                                         .pointerInteropFilter {
-                                                            addNoteButtonEnabled = true
+                                                            sessionViewModel.addNoteButtonEnabled.value = true
                                                             when (it.action) {
                                                                 MotionEvent.ACTION_DOWN -> {
                                                                     selectedRating = true
@@ -326,7 +322,7 @@ fun FeedbackSection(
                                             value = selectedCommonFeedback,
                                             onValueChange = {
                                                 selectedCommonFeedback = it
-                                                addNoteButtonEnabled = true
+                                                sessionViewModel.addNoteButtonEnabled.value = true
                                             },
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -382,7 +378,7 @@ fun FeedbackSection(
                                         onValueChange = {
                                             writtenFeedback = it
                                             if (it != "") {
-                                                addNoteButtonEnabled = true
+                                                sessionViewModel.addNoteButtonEnabled.value = true
                                             }
                                         },
                                         textStyle = TextStyle(
@@ -423,7 +419,7 @@ fun FeedbackSection(
                                 ) {
 
                                     OutlinedButton(
-                                        enabled = addNoteButtonEnabled,
+                                        enabled = sessionViewModel.addNoteButtonEnabled.value,
                                         onClick = {
                                         },
                                         colors = ButtonDefaults.buttonColors(

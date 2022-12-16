@@ -31,6 +31,12 @@ class SessionViewModel @Inject constructor(
     private val sessionMapper: SessionMapper
 ) : ViewModel() {
 
+
+    //Add note button
+    //Add note button states
+    var addNoteButtonEnabled: MutableState<Boolean> = mutableStateOf(false)
+
+
     //Response information
     var succeeded = mutableStateOf(false)
     var failed: String by mutableStateOf("")
