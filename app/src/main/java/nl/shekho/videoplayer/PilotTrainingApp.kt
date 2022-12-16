@@ -6,8 +6,4 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @HiltAndroidApp
-class PilotTrainingApp: Application(){
-    companion object {
-        var globalToken = ""
-    }
-}
+class PilotTrainingApp: Application(){}

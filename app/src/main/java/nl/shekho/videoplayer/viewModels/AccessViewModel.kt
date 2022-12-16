@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.entities.LoginEntity
@@ -15,7 +14,6 @@ import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.helpers.UserPreferences
 import nl.shekho.videoplayer.models.Role
 import javax.inject.Inject
-import nl.shekho.videoplayer.PilotTrainingApp.Companion.globalToken
 
 
 @HiltViewModel
@@ -26,7 +24,7 @@ class AccessViewModel @Inject constructor(
 ) : ViewModel() {
 
     //Response information
-    var succeeded = mutableStateOf(false)
+    var succeeded = mutableStateOf(true)
     var failed: String by mutableStateOf("")
     var loading: Boolean by mutableStateOf(false)
 
@@ -84,24 +82,24 @@ class AccessViewModel @Inject constructor(
         viewModelScope.launch {
             loading = true
             try {
-                var userEntity = LoginEntity(username, password)
+                val userEntity = LoginEntity(username, password)
                 val response = apiService.login(userEntity)
 
                 if (response.isSuccessful) {
-                    succeeded.value = true
                     val body = response.body()
                     if (body != null) {
                         loggedIn.value = true
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
                         encodedJwtToken = body.token
-                        globalToken = body.token
                         decodeJWT()
                     }
 
                 } else {
+                    succeeded.value = false
                     failed = response.message()
                 }
             } catch (e: java.lang.Exception) {
+                succeeded.value = false
                 failed = e.message.toString()
             }
 
@@ -198,7 +196,6 @@ class AccessViewModel @Inject constructor(
             jwtExpired = decodedJwtToken!!.isExpired(10)
 
             if (jwtExpired != true) {
-                globalToken = encodedJwtToken!!
                 loggedInUserId = decodedJwtToken!!.getClaim("UserId").asString()
                 companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
                 userRole =

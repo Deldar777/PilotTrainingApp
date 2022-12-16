@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.views
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +17,8 @@ import kotlin.time.ExperimentalTime
 fun StartView(
     accessViewModel: AccessViewModel,
     navController: NavController,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    context: Context
 ) {
     var showOverview by remember { mutableStateOf(accessViewModel.loggedIn) }
     var showNewSessionButton by remember { mutableStateOf(accessViewModel.userIsInstructor) }
@@ -29,7 +31,7 @@ fun StartView(
         if (!accessViewModel.loggedIn.value) {
             LoginView(
                 accessViewModel = accessViewModel,
-                navController = navController
+                context = context
             )
         } else {
             OverviewView(

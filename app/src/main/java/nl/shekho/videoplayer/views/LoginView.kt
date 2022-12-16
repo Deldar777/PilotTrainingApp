@@ -1,5 +1,7 @@
 package nl.shekho.videoplayer.views
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,12 +41,8 @@ import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
 @Composable
 fun LoginView(
     accessViewModel: AccessViewModel,
-    navController: NavController
+    context: Context
 ) {
-    //Feedback color and message
-    var messageColor by remember { mutableStateOf(Color.Red) }
-    var messageText by remember { mutableStateOf("") }
-
     //Login text fields
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -172,21 +170,18 @@ fun LoginView(
                     ) {
 
                         OutlinedButton(
+                            enabled = !accessViewModel.loading,
                             onClick = {
                                 if (accessViewModel.isOnline()) {
                                     if (username != "" && password != "") {
 
                                         accessViewModel.logIn(username, password)
-
-                                        if (!accessViewModel.succeeded.value) {
-                                            messageText = loginFailed
-                                        }
-
                                     } else {
-                                        messageText = userNameOrPasswordEmpty
+                                        Toast.makeText(context, userNameOrPasswordEmpty, Toast.LENGTH_LONG).show()
+
                                     }
                                 } else {
-                                    messageText = notInternet
+                                    Toast.makeText(context, notInternet, Toast.LENGTH_LONG).show()
                                 }
                             },
                             shape = RoundedCornerShape(20.dp),
@@ -212,8 +207,11 @@ fun LoginView(
                     }
                     if (accessViewModel.loading) {
                         Loading()
-                    } else {
-                        FeedbackMessage(color = messageColor, text = messageText)
+                    }else{
+                        if(!accessViewModel.succeeded.value){
+                            Toast.makeText(context, loginFailed, Toast.LENGTH_LONG).show()
+                            accessViewModel.succeeded.value = true
+                        }
                     }
                 }
             }

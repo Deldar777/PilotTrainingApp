@@ -166,12 +166,6 @@ fun LiveStreamingProgressBar(
                 Button(
                     onClick = {
                         videoPlayerViewModel.showIngestUrl = false
-                        accessViewModel.encodedJwtToken?.let {
-                            videoPlayerViewModel.continueStreamingProcess(
-                                it
-                            )
-                        }
-
                     }, colors = ButtonDefaults.textButtonColors(
                         backgroundColor = lightPurple
                     )
