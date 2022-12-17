@@ -17,10 +17,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 
 @Composable
 fun EmptyReview(
-    isInstructor: Boolean
+    accessViewModel: AccessViewModel
 ){
     Box(
         contentAlignment = Alignment.Center,
@@ -31,7 +33,7 @@ fun EmptyReview(
             )
     ) {
 
-        if(isInstructor){
+        if(accessViewModel.userIsInstructor.value){
             Text(
                 text = stringResource(id = R.string.instructorEmptyReview),
                 fontFamily = FontFamily.Monospace,

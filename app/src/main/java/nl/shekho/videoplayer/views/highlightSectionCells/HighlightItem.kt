@@ -24,9 +24,7 @@ import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightItem(
     event: Event,
@@ -36,7 +34,7 @@ fun HighlightItem(
     onItemClick: () -> Unit,
 ) {
 
-    var showFeedbackIcon by remember {
+    val showFeedbackIcon by remember {
         mutableStateOf(event.hasFeedback)
     }
 
@@ -110,7 +108,7 @@ fun HighlightItem(
 
             Icon(
                 painter = painterResource(id = event.eventIcon),
-                contentDescription = event.eventType?.type,
+                contentDescription = event.eventType.type,
                 tint = Color(event.eventIconColor),
                 modifier = Modifier
                     .zIndex(4f)
@@ -148,14 +146,12 @@ fun HighlightItem(
                         .fillMaxHeight(),
                     contentAlignment = Alignment.CenterStart,
                 ){
-                    event.eventType?.let {
-                        Text(
-                            text = it.type,
-                            color = MaterialTheme.colors.primary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
-                    }
+                    Text(
+                        text = event.eventType.type,
+                        color = MaterialTheme.colors.primary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
 
                 }
                 Box(

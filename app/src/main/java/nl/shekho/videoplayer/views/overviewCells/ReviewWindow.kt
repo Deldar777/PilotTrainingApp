@@ -17,14 +17,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import nl.shekho.videoplayer.helpers.extensions.Helpers
-import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.lightBlue
+import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.navigation.Screens
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
-fun ReviewWindow(session: Session) {
+fun ReviewWindow(
+    sessionViewModel: SessionViewModel,
+    navController: NavController
+) {
 
     Box(
         modifier = Modifier
@@ -49,7 +56,13 @@ fun ReviewWindow(session: Session) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "${session.startTime?.let { Helpers.formatDateTimeSessionShort(it) }}",
+                    text = "${
+                        sessionViewModel.selectedSession.value.startTime?.let {
+                            Helpers.formatDateTimeSessionShort(
+                                it
+                            )
+                        }
+                    }",
                     fontFamily = FontFamily.Monospace,
                     textAlign = TextAlign.Center,
                     fontSize = 28.sp,
@@ -68,8 +81,8 @@ fun ReviewWindow(session: Session) {
                 contentAlignment = Alignment.TopCenter
             ) {
                 Row(
-                  modifier = Modifier
-                      .fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
                     Box(
                         modifier = Modifier
@@ -78,7 +91,7 @@ fun ReviewWindow(session: Session) {
                             .fillMaxHeight()
                             .padding(top = 60.dp, start = 30.dp),
                         contentAlignment = Alignment.TopStart
-                    ){
+                    ) {
                         Text(
                             text = stringResource(id = R.string.participants),
                             fontFamily = FontFamily.Monospace,
@@ -96,12 +109,12 @@ fun ReviewWindow(session: Session) {
                             .weight(2f)
                             .fillMaxHeight(),
                         contentAlignment = Alignment.TopStart
-                    ){
+                    ) {
 
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
-                        ){
+                        ) {
 
                             // Roles section
                             Box(
@@ -111,7 +124,7 @@ fun ReviewWindow(session: Session) {
                                     .fillMaxHeight()
                                     .padding(top = 60.dp),
                                 contentAlignment = Alignment.TopStart
-                            ){
+                            ) {
 
                                 Column(
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -161,7 +174,7 @@ fun ReviewWindow(session: Session) {
                                     .fillMaxHeight(),
                                 contentAlignment = Alignment.TopStart
 
-                            ){
+                            ) {
                                 Column(
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier.fillMaxSize()
@@ -227,7 +240,7 @@ fun ReviewWindow(session: Session) {
                             .fillMaxHeight()
                             .padding(top = 30.dp, start = 30.dp),
                         contentAlignment = Alignment.TopStart
-                    ){
+                    ) {
                         Text(
                             text = stringResource(id = R.string.session),
                             fontFamily = FontFamily.Monospace,
@@ -244,11 +257,11 @@ fun ReviewWindow(session: Session) {
                             .fillMaxWidth()
                             .weight(2f)
                             .fillMaxHeight()
-                    ){
+                    ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
-                        ){
+                        ) {
                             Image(
                                 painter = painterResource(id = R.drawable.session_image),
                                 contentDescription = stringResource(id = R.string.session),
@@ -282,7 +295,7 @@ fun ReviewWindow(session: Session) {
                             .fillMaxWidth()
                             .weight(1f)
                             .fillMaxHeight()
-                    ){
+                    ) {
 
                     }
 
@@ -291,18 +304,19 @@ fun ReviewWindow(session: Session) {
                             .fillMaxWidth()
                             .weight(2f)
                             .fillMaxHeight()
-                    ){
+                    ) {
 
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
-                        ){
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .width(260.dp)
                                     .height(60.dp)
                                     .background(lightBlue, shape = RoundedCornerShape(20.dp))
                                     .clickable {
+                                        navController.navigate(Screens.ReviewScreen.route)
                                     },
                                 contentAlignment = Alignment.Center
                             ) {

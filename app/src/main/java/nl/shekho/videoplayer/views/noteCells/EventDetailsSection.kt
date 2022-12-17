@@ -22,11 +22,12 @@ import java.time.format.DateTimeFormatter
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EventDetailsSection(
-    sessionViewModel: SessionViewModel
-){
+    sessionViewModel: SessionViewModel,
+    title: String,
+    subTitle: String
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,14 +37,14 @@ fun EventDetailsSection(
     ) {
 
         Text(
-            text = stringResource(id = R.string.addNote),
+            text = title,
             color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold,
-            fontSize = 28.sp
+            fontSize = 26.sp
         )
 
         Text(
-            text = stringResource(id = R.string.addNoteDescription),
+            text = subTitle,
             color = MaterialTheme.colors.secondary,
             fontWeight = FontWeight.Light,
             fontSize = 18.sp,
@@ -59,21 +60,21 @@ fun EventDetailsSection(
                 text = "${stringResource(id = R.string.eventType)}: ",
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
             )
 
             Icon(
                 painter = painterResource(id = sessionViewModel.selectedEvent.value.eventIcon),
-                contentDescription = "Feedback icon",
+                contentDescription = "",
                 tint = Color(sessionViewModel.selectedEvent.value.eventIconColor),
-                modifier = Modifier.size(26.dp)
+                modifier = Modifier.size(24.dp)
             )
 
             Text(
-                text = if (sessionViewModel.selectedEvent.value.eventType != null) sessionViewModel.selectedEvent.value.eventType!!.type else "Marked event",
+                text = sessionViewModel.selectedEvent.value.eventType.type,
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 modifier = Modifier.padding(start = 10.dp)
             )
         }
@@ -88,15 +89,14 @@ fun EventDetailsSection(
                 text = "${stringResource(id = R.string.altitude)}: ",
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
             )
             Text(
                 text = if (sessionViewModel.selectedEvent.value.altitude != null) sessionViewModel.selectedEvent.value.altitude.toString() else "Current altitude",
                 color = MaterialTheme.colors.secondary,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
             )
         }
-
 
         Row(
             modifier = Modifier
@@ -105,25 +105,24 @@ fun EventDetailsSection(
             Text(
                 text = "${stringResource(id = R.string.timestamp)}: ",
                 color = MaterialTheme.colors.primary,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
             )
 
             val timestamp = sessionViewModel.selectedEvent.value.timestamp?.let {
                 formatDate(it)
             } ?: run {
-                "Current timestamp"
+                stringResource(id = R.string.currentTimestamp)
             }
             Text(
                 text = timestamp,
                 color = MaterialTheme.colors.secondary,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
             )
         }
     }
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 private fun formatDate(date: String): String {
     val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
     return parsedDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))

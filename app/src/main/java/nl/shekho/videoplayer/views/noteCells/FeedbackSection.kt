@@ -117,7 +117,9 @@ fun FeedbackSection(
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
-                sessionViewModel = sessionViewModel
+                sessionViewModel = sessionViewModel,
+                title = stringResource(id = R.string.addNote),
+                subTitle = stringResource(id = R.string.addNoteSubTitle)
             )
         }
 
@@ -267,7 +269,8 @@ fun FeedbackSection(
                                                         .width(size)
                                                         .height(size)
                                                         .pointerInteropFilter {
-                                                            sessionViewModel.addNoteButtonEnabled.value = true
+                                                            sessionViewModel.addNoteButtonEnabled.value =
+                                                                true
                                                             when (it.action) {
                                                                 MotionEvent.ACTION_DOWN -> {
                                                                     selectedRating = true

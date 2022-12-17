@@ -33,7 +33,7 @@ fun SetupNavGraph(
         }
 
         composable(
-            route = Screens.StartView.route
+            route = Screens.StartScreen.route
         ){
             StartView(
                 navController = navController,
@@ -44,12 +44,42 @@ fun SetupNavGraph(
         }
 
         composable(
-            route = Screens.Session.route
+            route = Screens.SessionScreen.route
         ){
             SessionView(
                 sessionViewModel = sessionViewModel,
                 navController = navController,
                 accessViewModel = accessViewModel
+            )
+        }
+
+        composable(
+            route = Screens.ReviewScreen.route
+        ){
+            ReviewView(
+                sessionViewModel = sessionViewModel,
+                navController = navController,
+                accessViewModel = accessViewModel
+            )
+        }
+
+        composable(
+            route = Screens.OverviewScreen.route
+        ){
+            OverviewView(
+                sessionViewModel = sessionViewModel,
+                navController = navController,
+                accessViewModel = accessViewModel,
+                context = context
+            )
+        }
+
+        composable(
+            route = Screens.LoginScreen.route
+        ){
+            LoginView(
+                accessViewModel = accessViewModel,
+                context = context
             )
         }
 

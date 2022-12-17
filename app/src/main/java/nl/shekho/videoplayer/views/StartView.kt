@@ -20,9 +20,6 @@ fun StartView(
     sessionViewModel: SessionViewModel,
     context: Context
 ) {
-    var showOverview by remember { mutableStateOf(accessViewModel.loggedIn) }
-    var showNewSessionButton by remember { mutableStateOf(accessViewModel.userIsInstructor) }
-
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
@@ -38,7 +35,7 @@ fun StartView(
                 accessViewModel = accessViewModel,
                 sessionViewModel = sessionViewModel,
                 navController = navController,
-                showNewSessionButton = showNewSessionButton.value
+                context = context
             )
         }
     }

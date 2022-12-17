@@ -1,31 +1,25 @@
 package nl.shekho.videoplayer.views.topbarCells
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.customDarkGray
-import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.ui.theme.deepPurple
-import nl.shekho.videoplayer.ui.theme.lightBlue
+import nl.shekho.videoplayer.ui.theme.lightPurple
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
-import nl.shekho.videoplayer.views.topbarCells.*
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun TopBarSession(
+fun TopBarReview(
     modifier: Modifier = Modifier,
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel,
@@ -55,15 +49,15 @@ fun TopBarSession(
         ) {
             Box(
                 modifier = Modifier
-                    .weight(0.75f)
+                    .weight(1f)
                     .background(customDarkGray),
                 contentAlignment = Alignment.Center
             ) {
                 SessionTopBarFirstSection(
                     accessViewModel = accessViewModel,
                     sessionViewModel = sessionViewModel,
-                    titleColor = lightBlue,
-                    iconsColor = deepBlue
+                    iconsColor = deepPurple,
+                    titleColor = lightPurple
                 )
             }
 
@@ -74,15 +68,7 @@ fun TopBarSession(
                     .background(customDarkGray),
                 contentAlignment = Alignment.Center
             ) {
-                Timer(
-                    isPlaying = sessionViewModel.isPlaying,
-                    seconds = sessionViewModel.seconds,
-                    minutes = sessionViewModel.minutes,
-                    hours = sessionViewModel.hours,
-                    onStart = { sessionViewModel.start() },
-                    onStop = { sessionViewModel.stop() },
-                    onPause = { sessionViewModel.pause() },
-                )
+                ReviewTopBarSecondSection()
             }
 
             Box(
@@ -92,12 +78,8 @@ fun TopBarSession(
                     .padding(end = 10.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                SessionTopBarThirdSection(
-                    sessionViewModel = sessionViewModel,
-                    navController = navController
-                )
+
             }
         }
     }
 }
-

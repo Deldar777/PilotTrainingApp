@@ -32,14 +32,13 @@ class SessionViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    //Add note button
+    //Session feedback variables
+    var failed = mutableStateOf(false)
+    var loading: Boolean by mutableStateOf(false)
+    var succeeded: Boolean by mutableStateOf(false)
+
     //Add note button states
     var addNoteButtonEnabled: MutableState<Boolean> = mutableStateOf(false)
-
-
-    //Response information
-    var succeeded = mutableStateOf(false)
-    var failed: String by mutableStateOf("")
 
     //New session and review windows
     var showNewSessionWindow: MutableState<Boolean> = mutableStateOf(false)
@@ -60,7 +59,7 @@ class SessionViewModel @Inject constructor(
     var selectedEvent = mutableStateOf(Event(EventType.MARKEDEVENT, null, null, null))
     var selectedItemIndex = mutableStateOf(100)
 
-    fun resetViewWindowsValues(){
+    fun resetViewWindowsValues() {
         showNewSessionWindow.value = false
         showReviewWindow.value = false
         showEmptyReview.value = true
@@ -69,34 +68,30 @@ class SessionViewModel @Inject constructor(
 
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {
         viewModelScope.launch {
+            loading = true
 
             try {
                 val response = apiService.createSession(
                     body = newSessionEntity,
                     token = token,
                 )
-
-                if (response.isSuccessful) {
+                if (response.isSuccessful && response.body() != null) {
                     val body = response.body()
-
-                    if (body != null) {
-                        succeeded.value = true
-                        runningSession = body
-                    }else{
-                        failed = "Body was empty"
-                    }
-
+                    succeeded = true
+                    runningSession = body
                 } else {
-                    failed = response.message()
+                    failed.value = true
                 }
             } catch (e: java.lang.Exception) {
-            failed = e.message.toString()
-        }
+                failed.value = true
+            }
+            delay(4000)
+            loading = false
         }
     }
 
 
-    fun fetchSessionsByUserId(userId: String,token: String) {
+    fun fetchSessionsByUserId(userId: String, token: String) {
         viewModelScope.launch {
 
             val response = apiService.getSessionsByUserId(
@@ -120,7 +115,6 @@ class SessionViewModel @Inject constructor(
             mutableSessions.emit(result)
         }
     }
-
 
 
     fun getEventsMockData() {

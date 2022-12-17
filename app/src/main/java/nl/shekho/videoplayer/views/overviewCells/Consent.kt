@@ -31,7 +31,7 @@ fun Consent() {
             text = stringResource(id = R.string.consent),
             color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
+            fontSize = 14.sp
         )
     }
 }

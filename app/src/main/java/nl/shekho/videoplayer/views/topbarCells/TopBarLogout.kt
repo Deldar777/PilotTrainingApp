@@ -27,7 +27,8 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun TopBarLogout(
     accessViewModel: AccessViewModel,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    navController: NavController
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -69,6 +70,7 @@ fun TopBarLogout(
                         modifier = Modifier.clickable {
                             accessViewModel.resetSessionInformation()
                             sessionViewModel.resetViewWindowsValues()
+                            navController.navigate(Screens.LoginScreen.route)
                         }
                     )
                 }

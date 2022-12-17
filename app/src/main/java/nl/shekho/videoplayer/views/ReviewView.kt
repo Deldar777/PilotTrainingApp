@@ -1,33 +1,29 @@
 package nl.shekho.videoplayer.views
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.ui.theme.*
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.HighlightAndVideo
-import nl.shekho.videoplayer.views.highlightSectionCells.*
-import nl.shekho.videoplayer.views.noteCells.ReviewFeedbackAndVideoSection
-import nl.shekho.videoplayer.views.noteCells.SessionFeedbackAndLiveStreaming
-import nl.shekho.videoplayer.views.topbarCells.TopBarSession
+import nl.shekho.videoplayer.views.topbarCells.TopBarReview
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun SessionView(
+fun ReviewView(
     sessionViewModel: SessionViewModel,
     navController: NavController,
     accessViewModel: AccessViewModel
 ) {
+
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
@@ -36,7 +32,7 @@ fun SessionView(
         Column {
 
             // Top bar
-            TopBarSession(
+            TopBarReview(
                 sessionViewModel = sessionViewModel,
                 accessViewModel = accessViewModel,
                 navController = navController
@@ -46,14 +42,10 @@ fun SessionView(
             HighlightAndVideo(
                 sessionViewModel = sessionViewModel,
                 accessViewModel = accessViewModel,
-                screen = stringResource(id = R.string.session),
+                screen = stringResource(id = R.string.review),
                 navController = navController
             )
+
         }
     }
 }
-
-
-
-
-

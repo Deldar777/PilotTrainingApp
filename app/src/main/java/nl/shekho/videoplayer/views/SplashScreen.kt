@@ -7,18 +7,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
-import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.customDarkGray
 import nl.shekho.videoplayer.viewModels.AccessViewModel
@@ -42,7 +38,7 @@ fun SplashScreen(
         delay(1000)
         navController.popBackStack()
 
-        navController.navigate(Screens.StartView.route)
+        navController.navigate(Screens.StartScreen.route)
     }
     Splash(alpha = alphaAnim.value)
 }

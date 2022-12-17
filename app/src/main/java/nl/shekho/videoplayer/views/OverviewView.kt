@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.views
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,16 +33,16 @@ fun OverviewView(
     accessViewModel: AccessViewModel,
     sessionViewModel: SessionViewModel,
     navController: NavController,
-    showNewSessionButton: Boolean
+    context: Context
 ) {
-    var isInstructor by remember { mutableStateOf(accessViewModel.userIsInstructor) }
     val shape = RoundedCornerShape(20.dp)
 
     Column {
         // Top bar
         TopBarLogout(
             accessViewModel = accessViewModel,
-            sessionViewModel = sessionViewModel
+            sessionViewModel = sessionViewModel,
+            navController = navController
         )
 
         Row(
@@ -83,7 +84,7 @@ fun OverviewView(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "Welcome ${accessViewModel.loggedInUser?.firstname ?: ""}",
+                                    text = "${stringResource(id = R.string.welcome)} ${accessViewModel.loggedInUser?.firstname ?: ""}",
                                     fontFamily = FontFamily.Monospace,
                                     textAlign = TextAlign.Center,
                                     fontSize = 22.sp,
@@ -130,7 +131,7 @@ fun OverviewView(
                             .weight(0.4f)
 
                     ) {
-                        if (showNewSessionButton) {
+                        if (accessViewModel.userIsInstructor.value) {
                             NewSessionButton(
                                 sessionViewModel = sessionViewModel
                             )
@@ -153,16 +154,20 @@ fun OverviewView(
                     NewSessionWindow(
                         accessViewModel = accessViewModel,
                         sessionViewModel = sessionViewModel,
-                        navController = navController
+                        navController = navController,
+                        context = context
                     )
                 }
 
                 if (sessionViewModel.showReviewWindow.value) {
-                    ReviewWindow(session = sessionViewModel.selectedSession.value)
+                    ReviewWindow(
+                        sessionViewModel = sessionViewModel,
+                        navController = navController
+                    )
                 }
 
                 if (sessionViewModel.showEmptyReview.value) {
-                    EmptyReview(isInstructor = isInstructor.value)
+                    EmptyReview(accessViewModel = accessViewModel)
                 }
 
             }

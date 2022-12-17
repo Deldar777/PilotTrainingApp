@@ -1,7 +1,5 @@
 package nl.shekho.videoplayer.views.noteCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,14 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.viewModels.AccessViewModel
-import nl.shekho.videoplayer.views.VideoView
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.VideoView
 import kotlin.time.ExperimentalTime
-
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun FeedbackAndVideoSection(
+fun ReviewFeedbackAndVideoSection(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel
 ) {
@@ -38,11 +35,10 @@ fun FeedbackAndVideoSection(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-
             VideoView(accessViewModel = accessViewModel)
         }
 
-        //Feedback section
+        //Note section
         Box(
             modifier = Modifier
                 .weight(1.2f)
@@ -51,9 +47,8 @@ fun FeedbackAndVideoSection(
                 .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
-            FeedbackSection(
-                sessionViewModel = sessionViewModel,
-                accessViewModel = accessViewModel
+            NoteSection(
+                sessionViewModel = sessionViewModel
             )
         }
     }

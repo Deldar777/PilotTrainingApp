@@ -1,5 +1,7 @@
 package nl.shekho.videoplayer.views.overviewCells
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,11 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -34,23 +38,25 @@ import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
 import java.time.LocalDateTime
 import kotlin.time.ExperimentalTime
+import nl.shekho.videoplayer.helpers.extensions.Helpers
+import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.views.generalCells.Loading
+import nl.shekho.videoplayer.views.navigation.Screens
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun NewSessionWindow(
     accessViewModel: AccessViewModel,
     sessionViewModel: SessionViewModel,
-    navController: NavController
+    navController: NavController,
+    context: Context
 ) {
 
     //Feedback variables
-    var messageColor by remember { mutableStateOf(Color.Red) }
-    var messageText by remember { mutableStateOf("") }
-    val emptyFields = stringResource(id = R.string.sessionEmptyFields)
     val sameParticipant = stringResource(id = R.string.sameParticipant)
     val noInternet = stringResource(id = R.string.noInternet)
-    val generalError = stringResource(id = R.string.generalError)
-    val sessionCreated = stringResource(id = R.string.sessionCreated)
+    val sessionCreationError = stringResource(id = R.string.sessionCreationError)
+    val noToken = stringResource(id = R.string.noToken)
 
     //session name text field
     var sessionName by remember { mutableStateOf("") }
@@ -129,18 +135,18 @@ fun NewSessionWindow(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = 10.dp, top = 10.dp, start = 100.dp, end = 100.dp)
+                        .padding(bottom = 10.dp, top = 10.dp, start = 80.dp, end = 100.dp)
                 ) {
 
                     // sessionName textField
-                    sessionName = formatDate(LocalDateTime.now())
+                    sessionName = Helpers.getSessionName()
                     OutlinedTextField(
                         enabled = false,
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.White,
                             textColor = MaterialTheme.colors.primaryVariant
                         ),
-                        value = formatDate(LocalDateTime.now()),
+                        value = sessionName,
                         onValueChange = { },
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.primaryVariant,
@@ -282,76 +288,92 @@ fun NewSessionWindow(
                     //Consent participant 2
                     Consent()
 
-                    //Start button
-                    Box(
+                    //Session start button
+                    // Login button
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(top = 40.dp)
-                            .width(260.dp)
-                            .height(60.dp)
-                            .background(lightBlue, shape = RoundedCornerShape(20.dp))
-                            .clickable {
-//                                navController.navigate(Screens.Session.route)
+                            .fillMaxWidth()
+                            .padding(15.dp)
+                    ) {
 
+                        OutlinedButton(
+                            enabled = !sessionViewModel.loading &&
+                                    participant1.isNotEmpty() &&
+                                    participant2.isNotEmpty() &&
+                                    participant1 != participant2,
+                            onClick = {
                                 if (accessViewModel.isOnline()) {
-                                    if (participant1 != "" && participant2 != "" && sessionName != "") {
 
-                                        if (participant1 != participant2) {
-                                            val instructorId = accessViewModel.loggedInUserId
-                                            val participant1Id = mappedUsers?.get(participant1)?.id
-                                            val participant2Id = mappedUsers?.get(participant2)?.id
-                                            val companyId = accessViewModel.companyId
-                                            var token = accessViewModel.encodedJwtToken
+                                    val instructorId = accessViewModel.loggedInUserId
+                                    val participant1Id = mappedUsers?.get(participant1)?.id
+                                    val participant2Id = mappedUsers?.get(participant2)?.id
+                                    val companyId = accessViewModel.companyId
+                                    var token = accessViewModel.encodedJwtToken
 
-                                            if (token.isNullOrEmpty() || instructorId.isNullOrEmpty() || participant1Id.isNullOrEmpty() || participant2Id.isNullOrEmpty() || companyId.isNullOrEmpty()) {
-                                                messageText = generalError
+                                    val newSessionEntity = NewSessionEntity(
+                                        UserIds = listOf(
+                                            instructorId,
+                                            participant1Id,
+                                            participant2Id
+                                        ),
+                                        CompanyId = companyId
+                                    )
+                                    navController.navigate(Screens.SessionScreen.route)
 
-                                            } else {
-                                                val newSessionEntity = NewSessionEntity(
-                                                    UserIds = listOf(
-                                                        instructorId,
-                                                        participant1Id,
-                                                        participant2Id
-                                                    ),
-                                                    CompanyId = companyId
-                                                )
+                                    if (token != null) {
+                                        sessionViewModel.createSession(newSessionEntity, token)
 
-                                                sessionViewModel.createSession(newSessionEntity, token)
 
-                                                if(sessionViewModel.succeeded.value){
-                                                    messageColor = Color.Green
-                                                    messageText = sessionCreated
-
-                                                    sessionViewModel.fetchSessionsByUserId(instructorId, token)
-                                                }else{
-                                                    messageText = sessionViewModel.failed
-                                                }
-                                                accessViewModel.participant1 = mappedUsers.get(participant1)
-                                                accessViewModel.participant2 = mappedUsers.get(participant2)
+                                        if (!sessionViewModel.loading && sessionViewModel.succeeded) {
+                                            if (mappedUsers != null) {
+                                                accessViewModel.participant1 =
+                                                    mappedUsers[participant1]
+                                                accessViewModel.participant2 =
+                                                    mappedUsers[participant2]
                                             }
-                                        } else {
-                                            messageText = sameParticipant
+                                            navController.navigate(Screens.SessionScreen.route)
                                         }
-
                                     } else {
-                                        messageText = emptyFields
+                                        Toast.makeText(context, noToken, Toast.LENGTH_LONG).show()
                                     }
                                 } else {
-                                    messageText = noInternet
+                                    Toast.makeText(context, noInternet, Toast.LENGTH_LONG).show()
                                 }
                             },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.start),
-                            color = MaterialTheme.colors.primary,
-                            textAlign = TextAlign.Center,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                            shape = RoundedCornerShape(20.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = deepBlue,
+                                contentColor = MaterialTheme.colors.primary
+                            ),
+                            modifier = Modifier
+                                .width(300.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.start),
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = TextAlign.Center,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.primary,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                            )
+                        }
                     }
+
+
                 }
             }
-            ShowFeedback(text = messageText, color = messageColor)
+            if (sessionViewModel.loading) {
+                Loading()
+            } else {
+                if (sessionViewModel.failed.value) {
+                    Toast.makeText(context, sessionCreationError, Toast.LENGTH_LONG).show()
+                }
+            }
 
         }
     }
@@ -366,11 +388,4 @@ fun mapUsers(users: List<UserEntity>): MutableMap<String, UserEntity> {
         }
     }
     return mappedUsers
-}
-
-fun formatDate(date: LocalDateTime): String {
-    var formattedMinutes = String.format("%02d", date.minute)
-    return "Session - ${
-        date.dayOfWeek.toString().lowercase().subSequence(0, 3)
-    } ${date.dayOfMonth}th - ${date.hour}:${formattedMinutes}"
 }

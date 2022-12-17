@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.navigation.Screens
@@ -32,7 +31,7 @@ fun SessionTopBarThirdSection(
 ) {
     OutlinedButton(
         onClick = {
-            navController.navigate(Screens.StartView.route)
+            navController.navigate(Screens.StartScreen.route)
         },
         colors = ButtonDefaults.buttonColors(
             backgroundColor = deepPurple,

@@ -52,9 +52,12 @@ fun LoginView(
     val userNameOrPasswordEmpty = stringResource(id = R.string.emptyFields)
     val notInternet = stringResource(id = R.string.noInternet)
     val loginFailed = stringResource(id = R.string.loginFailed)
-    val loginSucceeded = stringResource(id = R.string.loginSucceeded)
 
-    Column {
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+    ) {
         // Top bar
         TopBarLogin()
         // Login block
@@ -169,16 +172,10 @@ fun LoginView(
                     ) {
 
                         OutlinedButton(
-                            enabled = !accessViewModel.loading,
+                            enabled = !accessViewModel.loading && (username.isNotEmpty() && password.isNotEmpty()),
                             onClick = {
                                 if (accessViewModel.isOnline()) {
-                                    if (username != "" && password != "") {
-
-                                        accessViewModel.logIn(username, password)
-                                    } else {
-                                        Toast.makeText(context, userNameOrPasswordEmpty, Toast.LENGTH_LONG).show()
-
-                                    }
+                                    accessViewModel.logIn(username, password)
                                 } else {
                                     Toast.makeText(context, notInternet, Toast.LENGTH_LONG).show()
                                 }

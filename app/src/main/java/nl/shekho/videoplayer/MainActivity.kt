@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import nl.shekho.videoplayer.ui.theme.pilotTrainingThemes.PilotTrainingTheme
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.ReviewView
 import nl.shekho.videoplayer.views.SessionView
 import nl.shekho.videoplayer.views.navigation.SetupNavGraph
 import kotlin.time.ExperimentalTime
@@ -39,26 +40,32 @@ class MainActivity : ComponentActivity() {
             PilotTrainingTheme {
                 navController = rememberNavController()
 
-//                //Check if the user has token stored
-//                ReadSessionInformation()
-//
-//                //Based on the token determine which screen should be shown next
-//                accessViewModel.loggedIn.value =
-//                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
-//                        ?: false)
+                //Check if the user has token stored
+                ReadSessionInformation()
 
-                SessionView(
-                    sessionViewModel = sessionViewModel,
-                    navController = navController,
-                    accessViewModel = accessViewModel
-                )
+                //Based on the token determine which screen should be shown next
+                accessViewModel.loggedIn.value =
+                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
+                        ?: false)
 
-//                SetupNavGraph(
-//                    navController = navController,
-//                    accessViewModel = accessViewModel,
+//                SessionView(
 //                    sessionViewModel = sessionViewModel,
-//                    context = this
+//                    navController = navController,
+//                    accessViewModel = accessViewModel
 //                )
+
+//                ReviewView(
+//                    sessionViewModel = sessionViewModel,
+//                    navController = navController,
+//                    accessViewModel = accessViewModel
+//                )
+
+                SetupNavGraph(
+                    navController = navController,
+                    accessViewModel = accessViewModel,
+                    sessionViewModel = sessionViewModel,
+                    context = this
+                )
             }
         }
     }

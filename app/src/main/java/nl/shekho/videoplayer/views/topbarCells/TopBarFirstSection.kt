@@ -7,23 +7,27 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.helpers.extensions.Helpers
+import kotlin.time.ExperimentalTime
+import androidx.compose.ui.graphics.*
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun SessionTopBarFirstSection(
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    sessionViewModel: SessionViewModel,
+    iconsColor: Color,
+    titleColor: Color
 ){
+    var sessionDate = sessionViewModel.selectedSession.value.startTime
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -35,15 +39,15 @@ fun SessionTopBarFirstSection(
 
         //Session name
         Text(
-            text = "Session - ${getSessionDateFormatted()}",
+            text = "${stringResource(id = R.string.session)} - ${sessionDate?.let { Helpers.formatDateTimeSessionShort(it)} ?: kotlin.run { "Date" }} ",
             fontSize = 18.sp,
-            color = lightBlue,
+            color = titleColor,
             fontWeight = FontWeight.Bold
         )
 
         //Session date
         Text(
-            text = getCurrentDateFormatted(),
+            text = sessionDate?.let { Helpers.getSessionDate(sessionDate)} ?: kotlin.run { stringResource(id = R.string.sessionDate)},
             fontSize = 14.sp,
             color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold
@@ -51,7 +55,6 @@ fun SessionTopBarFirstSection(
 
 
         //Participants
-
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
@@ -70,13 +73,13 @@ fun SessionTopBarFirstSection(
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_person_24),
                 contentDescription = "",
-                tint = deepBlue,
+                tint = iconsColor,
                 modifier = Modifier
                     .size(20.dp)
             )
 
             Text(
-                text = accessViewModel.participant1?.firstname ?: "",
+                text = accessViewModel.participant1?.firstname ?: stringResource(id = R.string.participant1),
                 fontSize = 14.sp,
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold
@@ -86,13 +89,13 @@ fun SessionTopBarFirstSection(
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_person_24),
                 contentDescription = "",
-                tint = deepBlue,
+                tint = iconsColor,
                 modifier = Modifier
                     .size(20.dp)
             )
 
             Text(
-                text = accessViewModel.participant2?.firstname ?: "",
+                text = accessViewModel.participant2?.firstname ?: stringResource(id = R.string.participant2),
                 fontSize = 14.sp,
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold
@@ -100,18 +103,4 @@ fun SessionTopBarFirstSection(
             )
         }
     }
-}
-
-
-fun getSessionDateFormatted(): String{
-    val currentDate = LocalDateTime.now()
-    return "${LocalDateTime.now().dayOfWeek} ${currentDate.dayOfMonth}th"
-}
-
-
-fun getCurrentDateFormatted(): String{
-    val currentDate = LocalDateTime.now()
-    val formatterPattern = "yyyy-MM-dd HH:mm"
-    val formatter = DateTimeFormatter.ofPattern(formatterPattern)
-    return currentDate.format(formatter)
 }
