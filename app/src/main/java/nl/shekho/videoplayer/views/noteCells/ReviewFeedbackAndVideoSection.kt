@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.views.noteCells
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +18,8 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun ReviewFeedbackAndVideoSection(
     sessionViewModel: SessionViewModel,
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    context: Context
 ) {
     val shape = RoundedCornerShape(20.dp)
     Column(
@@ -48,7 +50,9 @@ fun ReviewFeedbackAndVideoSection(
             contentAlignment = Alignment.Center
         ) {
             NoteSection(
-                sessionViewModel = sessionViewModel
+                context = context,
+                sessionViewModel = sessionViewModel,
+                accessViewModel = accessViewModel
             )
         }
     }

@@ -57,7 +57,8 @@ class MainActivity : ComponentActivity() {
 //                ReviewView(
 //                    sessionViewModel = sessionViewModel,
 //                    navController = navController,
-//                    accessViewModel = accessViewModel
+//                    accessViewModel = accessViewModel,
+//                    context = this
 //                )
 
                 SetupNavGraph(

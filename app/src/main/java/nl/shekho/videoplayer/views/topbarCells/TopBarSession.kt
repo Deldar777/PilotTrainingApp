@@ -15,8 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.customDarkGray
-import nl.shekho.videoplayer.ui.theme.deepBlue
-import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
@@ -63,7 +61,7 @@ fun TopBarSession(
                     accessViewModel = accessViewModel,
                     sessionViewModel = sessionViewModel,
                     titleColor = lightBlue,
-                    iconsColor = deepBlue
+                    iconsColor = lightBlue
                 )
             }
 

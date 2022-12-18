@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.views.generalCells
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +25,8 @@ fun HighlightAndVideo(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel,
     screen: String,
-    navController: NavController
+    navController: NavController,
+    context: Context
 ) {
     val shape = RoundedCornerShape(20.dp)
 
@@ -69,7 +71,8 @@ fun HighlightAndVideo(
             }else{
                 ReviewFeedbackAndVideoSection(
                     sessionViewModel = sessionViewModel,
-                    accessViewModel = accessViewModel
+                    accessViewModel = accessViewModel,
+                    context = context
                 )
             }
 

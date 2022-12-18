@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.views
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,8 @@ import kotlin.time.ExperimentalTime
 fun ReviewView(
     sessionViewModel: SessionViewModel,
     navController: NavController,
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    context: Context
 ) {
 
     Box(
@@ -43,7 +45,8 @@ fun ReviewView(
                 sessionViewModel = sessionViewModel,
                 accessViewModel = accessViewModel,
                 screen = stringResource(id = R.string.review),
-                navController = navController
+                navController = navController,
+                context = context
             )
 
         }

@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
@@ -182,7 +182,7 @@ fun LoginView(
                             },
                             shape = RoundedCornerShape(20.dp),
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = deepBlue,
+                                backgroundColor = lightBlue,
                                 contentColor = MaterialTheme.colors.primary
                             ),
                             modifier = Modifier

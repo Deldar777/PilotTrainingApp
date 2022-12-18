@@ -76,5 +76,8 @@
     <string name="currentTimestamp">Current timestamp</string>
     <string name="noToken">Something went wrong with authentication! Please log out and log in again</string>
     <string name="sessionCreationError">Sorry for the inconvenience! Session cannot be created now, please contact VRef Solutions</string>
+    <string name="editOn">Edit mode on</string>
+    <string name="editOff">Edit mode off</string>
+    <string name="saveChanges">Save changes</string>
 
 </resources>

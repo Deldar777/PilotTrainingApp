@@ -49,7 +49,8 @@ fun SetupNavGraph(
             SessionView(
                 sessionViewModel = sessionViewModel,
                 navController = navController,
-                accessViewModel = accessViewModel
+                accessViewModel = accessViewModel,
+                context = context
             )
         }
 
@@ -59,7 +60,8 @@ fun SetupNavGraph(
             ReviewView(
                 sessionViewModel = sessionViewModel,
                 navController = navController,
-                accessViewModel = accessViewModel
+                accessViewModel = accessViewModel,
+                context = context
             )
         }
 

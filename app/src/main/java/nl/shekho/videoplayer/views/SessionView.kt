@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.views
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +27,8 @@ import kotlin.time.ExperimentalTime
 fun SessionView(
     sessionViewModel: SessionViewModel,
     navController: NavController,
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    context: Context
 ) {
     Box(
         modifier = Modifier
@@ -47,7 +49,8 @@ fun SessionView(
                 sessionViewModel = sessionViewModel,
                 accessViewModel = accessViewModel,
                 screen = stringResource(id = R.string.session),
-                navController = navController
+                navController = navController,
+                context = context
             )
         }
     }

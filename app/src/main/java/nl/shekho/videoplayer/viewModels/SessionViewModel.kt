@@ -57,7 +57,7 @@ class SessionViewModel @Inject constructor(
     //Events
     private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
     val events: StateFlow<Result<List<Event>>?> = mutableEvents
-    var selectedEvent = mutableStateOf(Event(EventType.MARKEDEVENT, null, null, null))
+    var selectedEvent = mutableStateOf(Event(EventType.MARKEDEVENT, null, null, ""))
     var selectedItemIndex = mutableStateOf(100)
 
     fun resetViewWindowsValues() {

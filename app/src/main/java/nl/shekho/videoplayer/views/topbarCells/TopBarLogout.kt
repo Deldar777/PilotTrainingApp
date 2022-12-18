@@ -15,9 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.ui.theme.customDarkGray
-import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.helpers.SessionInformation
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.navigation.Screens
@@ -64,7 +63,7 @@ fun TopBarLogout(
                 ) {
                     Text(
                         text = stringResource(id = R.string.logout),
-                        color = deepBlue,
+                        color = lightBlue,
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
                         modifier = Modifier.clickable {
