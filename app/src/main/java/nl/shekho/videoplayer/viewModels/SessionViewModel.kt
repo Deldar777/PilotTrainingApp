@@ -33,9 +33,10 @@ class SessionViewModel @Inject constructor(
 
 
     //Session feedback variables
-    var failed = mutableStateOf(false)
     var loading: Boolean by mutableStateOf(false)
     var succeeded: Boolean by mutableStateOf(false)
+    var failed: String by mutableStateOf("")
+    var createSessionAsked: Boolean by mutableStateOf(false)
 
     //Add note button states
     var addNoteButtonEnabled: MutableState<Boolean> = mutableStateOf(false)
@@ -69,23 +70,21 @@ class SessionViewModel @Inject constructor(
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {
         viewModelScope.launch {
             loading = true
-
             try {
                 val response = apiService.createSession(
                     body = newSessionEntity,
                     token = token,
                 )
+
                 if (response.isSuccessful && response.body() != null) {
-                    val body = response.body()
                     succeeded = true
-                    runningSession = body
+                    runningSession = response.body()
                 } else {
-                    failed.value = true
+                    failed = response.message()
                 }
             } catch (e: java.lang.Exception) {
-                failed.value = true
+                failed = e.message.toString()
             }
-            delay(4000)
             loading = false
         }
     }

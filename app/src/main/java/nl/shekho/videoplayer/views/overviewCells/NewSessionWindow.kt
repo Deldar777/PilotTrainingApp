@@ -67,19 +67,15 @@ fun NewSessionWindow(
     var expanded1 by remember { mutableStateOf(false) }
     var participant1 by remember { mutableStateOf("") }
     var textfieldSize1 by remember { mutableStateOf(androidx.compose.ui.geometry.Size.Zero) }
-    val icon1 = if (expanded1)
-        Icons.Filled.ArrowDropUp
-    else
-        Icons.Filled.ArrowDropDown
+    val icon1 = if (expanded1) Icons.Filled.ArrowDropUp
+    else Icons.Filled.ArrowDropDown
 
     //Dropdown participant 1
     var expanded2 by remember { mutableStateOf(false) }
     var participant2 by remember { mutableStateOf("") }
     var textfieldSize2 by remember { mutableStateOf(androidx.compose.ui.geometry.Size.Zero) }
-    val icon2 = if (expanded2)
-        Icons.Filled.ArrowDropUp
-    else
-        Icons.Filled.ArrowDropDown
+    val icon2 = if (expanded2) Icons.Filled.ArrowDropUp
+    else Icons.Filled.ArrowDropDown
 
 
     Box(
@@ -92,9 +88,7 @@ fun NewSessionWindow(
     ) {
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier
-                .fillMaxSize()
+            verticalArrangement = Arrangement.spacedBy(20.dp), modifier = Modifier.fillMaxSize()
         ) {
 
             Box(
@@ -141,22 +135,16 @@ fun NewSessionWindow(
                     // sessionName textField
                     sessionName = Helpers.getSessionName()
                     OutlinedTextField(
-                        enabled = false,
-                        colors = TextFieldDefaults.textFieldColors(
+                        enabled = false, colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.White,
                             textColor = MaterialTheme.colors.primaryVariant
-                        ),
-                        value = sessionName,
-                        onValueChange = { },
-                        textStyle = TextStyle(
+                        ), value = sessionName, onValueChange = { }, textStyle = TextStyle(
                             color = MaterialTheme.colors.primaryVariant,
                             fontWeight = FontWeight.Bold
-                        ),
-                        label = {
+                        ), label = {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(20.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.sessionDate),
@@ -167,18 +155,15 @@ fun NewSessionWindow(
                                     color = textSecondaryDarkMode
                                 )
                             }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        }, modifier = Modifier.fillMaxWidth()
                     )
 
                     //Dropdown participant1
                     Column() {
-                        OutlinedTextField(
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = Color.White,
-                                textColor = MaterialTheme.colors.primaryVariant
-                            ),
+                        OutlinedTextField(colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White,
+                            textColor = MaterialTheme.colors.primaryVariant
+                        ),
                             value = participant1,
                             onValueChange = { participant1 = it },
                             modifier = Modifier
@@ -190,8 +175,7 @@ fun NewSessionWindow(
                             label = {
                                 Row(
                                     horizontalArrangement = Arrangement.spacedBy(20.dp),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
                                         text = stringResource(id = R.string.captain),
@@ -205,17 +189,16 @@ fun NewSessionWindow(
                             },
                             trailingIcon = {
                                 Icon(
-                                    icon1, null,
+                                    icon1,
+                                    null,
                                     Modifier.clickable { expanded1 = !expanded1 },
                                     tint = textSecondaryDarkMode
                                 )
-                            }
-                        )
+                            })
                         DropdownMenu(
                             expanded = expanded1,
                             onDismissRequest = { expanded1 = false },
-                            modifier = Modifier
-                                .width(with(LocalDensity.current) { textfieldSize1.width.toDp() })
+                            modifier = Modifier.width(with(LocalDensity.current) { textfieldSize1.width.toDp() })
                         ) {
                             mappedUsers?.forEach { label ->
                                 DropdownMenuItem(onClick = {
@@ -232,11 +215,10 @@ fun NewSessionWindow(
 
                     //Dropdown participant2
                     Column() {
-                        OutlinedTextField(
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = Color.White,
-                                textColor = MaterialTheme.colors.primaryVariant
-                            ),
+                        OutlinedTextField(colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White,
+                            textColor = MaterialTheme.colors.primaryVariant
+                        ),
                             value = participant2,
                             onValueChange = { participant2 = it },
                             modifier = Modifier
@@ -248,8 +230,7 @@ fun NewSessionWindow(
                             label = {
                                 Row(
                                     horizontalArrangement = Arrangement.spacedBy(20.dp),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
                                         text = stringResource(id = R.string.captain),
@@ -263,17 +244,16 @@ fun NewSessionWindow(
                             },
                             trailingIcon = {
                                 Icon(
-                                    icon2, null,
+                                    icon2,
+                                    null,
                                     Modifier.clickable { expanded2 = !expanded2 },
                                     tint = textSecondaryDarkMode
                                 )
-                            }
-                        )
+                            })
                         DropdownMenu(
                             expanded = expanded2,
                             onDismissRequest = { expanded2 = false },
-                            modifier = Modifier
-                                .width(with(LocalDensity.current) { textfieldSize2.width.toDp() })
+                            modifier = Modifier.width(with(LocalDensity.current) { textfieldSize2.width.toDp() })
                         ) {
                             mappedUsers?.forEach { label ->
                                 DropdownMenuItem(onClick = {
@@ -299,13 +279,9 @@ fun NewSessionWindow(
                     ) {
 
                         OutlinedButton(
-                            enabled = !sessionViewModel.loading &&
-                                    participant1.isNotEmpty() &&
-                                    participant2.isNotEmpty() &&
-                                    participant1 != participant2,
+                            enabled = !sessionViewModel.loading && participant1.isNotEmpty() && participant2.isNotEmpty() && participant1 != participant2,
                             onClick = {
                                 if (accessViewModel.isOnline()) {
-
                                     val instructorId = accessViewModel.loggedInUserId
                                     val participant1Id = mappedUsers?.get(participant1)?.id
                                     val participant2Id = mappedUsers?.get(participant2)?.id
@@ -314,26 +290,16 @@ fun NewSessionWindow(
 
                                     val newSessionEntity = NewSessionEntity(
                                         UserIds = listOf(
-                                            instructorId,
-                                            participant1Id,
-                                            participant2Id
-                                        ),
-                                        CompanyId = companyId
+                                            instructorId, participant1Id, participant2Id
+                                        ), CompanyId = companyId
                                     )
-                                    navController.navigate(Screens.SessionScreen.route)
 
                                     if (token != null) {
+                                        sessionViewModel.createSessionAsked = true
                                         sessionViewModel.createSession(newSessionEntity, token)
-
-
-                                        if (!sessionViewModel.loading && sessionViewModel.succeeded) {
-                                            if (mappedUsers != null) {
-                                                accessViewModel.participant1 =
-                                                    mappedUsers[participant1]
-                                                accessViewModel.participant2 =
-                                                    mappedUsers[participant2]
-                                            }
-                                            navController.navigate(Screens.SessionScreen.route)
+                                        if (mappedUsers != null) {
+                                            accessViewModel.participant1 = mappedUsers[participant1]
+                                            accessViewModel.participant2 = mappedUsers[participant2]
                                         }
                                     } else {
                                         Toast.makeText(context, noToken, Toast.LENGTH_LONG).show()
@@ -341,14 +307,14 @@ fun NewSessionWindow(
                                 } else {
                                     Toast.makeText(context, noInternet, Toast.LENGTH_LONG).show()
                                 }
+
                             },
                             shape = RoundedCornerShape(20.dp),
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = deepBlue,
                                 contentColor = MaterialTheme.colors.primary
                             ),
-                            modifier = Modifier
-                                .width(300.dp)
+                            modifier = Modifier.width(300.dp)
                         ) {
                             Text(
                                 text = stringResource(id = R.string.start),
@@ -367,13 +333,19 @@ fun NewSessionWindow(
 
                 }
             }
-            if (sessionViewModel.loading) {
-                Loading()
-            } else {
-                if (sessionViewModel.failed.value) {
-                    Toast.makeText(context, sessionCreationError, Toast.LENGTH_LONG).show()
+            if(sessionViewModel.createSessionAsked){
+                if (sessionViewModel.loading) {
+                    Loading()
+                } else {
+                    if (!sessionViewModel.succeeded) {
+                        Toast.makeText(context, sessionCreationError, Toast.LENGTH_LONG).show()
+                    } else {
+                        navController.navigate(Screens.SessionScreen.route)
+                    }
+                    sessionViewModel.createSessionAsked = false
                 }
             }
+
 
         }
     }
