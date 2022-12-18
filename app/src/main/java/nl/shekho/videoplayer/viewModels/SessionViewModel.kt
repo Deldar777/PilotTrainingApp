@@ -49,7 +49,7 @@ class SessionViewModel @Inject constructor(
     //Sessions
     private val mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
     val sessions: StateFlow<Result<List<Session>>?> = mutableSessions
-    val selectedSession = mutableStateOf(Session(null, null, null, null))
+    val selectedSession = mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null))
     var runningSession: SessionEntity? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
 

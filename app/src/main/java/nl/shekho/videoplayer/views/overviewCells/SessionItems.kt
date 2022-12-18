@@ -20,10 +20,8 @@ import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.views.generalCells.NoInternetView
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import nl.shekho.videoplayer.helpers.extensions.Helpers
 
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -54,9 +52,10 @@ fun SessionItems(
             sessions?.let { sessions ->
                 sessions
                     .onSuccess {
-                        if (it.isNotEmpty()) {
+                        val filteredArray = Helpers.filterSessionIfUserIsInstructor(it,accessViewModel.userIsInstructor.value)
+                        if (filteredArray.isNotEmpty()) {
                             LazyColumn {
-                                itemsIndexed(items = it) { index, session ->
+                                itemsIndexed(items = filteredArray) { index, session ->
                                     SessionItem(
                                         session = session,
                                         isSelected = index == sessionViewModel.selectedSessionIndex.value,
@@ -97,12 +96,3 @@ fun SessionItems(
     }
 }
 
-fun filterSessionIfUserIsInstructor(sessions: List<Session>) {
-
-    sessions.forEach { session ->
-        val sessionDateString = session.startTime
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm");
-        val sessionDate = LocalDate.parse(sessionDateString, formatter);
-    }
-
-}
