@@ -24,12 +24,10 @@ class AccessViewModel @Inject constructor(
 ) : ViewModel() {
 
     //Response information
-    var succeeded = mutableStateOf(true)
+    var succeeded: Boolean by mutableStateOf(false)
     var failed: String by mutableStateOf("")
     var loading: Boolean by mutableStateOf(false)
-
-    //overview screen
-    var showOverviewScreen: MutableState<Boolean> = mutableStateOf(false)
+    var loginAsked: Boolean by mutableStateOf(false)
 
     //Access information
     var loggedIn = mutableStateOf(false)
@@ -47,21 +45,6 @@ class AccessViewModel @Inject constructor(
     var companyId: String? = ""
     var jwtExpired: Boolean? = false
     var listUsers: List<UserEntity>? = listOf()
-
-    init {
-        getParticipantMockData()
-    }
-
-    fun showOverviewScreen(showOverview: Boolean){
-        showOverviewScreen.value = showOverview
-    }
-
-    private fun getParticipantMockData(){
-        val participant1Mock = UserEntity("1","", firstname = "Daan","Daan","","",Role.PILOT.type,"" )
-        val participant2Mock = UserEntity("1","", firstname = "Lisa","Lisa","","",Role.PILOT.type,"" )
-        participant1 = participant1Mock
-        participant2 = participant2Mock
-    }
 
     fun resetSessionInformation() {
         userIsInstructor.value = false
@@ -84,22 +67,19 @@ class AccessViewModel @Inject constructor(
             try {
                 val userEntity = LoginEntity(username, password)
                 val response = apiService.login(userEntity)
-
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body != null) {
                         loggedIn.value = true
+                        succeeded = true
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
                         encodedJwtToken = body.token
                         decodeJWT()
                     }
-
                 } else {
-                    succeeded.value = false
                     failed = response.message()
                 }
             } catch (e: java.lang.Exception) {
-                succeeded.value = false
                 failed = e.message.toString()
             }
 
@@ -120,7 +100,7 @@ class AccessViewModel @Inject constructor(
                         val body = response.body()
 
                         if (body != null) {
-                            var user = response.body()
+                            val user = response.body()
                             if (user != null) {
                                 loggedInUser = user.results
                             }

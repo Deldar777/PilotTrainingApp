@@ -38,7 +38,12 @@ fun SplashScreen(
         delay(1000)
         navController.popBackStack()
 
-        navController.navigate(Screens.StartScreen.route)
+        if(accessViewModel.loggedIn.value){
+            navController.navigate(Screens.OverviewScreen.route)
+        }else{
+            navController.navigate(Screens.LoginScreen.route)
+
+        }
     }
     Splash(alpha = alphaAnim.value)
 }

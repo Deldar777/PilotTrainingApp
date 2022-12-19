@@ -33,17 +33,6 @@ fun SetupNavGraph(
         }
 
         composable(
-            route = Screens.StartScreen.route
-        ){
-            StartView(
-                navController = navController,
-                accessViewModel = accessViewModel,
-                sessionViewModel = sessionViewModel,
-                context = context
-            )
-        }
-
-        composable(
             route = Screens.SessionScreen.route
         ){
             SessionView(
@@ -81,7 +70,8 @@ fun SetupNavGraph(
         ){
             LoginView(
                 accessViewModel = accessViewModel,
-                context = context
+                context = context,
+                navController = navController
             )
         }
 

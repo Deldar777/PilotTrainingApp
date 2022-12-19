@@ -35,6 +35,28 @@ fun OverviewView(
     navController: NavController,
     context: Context
 ) {
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+    ) {
+        OverviewWindow(
+            accessViewModel = accessViewModel,
+            sessionViewModel = sessionViewModel,
+            navController = navController,
+            context = context
+        )
+    }
+}
+
+@OptIn(ExperimentalTime::class)
+@Composable
+fun OverviewWindow(
+    accessViewModel: AccessViewModel,
+    sessionViewModel: SessionViewModel,
+    navController: NavController,
+    context: Context
+) {
     val shape = RoundedCornerShape(20.dp)
 
     Column {
@@ -162,7 +184,8 @@ fun OverviewView(
                 if (sessionViewModel.showReviewWindow.value) {
                     ReviewWindow(
                         sessionViewModel = sessionViewModel,
-                        navController = navController
+                        navController = navController,
+                        accessViewModel = accessViewModel
                     )
                 }
 

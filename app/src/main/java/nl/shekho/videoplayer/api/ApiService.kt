@@ -32,11 +32,16 @@ interface ApiService {
         @Header("Authorization") token: String?
     ): Response<List<SessionEntity>>
 
-
     @POST("CreateSession")
     suspend fun createSession(
         @Body body: NewSessionEntity,
         @Header("Authorization") token: String?
     ):Response<SessionEntity>
+
+    @GET("GetUserBySessionId/{sessionId}")
+    suspend fun getUsersBySessionId(
+        @Path("sessionId") sessionId: String,
+        @Header("Authorization") token: String?
+    ): Response<UsersEntity>
 
 }

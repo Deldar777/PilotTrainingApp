@@ -25,7 +25,9 @@ fun SessionTopBarFirstSection(
     accessViewModel: AccessViewModel,
     sessionViewModel: SessionViewModel,
     iconsColor: Color,
-    titleColor: Color
+    titleColor: Color,
+    participant1Name: String,
+    participant2Name: String
 ){
     var sessionDate = sessionViewModel.selectedSession.value.startTime
 
@@ -39,7 +41,7 @@ fun SessionTopBarFirstSection(
 
         //Session name
         Text(
-            text = "${stringResource(id = R.string.session)} - ${sessionDate?.let { Helpers.formatDateTimeSessionShort(it)} ?: kotlin.run { "Date" }} ",
+            text = "${stringResource(id = R.string.session)} - ${sessionDate.let { Helpers.formatDateTimeSessionShort(it)} ?: kotlin.run { "Date" }} ",
             fontSize = 18.sp,
             color = titleColor,
             fontWeight = FontWeight.Bold
@@ -47,7 +49,7 @@ fun SessionTopBarFirstSection(
 
         //Session date
         Text(
-            text = sessionDate?.let { Helpers.getSessionDate(sessionDate)} ?: kotlin.run { stringResource(id = R.string.sessionDate)},
+            text = sessionDate.let { Helpers.getSessionDate(sessionDate)} ?: kotlin.run { stringResource(id = R.string.sessionDate)},
             fontSize = 14.sp,
             color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold
@@ -79,7 +81,7 @@ fun SessionTopBarFirstSection(
             )
 
             Text(
-                text = accessViewModel.participant1?.firstname ?: stringResource(id = R.string.participant1),
+                text = participant1Name,
                 fontSize = 14.sp,
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold
@@ -95,7 +97,7 @@ fun SessionTopBarFirstSection(
             )
 
             Text(
-                text = accessViewModel.participant2?.firstname ?: stringResource(id = R.string.participant2),
+                text = participant2Name,
                 fontSize = 14.sp,
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold

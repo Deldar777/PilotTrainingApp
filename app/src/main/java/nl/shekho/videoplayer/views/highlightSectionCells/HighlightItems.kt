@@ -24,53 +24,22 @@ fun HighlightItems(
     inactiveColor: Color = highlightItemGray,
     sessionViewModel: SessionViewModel
 ) {
-    val events by sessionViewModel.events.collectAsState()
 
-    if (sessionViewModel.isOnline()) {
-        //Fetch the events from the API
-        sessionViewModel.getEventsMockData()
-
-//        sessionViewModel.selectedEvent.value = eventList.get(eventList.lastIndex)
-//        val coroutineScope = rememberCoroutineScope()
-//        val scrollState = rememberLazyListState()
-        events?.let { listEvent ->
-            listEvent
-                .onSuccess {
-                    if (it.isNotEmpty()) {
-                        LazyColumn {
-                            itemsIndexed(items = it) { index, event ->
-                                HighlightItem(
-                                    event = event,
-                                    isSelected = index == sessionViewModel.selectedItemIndex.value,
-                                    activeHighlightColor = activeHighlightColor,
-                                    inactiveColor = inactiveColor,
-                                ){
-                                    sessionViewModel.addNoteButtonEnabled.value = false
-                                    sessionViewModel.selectedItemIndex.value = index
-                                    sessionViewModel.selectedEvent.value = event
-                                }
-                            }
-                        }
-
-                    } else {
-                        ShowFeedback(
-                            text = stringResource(id = R.string.noEventsYet),
-                            color = MaterialTheme.colors.primary
-                        )
-                    }
+    LazyColumn {
+        itemsIndexed(items = sessionViewModel.events) { index, event ->
+            if (event != null) {
+                HighlightItem(
+                    event = event,
+                    isSelected = index == sessionViewModel.selectedItemIndex.value,
+                    activeHighlightColor = activeHighlightColor,
+                    inactiveColor = inactiveColor,
+                ){
+                    sessionViewModel.addNoteButtonEnabled.value = false
+                    sessionViewModel.selectedItemIndex.value = index
+                    sessionViewModel.selectedEvent.value = event
                 }
-                .onFailure {
-                    ShowFeedback(
-                        text = stringResource(id = R.string.generalError),
-                        color = Color.Red
-                    )
-                }
-
-        } ?: run {
-            CircularProgressIndicator(color = Color.White)
+            }
         }
-    } else {
-        NoInternetView()
     }
 }
 

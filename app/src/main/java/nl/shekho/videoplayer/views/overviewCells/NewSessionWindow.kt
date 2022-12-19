@@ -31,12 +31,9 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
 import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.models.Role
-import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.generalCells.ShowFeedback
-import java.time.LocalDateTime
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.ui.theme.deepBlue
@@ -345,8 +342,6 @@ fun NewSessionWindow(
                     sessionViewModel.createSessionAsked = false
                 }
             }
-
-
         }
     }
 }

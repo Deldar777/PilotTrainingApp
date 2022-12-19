@@ -4,12 +4,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -21,8 +27,12 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.models.Role
 import nl.shekho.videoplayer.ui.theme.lightBlue
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.generalCells.NoInternetView
+import nl.shekho.videoplayer.views.generalCells.ShowFeedback
 import nl.shekho.videoplayer.views.navigation.Screens
 import kotlin.time.ExperimentalTime
 
@@ -30,8 +40,12 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun ReviewWindow(
     sessionViewModel: SessionViewModel,
-    navController: NavController
+    navController: NavController,
+    accessViewModel: AccessViewModel
 ) {
+
+    //Get users that the logged in user has participated in
+    val users by sessionViewModel.users.collectAsState()
 
     Box(
         modifier = Modifier
@@ -56,13 +70,11 @@ fun ReviewWindow(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "${
-                        sessionViewModel.selectedSession.value.startTime?.let {
-                            Helpers.formatDateTimeSessionShort(
-                                it
-                            )
-                        }
-                    }",
+                    text = sessionViewModel.selectedSession.value.startTime.let {
+                        Helpers.formatDateTimeSessionShort(
+                            it
+                        )
+                    },
                     fontFamily = FontFamily.Monospace,
                     textAlign = TextAlign.Center,
                     fontSize = 28.sp,
@@ -130,38 +142,26 @@ fun ReviewWindow(
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier.fillMaxSize()
                                 ) {
-                                    Text(
-                                        text = stringResource(id = R.string.role),
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
+
+                                    //Roles
+                                    TextName(
+                                        name = stringResource(id = R.string.role),
                                         fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colors.primaryVariant,
+                                        fontSize = 16
+                                    )
+                                    TextName(
+                                        name = stringResource(id = R.string.instructor),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16
                                     )
 
-                                    Text(
-                                        text = stringResource(id = R.string.instructor),
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
-                                        color = MaterialTheme.colors.primaryVariant,
-                                    )
-
-                                    Text(
-                                        text = stringResource(id = R.string.firstOfficer),
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
-                                        color = MaterialTheme.colors.primaryVariant,
-                                    )
-
-                                    Text(
-                                        text = stringResource(id = R.string.captain),
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
-                                        color = MaterialTheme.colors.primaryVariant,
-                                    )
+                                    for (i in 1..2) {
+                                        TextName(
+                                            name = stringResource(id = R.string.pilot),
+                                            fontWeight = FontWeight.Normal,
+                                            fontSize = 16
+                                        )
+                                    }
                                 }
                             }
 
@@ -179,43 +179,73 @@ fun ReviewWindow(
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier.fillMaxSize()
                                 ) {
-                                    Text(
-                                        text = stringResource(id = R.string.name),
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
+
+                                }
+
+
+
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    TextName(
+                                        name = stringResource(id = R.string.name),
                                         fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colors.primaryVariant,
+                                        fontSize = 16
                                     )
 
-                                    Text(
-                                        text = "Andy Henson",
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
-                                        color = MaterialTheme.colors.primaryVariant,
-                                    )
+                                    if (sessionViewModel.isOnline()) {
 
-                                    Text(
-                                        text = "Daan Baer",
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
-                                        color = MaterialTheme.colors.primaryVariant,
-                                    )
+                                        if (accessViewModel.encodedJwtToken != null && sessionViewModel.selectedSession.value.id != null) {
+                                            sessionViewModel.fetchUsersBySessionId(
+                                                sessionId = sessionViewModel.selectedSession.value.id!!,
+                                                token = accessViewModel.encodedJwtToken!!
+                                            )
+                                        }
 
-                                    Text(
-                                        text = "Lisa Bakke",
-                                        fontFamily = FontFamily.Monospace,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 14.sp,
-                                        color = MaterialTheme.colors.primaryVariant,
-                                    )
+                                        users?.let { users ->
+                                            users
+                                                .onSuccess {
+                                                    it.forEach{ user ->
+                                                        if(user.role == Role.INSTRUCTOR.type){
+                                                            TextName(
+                                                                name = user.fullName,
+                                                                fontWeight = FontWeight.Normal,
+                                                                fontSize = 14
+                                                            )
+                                                        }
+                                                    }
+
+                                                    it.forEach{ user ->
+                                                        if(user.role == Role.PILOT.type){
+                                                            TextName(
+                                                                name = user.fullName,
+                                                                fontWeight = FontWeight.Normal,
+                                                                fontSize = 14
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                .onFailure {
+                                                    ShowFeedback(
+                                                        text = stringResource(id = R.string.generalError),
+                                                        color = Color.Red
+                                                    )
+                                                }
+
+                                        } ?: run {
+                                            CircularProgressIndicator(color = Color.White)
+                                        }
+                                    } else {
+                                        NoInternetView()
+                                    }
+
+
+
                                 }
                             }
 
                         }
-
                     }
                 }
             }

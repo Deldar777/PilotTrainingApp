@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 fun ShowFeedback(text: String, color: Color) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(10.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -23,7 +24,6 @@ fun ShowFeedback(text: String, color: Color) {
             text = text,
             style = MaterialTheme.typography.body1,
             color =color,
-            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )

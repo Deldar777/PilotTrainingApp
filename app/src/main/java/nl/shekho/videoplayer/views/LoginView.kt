@@ -36,20 +36,40 @@ import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
 import nl.shekho.videoplayer.views.generalCells.Loading
+import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.topbarCells.TopBarLogin
 
 
 @Composable
 fun LoginView(
     accessViewModel: AccessViewModel,
-    context: Context
+    context: Context,
+    navController: NavController
+){
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+    ) {
+        LoginWindow(
+            accessViewModel = accessViewModel,
+            context = context,
+            navController = navController
+        )
+    }
+}
+
+@Composable
+fun LoginWindow(
+    accessViewModel: AccessViewModel,
+    context: Context,
+    navController: NavController
 ) {
     //Login text fields
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     //Feedback sentences
-    val userNameOrPasswordEmpty = stringResource(id = R.string.emptyFields)
     val notInternet = stringResource(id = R.string.noInternet)
     val loginFailed = stringResource(id = R.string.loginFailed)
 
@@ -175,6 +195,7 @@ fun LoginView(
                             enabled = !accessViewModel.loading && (username.isNotEmpty() && password.isNotEmpty()),
                             onClick = {
                                 if (accessViewModel.isOnline()) {
+                                    accessViewModel.loginAsked = true
                                     accessViewModel.logIn(username, password)
                                 } else {
                                     Toast.makeText(context, notInternet, Toast.LENGTH_LONG).show()
@@ -201,12 +222,17 @@ fun LoginView(
                             )
                         }
                     }
-                    if (accessViewModel.loading) {
-                        Loading()
-                    }else{
-                        if(!accessViewModel.succeeded.value){
-                            Toast.makeText(context, loginFailed, Toast.LENGTH_LONG).show()
-                            accessViewModel.succeeded.value = true
+
+                    if(accessViewModel.loginAsked){
+                        if (accessViewModel.loading) {
+                            Loading()
+                        } else {
+                            if (!accessViewModel.succeeded) {
+                                Toast.makeText(context, loginFailed, Toast.LENGTH_LONG).show()
+                            } else {
+                                navController.navigate(Screens.OverviewScreen.route)
+                            }
+                            accessViewModel.loginAsked = false
                         }
                     }
                 }

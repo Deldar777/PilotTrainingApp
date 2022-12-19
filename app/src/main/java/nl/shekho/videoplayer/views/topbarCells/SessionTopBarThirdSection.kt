@@ -31,7 +31,7 @@ fun SessionTopBarThirdSection(
 ) {
     OutlinedButton(
         onClick = {
-            navController.navigate(Screens.StartScreen.route)
+
         },
         colors = ButtonDefaults.buttonColors(
             backgroundColor = deepPurple,

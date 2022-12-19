@@ -4,9 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
@@ -25,6 +28,10 @@ fun TopBarReview(
     accessViewModel: AccessViewModel,
     navController: NavController
 ) {
+
+    //Get users that the logged in user has participated in
+    val users by sessionViewModel.users.collectAsState()
+
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
@@ -53,11 +60,24 @@ fun TopBarReview(
                     .background(customDarkGray),
                 contentAlignment = Alignment.Center
             ) {
+
+                var user1 = stringResource(id = R.string.user1)
+                var user2 = stringResource(id = R.string.user2)
+                users?.let { users ->
+                    users
+                        .onSuccess {
+                            user1 = it.get(1).firstName
+                            user2 = it.get(2).firstName
+                        }
+                }
+
                 SessionTopBarFirstSection(
                     accessViewModel = accessViewModel,
                     sessionViewModel = sessionViewModel,
                     iconsColor = deepPurple,
-                    titleColor = lightPurple
+                    titleColor = lightPurple,
+                    participant1Name = user1,
+                    participant2Name = user2
                 )
             }
 

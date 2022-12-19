@@ -79,5 +79,8 @@
     <string name="editOn">Edit mode on</string>
     <string name="editOff">Edit mode off</string>
     <string name="saveChanges">Save changes</string>
+    <string name="pilot">Pilot</string>
+    <string name="user1">User 1</string>
+    <string name="user2">User 2</string>
 
 </resources>
