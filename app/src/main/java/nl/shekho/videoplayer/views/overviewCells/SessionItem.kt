@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,17 +22,23 @@ import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.models.Session
+import nl.shekho.videoplayer.models.SessionStatus
 import nl.shekho.videoplayer.ui.theme.highlightDivider
 import nl.shekho.videoplayer.ui.theme.lightBlue
+import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.*
 import java.time.format.DateTimeFormatter
+import kotlin.time.ExperimentalTime
 
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun SessionItem(
     session: Session,
     isSelected: Boolean = false,
     activeHighlightColor: Color = lightBlue,
+    accessViewModel: AccessViewModel,
     onItemClick: () -> Unit
 ) {
     Row(
@@ -50,7 +57,7 @@ fun SessionItem(
     ) {
 
         Text(
-            text = "${session.startTime?.let { Helpers.formatDateTimeSession(it) }}",
+            text = "${session.startTime.let { Helpers.formatDateTimeSession(it) }}",
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
@@ -74,8 +81,27 @@ fun SessionItem(
     }
 
     Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Divider(color = highlightDivider, thickness = 1.dp)
+
+        if(accessViewModel.userIsInstructor.value){
+            Text(
+                text = if (session.status == SessionStatus.STARTED.type) stringResource(id = R.string.inProgress) else stringResource(
+                    id = R.string.finished
+                ),
+                fontSize = 16.sp,
+                color = if (session.status == SessionStatus.STARTED.type) Color.Green else Color.Red
+
+            )
+
+            Divider(
+                color = if (session.status == SessionStatus.STARTED.type) Color.Green else Color.Red,
+                thickness = 1.dp
+            )
+        }else{
+            Divider(color = highlightDivider, thickness = 1.dp)
+        }
     }
 }

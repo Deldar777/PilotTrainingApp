@@ -81,7 +81,7 @@ fun MarkEventAndAltitudeSection(
                 .background(highlightItemGray)
         ) {
             Text(
-                text = "${stringResource(id = R.string.highlightTitle)} $currentAltitude",
+                text = "${stringResource(id = R.string.currentAltitude)} ${sessionViewModel.altitude}",
                 color = MaterialTheme.colors.primary,
             )
         }

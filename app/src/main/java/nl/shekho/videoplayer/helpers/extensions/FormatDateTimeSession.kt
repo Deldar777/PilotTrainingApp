@@ -1,6 +1,7 @@
 package nl.shekho.videoplayer.helpers.extensions
 
 import nl.shekho.videoplayer.models.Session
+import nl.shekho.videoplayer.models.SessionStatus
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -64,24 +65,29 @@ class Helpers {
         }
 
 
-        fun filterSessionIfUserIsInstructor(sessions: List<Session>, isInstructor: Boolean): List<Session> {
+        fun filterSessionIfUserIsInstructor(
+            sessions: List<Session>,
+            isInstructor: Boolean
+        ): List<Session> {
 
-            if(isInstructor){
-                val filteredArray = sessions.filter { session ->
-                    isNotOlderThan24Hours(session.startTime)
+            if (isInstructor) {
+                val sessionsForInstructor = sessions.filter { session ->
+                    isNotOlderThan24Hours(session.startTime) && (session.status == SessionStatus.STARTED.type || session.status == SessionStatus.FINISHED.type)
                 }
 
-                return filteredArray
+                return sessionsForInstructor
+            } else {
+                val sessionsForPilot = sessions.filter { session ->
+                    session.status == SessionStatus.FINISHED.type
+                }
+                return sessionsForPilot
             }
 
-            return sessions
         }
 
         private fun isNotOlderThan24Hours(date: String): Boolean {
             val formattedDate = convertStringToLocalDateTime(date)
             val oneDayOld = LocalDateTime.now().minusHours(24)
-            var isNotOld = formattedDate.isAfter(oneDayOld) || formattedDate.isEqual(oneDayOld)
-
             return formattedDate.isAfter(oneDayOld) || formattedDate.isEqual(oneDayOld)
         }
     }

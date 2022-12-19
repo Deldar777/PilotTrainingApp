@@ -57,6 +57,7 @@ fun SessionItems(
                             LazyColumn {
                                 itemsIndexed(items = filteredArray) { index, session ->
                                     SessionItem(
+                                        accessViewModel = accessViewModel,
                                         session = session,
                                         isSelected = index == sessionViewModel.selectedSessionIndex.value,
                                         activeHighlightColor = activeHighlightColor

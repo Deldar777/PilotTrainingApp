@@ -12,6 +12,7 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.views.generalCells.NoInternetView
 import nl.shekho.videoplayer.views.generalCells.ShowFeedback
@@ -25,7 +26,15 @@ fun HighlightItems(
     sessionViewModel: SessionViewModel
 ) {
 
+    if (sessionViewModel.events.isEmpty()) {
+        ShowFeedback(
+            color = Color.White,
+            text = stringResource(id = R.string.noEventsYet)
+        )
+    }
+
     LazyColumn {
+
         itemsIndexed(items = sessionViewModel.events) { index, event ->
             if (event != null) {
                 HighlightItem(
@@ -33,7 +42,7 @@ fun HighlightItems(
                     isSelected = index == sessionViewModel.selectedItemIndex.value,
                     activeHighlightColor = activeHighlightColor,
                     inactiveColor = inactiveColor,
-                ){
+                ) {
                     sessionViewModel.addNoteButtonEnabled.value = false
                     sessionViewModel.selectedItemIndex.value = index
                     sessionViewModel.selectedEvent.value = event

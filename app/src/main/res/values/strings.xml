@@ -82,5 +82,7 @@
     <string name="pilot">Pilot</string>
     <string name="user1">User 1</string>
     <string name="user2">User 2</string>
+    <string name="inProgress">In progress</string>
+    <string name="finished">Finished</string>
 
 </resources>

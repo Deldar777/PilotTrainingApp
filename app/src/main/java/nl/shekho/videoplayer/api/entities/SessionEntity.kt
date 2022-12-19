@@ -6,5 +6,6 @@ data class SessionEntity(
     var id: String,
     var startTime: String,
     var companyId: String,
-    var videos: List<String>?
+    var videos: List<String>?,
+    var status: String?
 )

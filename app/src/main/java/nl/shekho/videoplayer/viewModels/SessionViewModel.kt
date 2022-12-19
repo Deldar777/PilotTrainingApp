@@ -61,7 +61,7 @@ class SessionViewModel @Inject constructor(
     //Sessions
     private val mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
     val sessions: StateFlow<Result<List<Session>>?> = mutableSessions
-    val selectedSession = mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null))
+    val selectedSession = mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null, null))
     var runningSession: SessionEntity? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
 
@@ -149,26 +149,6 @@ class SessionViewModel @Inject constructor(
         }
     }
 
-
-    fun getEventsMockData() {
-        val events = listOf(
-            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, feedback = ""),
-            Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 4343, "Good job"),
-            Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 434, null),
-            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 32323, null),
-            Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 545, null),
-            Event(EventType.MASTERWARNING, LocalDateTime.now().toString(), 545, "Good job"),
-            Event(EventType.ENGINEFAILURE, LocalDateTime.now().toString(), 545, null),
-            Event(EventType.LANDING, LocalDateTime.now().toString(), 43434, "More attention"),
-        )
-
-        viewModelScope.launch {
-            delay(4000)
-            val result = Result.success(events)
-            mutableEvents.emit(result)
-        }
-    }
-
     //Stopwatch
     private var time: Duration = Duration.ZERO
     private lateinit var timer: Timer
@@ -210,13 +190,14 @@ class SessionViewModel @Inject constructor(
     private fun taskTimer() {
         secondsPassed += 1
 
+        altitude = (10000..50000).random()
         if (generatedEvents <= maxNumberOfEvents) {
             if (secondsPassed % cycleTimeInSeconds == 0) {
                 generateEvent()
             }
-
         }
     }
+
 
     private fun generateEvent() {
 
@@ -227,12 +208,12 @@ class SessionViewModel @Inject constructor(
         } else {
             var randomEventIndex = (1..6).random()
             events = events + listOf(
-                Event(EventType.values()[randomEventIndex], LocalDateTime.now().toString(), 7676, "More attention"),)
+                Event(EventType.values()[randomEventIndex], LocalDateTime.now().toString(), altitude, "More attention"),)
         }
 
         if(generatedEvents == maxNumberOfEvents){
             events = events + listOf(
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 1000, feedback = ""),
+                Event(EventType.LANDING, LocalDateTime.now().toString(), 500, feedback = ""),
             )
         }
 

@@ -14,7 +14,8 @@ class SessionMapper {
             id = entity.id,
             companyId = entity.companyId,
             startTime = entity.startTime,
-            videos = entity.videos
+            videos = entity.videos,
+            status = entity.status
         )
     }
 }

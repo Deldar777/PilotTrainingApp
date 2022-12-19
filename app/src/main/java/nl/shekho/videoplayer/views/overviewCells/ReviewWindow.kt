@@ -28,6 +28,7 @@ import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Role
+import nl.shekho.videoplayer.models.SessionStatus
 import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
@@ -182,8 +183,6 @@ fun ReviewWindow(
 
                                 }
 
-
-
                                 Column(
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier.fillMaxSize()
@@ -206,8 +205,8 @@ fun ReviewWindow(
                                         users?.let { users ->
                                             users
                                                 .onSuccess {
-                                                    it.forEach{ user ->
-                                                        if(user.role == Role.INSTRUCTOR.type){
+                                                    it.forEach { user ->
+                                                        if (user.role == Role.INSTRUCTOR.type) {
                                                             TextName(
                                                                 name = user.fullName,
                                                                 fontWeight = FontWeight.Normal,
@@ -216,8 +215,8 @@ fun ReviewWindow(
                                                         }
                                                     }
 
-                                                    it.forEach{ user ->
-                                                        if(user.role == Role.PILOT.type){
+                                                    it.forEach { user ->
+                                                        if (user.role == Role.PILOT.type) {
                                                             TextName(
                                                                 name = user.fullName,
                                                                 fontWeight = FontWeight.Normal,
@@ -239,7 +238,6 @@ fun ReviewWindow(
                                     } else {
                                         NoInternetView()
                                     }
-
 
 
                                 }
@@ -346,7 +344,12 @@ fun ReviewWindow(
                                     .height(60.dp)
                                     .background(lightBlue, shape = RoundedCornerShape(20.dp))
                                     .clickable {
-                                        navController.navigate(Screens.ReviewScreen.route)
+
+                                        if (sessionViewModel.selectedSession.value.status == SessionStatus.STARTED.type) {
+                                            navController.navigate(Screens.SessionScreen.route)
+                                        } else {
+                                            navController.navigate(Screens.ReviewScreen.route)
+                                        }
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
@@ -365,4 +368,5 @@ fun ReviewWindow(
         }
     }
 }
+
 
