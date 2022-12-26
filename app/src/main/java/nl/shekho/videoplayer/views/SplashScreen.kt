@@ -42,7 +42,6 @@ fun SplashScreen(
             navController.navigate(Screens.OverviewScreen.route)
         }else{
             navController.navigate(Screens.LoginScreen.route)
-
         }
     }
     Splash(alpha = alphaAnim.value)

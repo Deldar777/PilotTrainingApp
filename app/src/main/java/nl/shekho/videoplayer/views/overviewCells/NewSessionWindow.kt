@@ -57,7 +57,7 @@ fun NewSessionWindow(
 
     //session name text field
     var sessionName by remember { mutableStateOf("") }
-    val mappedUsers = accessViewModel.listUsers?.let { mapUsers(it) }
+//    val mappedUsers = accessViewModel.listUsers?.let { mapUsers(it) }
 
 
     //Dropdown participant 1
@@ -197,13 +197,13 @@ fun NewSessionWindow(
                             onDismissRequest = { expanded1 = false },
                             modifier = Modifier.width(with(LocalDensity.current) { textfieldSize1.width.toDp() })
                         ) {
-                            mappedUsers?.forEach { label ->
-                                DropdownMenuItem(onClick = {
-                                    participant1 = label.key
-                                }) {
-                                    Text(text = label.key)
-                                }
-                            }
+//                            mappedUsers?.forEach { label ->
+//                                DropdownMenuItem(onClick = {
+//                                    participant1 = label.key
+//                                }) {
+//                                    Text(text = label.key)
+//                                }
+//                            }
                         }
                     }
 
@@ -252,13 +252,13 @@ fun NewSessionWindow(
                             onDismissRequest = { expanded2 = false },
                             modifier = Modifier.width(with(LocalDensity.current) { textfieldSize2.width.toDp() })
                         ) {
-                            mappedUsers?.forEach { label ->
-                                DropdownMenuItem(onClick = {
-                                    participant2 = label.key
-                                }) {
-                                    Text(text = label.key)
-                                }
-                            }
+//                            mappedUsers?.forEach { label ->
+//                                DropdownMenuItem(onClick = {
+//                                    participant2 = label.key
+//                                }) {
+//                                    Text(text = label.key)
+//                                }
+//                            }
                         }
                     }
 
@@ -280,24 +280,24 @@ fun NewSessionWindow(
                             onClick = {
                                 if (accessViewModel.isOnline()) {
                                     val instructorId = accessViewModel.loggedInUserId
-                                    val participant1Id = mappedUsers?.get(participant1)?.id
-                                    val participant2Id = mappedUsers?.get(participant2)?.id
+//                                    val participant1Id = mappedUsers?.get(participant1)?.id
+//                                    val participant2Id = mappedUsers?.get(participant2)?.id
                                     val companyId = accessViewModel.companyId
                                     var token = accessViewModel.encodedJwtToken
 
                                     val newSessionEntity = NewSessionEntity(
                                         UserIds = listOf(
-                                            instructorId, participant1Id, participant2Id
+//                                            instructorId, participant1Id, participant2Id
                                         ), CompanyId = companyId
                                     )
 
                                     if (token != null) {
                                         sessionViewModel.createSessionAsked = true
                                         sessionViewModel.createSession(newSessionEntity, token)
-                                        if (mappedUsers != null) {
-                                            accessViewModel.participant1 = mappedUsers[participant1]
-                                            accessViewModel.participant2 = mappedUsers[participant2]
-                                        }
+//                                        if (mappedUsers != null) {
+//                                            accessViewModel.participant1 = mappedUsers[participant1]
+//                                            accessViewModel.participant2 = mappedUsers[participant2]
+//                                        }
                                     } else {
                                         Toast.makeText(context, noToken, Toast.LENGTH_LONG).show()
                                     }

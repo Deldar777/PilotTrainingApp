@@ -7,12 +7,14 @@ import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.api.ApiService
+import nl.shekho.videoplayer.api.UserMapper
 import nl.shekho.videoplayer.api.entities.LoginEntity
 import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.SessionInformation
 import nl.shekho.videoplayer.helpers.UserPreferences
 import nl.shekho.videoplayer.models.Role
+import nl.shekho.videoplayer.models.User
 import javax.inject.Inject
 
 
@@ -20,7 +22,8 @@ import javax.inject.Inject
 class AccessViewModel @Inject constructor(
     private val connectivityChecker: ConnectivityChecker,
     private val apiService: ApiService,
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val userMapper: UserMapper
 ) : ViewModel() {
 
     //Response information
@@ -38,13 +41,13 @@ class AccessViewModel @Inject constructor(
     var sessionId: String? = ""
     var userIsInstructor = mutableStateOf(false)
     var loggedInUserId: String? = ""
-    var loggedInUser: UserEntity? by mutableStateOf(null)
-    var participant1: UserEntity? by mutableStateOf(null)
-    var participant2: UserEntity? by mutableStateOf(null)
+    var loggedInUser: User? by mutableStateOf(null)
+    var firstOfficer: User? by mutableStateOf(null)
+    var captain: User? by mutableStateOf(null)
     var userRole: String? = ""
     var companyId: String? = ""
     var jwtExpired: Boolean? = false
-    var listUsers: List<UserEntity>? = listOf()
+    var listUsers: List<User?> = listOf()
 
     fun resetSessionInformation() {
         userIsInstructor.value = false
@@ -52,12 +55,10 @@ class AccessViewModel @Inject constructor(
         encodedJwtToken = null
         decodedJwtToken = null
         loggedInUser = null
-        participant1 = null
-        participant2 = null
         userRole = null
         companyId = null
         jwtExpired = false
-        listUsers = null
+        listUsers = emptyList()
         save(SessionInformation.JWTTOKEN, "")
     }
 
@@ -74,7 +75,7 @@ class AccessViewModel @Inject constructor(
                         succeeded = true
                         userPreferences.save(SessionInformation.JWTTOKEN, body.token)
                         encodedJwtToken = body.token
-                        decodeJWT()
+                        decodeJWTAfterLogin(body.token)
                     }
                 } else {
                     failed = response.message()
@@ -102,7 +103,8 @@ class AccessViewModel @Inject constructor(
                         if (body != null) {
                             val user = response.body()
                             if (user != null) {
-                                loggedInUser = user.results
+                                val mappedUser = userMapper.mapEntityToModel(user.results)
+                                loggedInUser = mappedUser
                             }
                         }
 
@@ -132,8 +134,9 @@ class AccessViewModel @Inject constructor(
                         if (body != null) {
                             var users = response.body()
                             if (users != null) {
-                                listUsers = users.results
-                                loggedInUser = listUsers!!.firstOrNull { it.id == loggedInUserId }
+                                val mappedUsers = userMapper.mapListEntityToModel(users.results)
+                                listUsers = mappedUsers
+                                loggedInUser = listUsers.firstOrNull { it!!.id == loggedInUserId }
                             }
                         }
 
@@ -164,6 +167,13 @@ class AccessViewModel @Inject constructor(
         decodeJWT()
     }
 
+    private fun decodeJWTAfterLogin(token: String) {
+        if (token.isNotEmpty()) {
+            decodedJwtToken = JWT(token)
+            assignValuesAfterDecoding(decodedJwtToken!!)
+        }
+    }
+
     private fun decodeJWT() {
         val token = encodedJwtToken
 
@@ -176,19 +186,22 @@ class AccessViewModel @Inject constructor(
             jwtExpired = decodedJwtToken!!.isExpired(10)
 
             if (jwtExpired != true) {
-                loggedInUserId = decodedJwtToken!!.getClaim("UserId").asString()
-                companyId = decodedJwtToken!!.getClaim("CompanyId").asString()
-                userRole =
-                    decodedJwtToken!!.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
-                        .asString()
-
-                if (userRole == Role.INSTRUCTOR.type) {
-                    userIsInstructor.value = true
-                    getUsers()
-                } else {
-                    getUser()
-                }
+                assignValuesAfterDecoding(decodedJwtToken!!)
             }
+        }
+    }
+
+    private fun assignValuesAfterDecoding(decodedJwtToken: JWT) {
+        loggedInUserId = decodedJwtToken.getClaim("UserId").asString()
+        companyId = decodedJwtToken.getClaim("CompanyId").asString()
+        userRole =
+            decodedJwtToken.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+                .asString()
+        if (userRole == Role.INSTRUCTOR.type) {
+            userIsInstructor.value = true
+            getUsers()
+        } else {
+            getUser()
         }
     }
 

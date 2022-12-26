@@ -63,8 +63,8 @@ fun TopBarSession(
                     sessionViewModel = sessionViewModel,
                     titleColor = lightBlue,
                     iconsColor = lightBlue,
-                    participant1Name = accessViewModel.participant1?.firstname ?: stringResource(id = R.string.user1),
-                    participant2Name = accessViewModel.participant2?.firstname ?: stringResource(id = R.string.user2)
+                    participant1Name = accessViewModel.firstOfficer?.firstName ?: stringResource(id = R.string.user1),
+                    participant2Name = accessViewModel.captain?.firstName ?: stringResource(id = R.string.user2)
                 )
             }
 

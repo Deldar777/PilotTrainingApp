@@ -106,7 +106,7 @@ fun OverviewWindow(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "${stringResource(id = R.string.welcome)} ${accessViewModel.loggedInUser?.firstname ?: ""}",
+                                    text = "${stringResource(id = R.string.welcome)} ${accessViewModel.loggedInUser?.firstName ?: ""}",
                                     fontFamily = FontFamily.Monospace,
                                     textAlign = TextAlign.Center,
                                     fontSize = 22.sp,

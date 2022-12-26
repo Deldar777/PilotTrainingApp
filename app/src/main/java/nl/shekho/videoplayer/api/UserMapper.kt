@@ -12,7 +12,7 @@ class UserMapper {
         entity.results.map { userEntity ->  mapEntityToModel(userEntity)}
     }
 
-    private fun mapEntityToModel(entity: UserEntity): User {
+    fun mapEntityToModel(entity: UserEntity): User {
         return User(
             id = entity.id,
             firstName = entity.firstname,
@@ -21,5 +21,16 @@ class UserMapper {
             role = entity.role,
             company = entity.companyId
         )
+    }
+
+    fun mapListEntityToModel(users: List<UserEntity>): List<User?> {
+        val mappedUsers = mutableListOf<User?>()
+
+        for(user in users){
+            val mappedUser = mapEntityToModel(user)
+            mappedUsers += mappedUser
+        }
+
+        return mappedUsers
     }
 }

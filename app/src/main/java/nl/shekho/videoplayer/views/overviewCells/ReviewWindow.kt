@@ -45,7 +45,7 @@ fun ReviewWindow(
     accessViewModel: AccessViewModel
 ) {
 
-    //Get users that the logged in user has participated in
+    //Get users for the selected session
     val users by sessionViewModel.users.collectAsState()
 
     Box(
@@ -156,13 +156,17 @@ fun ReviewWindow(
                                         fontSize = 16
                                     )
 
-                                    for (i in 1..2) {
-                                        TextName(
-                                            name = stringResource(id = R.string.pilot),
-                                            fontWeight = FontWeight.Normal,
-                                            fontSize = 16
-                                        )
-                                    }
+                                    TextName(
+                                        name = stringResource(id = R.string.firstOfficer),
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 16
+                                    )
+
+                                    TextName(
+                                        name = stringResource(id = R.string.captain),
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 16
+                                    )
                                 }
                             }
 
@@ -205,25 +209,30 @@ fun ReviewWindow(
                                         users?.let { users ->
                                             users
                                                 .onSuccess {
-                                                    it.forEach { user ->
-                                                        if (user.role == Role.INSTRUCTOR.type) {
-                                                            TextName(
-                                                                name = user.fullName,
-                                                                fontWeight = FontWeight.Normal,
-                                                                fontSize = 14
-                                                            )
-                                                        }
-                                                    }
 
-                                                    it.forEach { user ->
-                                                        if (user.role == Role.PILOT.type) {
-                                                            TextName(
-                                                                name = user.fullName,
-                                                                fontWeight = FontWeight.Normal,
-                                                                fontSize = 14
-                                                            )
-                                                        }
-                                                    }
+                                                    val instructor = it[0]
+                                                    val firstOfficer = it[1]
+                                                    val captain = it[2]
+
+                                                    TextName(
+                                                        name = instructor.fullName,
+                                                        fontWeight = FontWeight.Normal,
+                                                        fontSize = 14
+                                                    )
+
+                                                    TextName(
+                                                        name = firstOfficer.fullName,
+                                                        fontWeight = FontWeight.Normal,
+                                                        fontSize = 14
+                                                    )
+                                                    accessViewModel.firstOfficer = firstOfficer
+
+                                                    TextName(
+                                                        name = captain.fullName,
+                                                        fontWeight = FontWeight.Normal,
+                                                        fontSize = 14
+                                                    )
+                                                    accessViewModel.captain = captain
                                                 }
                                                 .onFailure {
                                                     ShowFeedback(

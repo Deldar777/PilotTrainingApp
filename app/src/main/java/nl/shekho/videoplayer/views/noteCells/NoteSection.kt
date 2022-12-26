@@ -50,11 +50,9 @@ fun NoteSection(
     var givenFeedback by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedback) }
     var editMode by remember { mutableStateOf(false) }
     val participantTabs = listOf(
-        accessViewModel.participant1?.firstname
-            ?: run { stringResource(id = R.string.participant1) },
+        stringResource(id = R.string.firstOfficer),
         stringResource(id = R.string.both),
-        accessViewModel.participant2?.firstname
-            ?: run { stringResource(id = R.string.participant2) },
+        stringResource(id = R.string.captain),
     )
 
     //Rating states

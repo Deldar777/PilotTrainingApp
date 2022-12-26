@@ -119,7 +119,6 @@ class SessionViewModel @Inject constructor(
                     } else {
                         Result.failure(Exception("Body was empty"))
                     }
-
                 }
                 else -> Result.failure(Exception("Something went wrong: Code ${response.code()}"))
             }
