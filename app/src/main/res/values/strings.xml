@@ -84,5 +84,9 @@
     <string name="user2">User 2</string>
     <string name="inProgress">In progress</string>
     <string name="finished">Finished</string>
+    <string name="endSessionAlert">Do you want to end this session?</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 
 </resources>

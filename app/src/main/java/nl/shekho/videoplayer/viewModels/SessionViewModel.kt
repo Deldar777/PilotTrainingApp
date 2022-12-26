@@ -4,7 +4,6 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,6 +32,8 @@ class SessionViewModel @Inject constructor(
     private val userMapper: UserMapper,
 ) : ViewModel() {
 
+    //Alert dialog
+    var openDialog = mutableStateOf(false)
 
     //Events automation
     var secondsPassed: Int by mutableStateOf(0)
@@ -79,6 +80,9 @@ class SessionViewModel @Inject constructor(
         showEmptyReview.value = true
     }
 
+    fun endSession() {
+
+    }
 
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {
         viewModelScope.launch {

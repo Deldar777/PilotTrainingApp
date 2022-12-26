@@ -95,7 +95,8 @@ fun TopBarSession(
             ) {
                 SessionTopBarThirdSection(
                     sessionViewModel = sessionViewModel,
-                    navController = navController
+                    navController = navController,
+                    accessViewModel = accessViewModel
                 )
             }
         }

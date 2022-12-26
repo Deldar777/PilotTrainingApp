@@ -3,13 +3,11 @@ package nl.shekho.videoplayer.views
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.*
@@ -17,8 +15,6 @@ import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.HighlightAndVideo
 import nl.shekho.videoplayer.views.highlightSectionCells.*
-import nl.shekho.videoplayer.views.noteCells.ReviewFeedbackAndVideoSection
-import nl.shekho.videoplayer.views.noteCells.SessionFeedbackAndLiveStreaming
 import nl.shekho.videoplayer.views.topbarCells.TopBarSession
 import kotlin.time.ExperimentalTime
 
@@ -30,10 +26,12 @@ fun SessionView(
     accessViewModel: AccessViewModel,
     context: Context
 ) {
+
     Box(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
+            .background(color = MaterialTheme.colors.background)
             .fillMaxSize()
+
     ) {
         Column {
 
@@ -52,6 +50,16 @@ fun SessionView(
                 navController = navController,
                 context = context
             )
+        }
+
+        if(sessionViewModel.openDialog.value){
+            Box(
+                modifier = Modifier
+                    .background(color = Color.White.copy(alpha = 0.8f))
+                    .fillMaxSize()
+            ){
+
+            }
         }
     }
 }

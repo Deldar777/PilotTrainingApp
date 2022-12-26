@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -16,22 +17,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.deepPurple
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.navigation.Screens
 import kotlin.time.ExperimentalTime
+import nl.shekho.videoplayer.views.generalCells.AlertDialog
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SessionTopBarThirdSection(
     sessionViewModel: SessionViewModel,
-    navController: NavController
+    navController: NavController,
+    accessViewModel: AccessViewModel
 ) {
     OutlinedButton(
         onClick = {
-
+            sessionViewModel.openDialog.value = true
         },
         colors = ButtonDefaults.buttonColors(
             backgroundColor = deepPurple,
@@ -60,4 +64,10 @@ fun SessionTopBarThirdSection(
         )
     }
 
+    AlertDialog(
+        sessionViewModel = sessionViewModel,
+        accessViewModel = accessViewModel,
+        navController = navController
+    )
 }
+
