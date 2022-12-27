@@ -46,6 +46,7 @@ fun HighlightItems(
                     sessionViewModel.addNoteButtonEnabled.value = false
                     sessionViewModel.selectedItemIndex.value = index
                     sessionViewModel.selectedEvent.value = event
+                    sessionViewModel.getRating()
                 }
             }
         }

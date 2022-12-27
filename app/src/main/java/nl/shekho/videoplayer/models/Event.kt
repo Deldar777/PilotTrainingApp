@@ -10,13 +10,15 @@ class Event(
     var eventType: EventType,
     var timestamp: String?,
     var altitude: Int?,
-    var feedback: String?
+    var feedbackAll: String?,
+    var feedbackFirstOfficer: String?,
+    var feedbackCaptain: String?,
+    var ratingAll: Int?,
+    var ratingFirstOfficer: Int?,
+    var ratingCaptain: Int?,
 ) {
 
     val feedbackIcon: Int = R.drawable.feedback_logo
-
-    val hasFeedback: Boolean
-        get() = feedback?.isNotEmpty() == true
 
     val eventIcon: Int
         get() = when {

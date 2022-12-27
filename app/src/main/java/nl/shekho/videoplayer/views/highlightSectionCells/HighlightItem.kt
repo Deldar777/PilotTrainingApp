@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.*
 import java.time.LocalDateTime
@@ -35,7 +36,11 @@ fun HighlightItem(
 ) {
 
     val showFeedbackIcon by remember {
-        mutableStateOf(event.hasFeedback)
+        mutableStateOf(!event.feedbackAll.isNullOrEmpty() || !event.feedbackFirstOfficer.isNullOrEmpty() || !event.feedbackCaptain.isNullOrEmpty())
+    }
+
+    val rating by remember {
+        mutableStateOf(event.ratingAll)
     }
 
     Row(
@@ -145,7 +150,7 @@ fun HighlightItem(
                         .weight(2.0f)
                         .fillMaxHeight(),
                     contentAlignment = Alignment.CenterStart,
-                ){
+                ) {
                     Text(
                         text = event.eventType.type,
                         color = MaterialTheme.colors.primary,
@@ -156,20 +161,71 @@ fun HighlightItem(
                 }
                 Box(
                     modifier = Modifier
-                        .weight(0.5f)
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.CenterStart,
-                ){
-                    if(showFeedbackIcon){
-                        Icon(
-                            painter = painterResource(id = event.feedbackIcon),
-                            contentDescription = "",
-                            tint = MaterialTheme.colors.primary,
-                        )
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(4.dp)
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(1.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(6.dp)
+                    ) {
+                        //Feedback icon
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1.1f)
+                        ) {
+                            if (showFeedbackIcon) {
+                                Icon(
+                                    painter = painterResource(id = event.feedbackIcon),
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colors.primary,
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                )
+                            }
+                        }
+
+                        //Rating icon and number
+
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(0.9f)
+                                .background(if(rating != null) deepPurple else Color.Transparent)
+                        ) {
+
+                            if(rating != null){
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                ) {
+                                    Text(
+                                        text = rating.toString(),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 14.sp,
+                                        color = MaterialTheme.colors.primary
+                                    )
+
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.star_image_foreground),
+                                        contentDescription = "",
+                                        tint = starYellow,
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                    )
+                                }
+                            }
+
+                        }
                     }
                 }
             }
-
         }
     }
 

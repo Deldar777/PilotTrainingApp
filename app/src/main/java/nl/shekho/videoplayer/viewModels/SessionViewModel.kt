@@ -12,7 +12,6 @@ import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.SessionMapper
 import nl.shekho.videoplayer.api.UserMapper
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
-import nl.shekho.videoplayer.api.entities.SessionEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.models.*
 import java.time.LocalDateTime
@@ -65,17 +64,27 @@ class SessionViewModel @Inject constructor(
     //Sessions
     private var mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
     var sessions: StateFlow<Result<List<Session>>?> = mutableSessions
-    var selectedSession = mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null, null))
+    var selectedSession =
+        mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null, null))
     var runningSession: Session? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
 
+    //Participants tabs
+    var selectedParticipantTabIndex: MutableState<Int> = mutableStateOf(1)
+    var currentRating: MutableState<Int> = mutableStateOf(0)
+    var hasFeedback: MutableState<Boolean> = mutableStateOf(false)
 
     //Events
     private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
-    var selectedEvent = mutableStateOf(Event(EventType.MARKEDEVENT, null, null, ""))
+    var selectedEvent =
+        mutableStateOf(Event(EventType.MARKEDEVENT, null, null, null, null, null, null, null, null))
     var events: List<Event?> by mutableStateOf(mutableListOf())
     var selectedItemIndex = mutableStateOf(100)
     var altitude: Int by mutableStateOf(0)
+
+    init {
+        getEvents()
+    }
 
     fun resetViewWindowsValues() {
         showNewSessionWindow.value = false
@@ -229,22 +238,80 @@ class SessionViewModel @Inject constructor(
         }
     }
 
+    fun getEvents() {
+        events = events + listOf(
+            Event(
+                EventType.TAKEOFF,
+                LocalDateTime.now().minusMinutes(80).toString(),
+                altitude = (10000..50000).random(), null, null, null, null, null, null
+            ),
+            Event(
+                EventType.ENGINEFAILURE,
+                LocalDateTime.now().minusMinutes(60).toString(),
+                altitude = (10000..50000).random(),
+                "Good communication",
+                "More attention",
+                null,
+                5,
+                3,
+                4
+            ),
+            Event(
+                EventType.MARKEDEVENT,
+                LocalDateTime.now().minusMinutes(40).toString(),
+                altitude = (10000..50000).random(), null, null, null, 4, null, null
+            ),
+            Event(
+                EventType.MASTERWARNING,
+                LocalDateTime.now().minusMinutes(15).toString(),
+                altitude = (10000..50000).random(), null, null, null, null, null, null
+            ),
+            Event(
+                EventType.ENGINEFIRE,
+                LocalDateTime.now().minusMinutes(8).toString(),
+                altitude = (10000..50000).random(), null, null, "Good reaction", null, null, 4
+            ),
+            Event(
+                EventType.TCAS,
+                LocalDateTime.now().minusMinutes(4).toString(),
+                altitude = (10000..50000).random(), null, null, null, 1, null, null
+            ),
+            Event(
+                EventType.LANDING,
+                LocalDateTime.now().minusMinutes(1).toString(),
+                altitude = (10000..50000).random(), null, null, null, 2, null, null
+            )
+        )
+    }
 
     private fun generateEvent() {
 
         if (generatedEvents == 0) {
             events = events + listOf(
-                Event(EventType.TAKEOFF, LocalDateTime.now().toString(), 1000, feedback = ""),
+                Event(
+                    EventType.TAKEOFF,
+                    LocalDateTime.now().toString(),
+                    altitude, null, null, null, null, null, null
+                )
             )
         } else {
-            var randomEventIndex = (1..6).random()
+            val randomEventIndex = (1..6).random()
             events = events + listOf(
-                Event(EventType.values()[randomEventIndex], LocalDateTime.now().toString(), altitude, "More attention"),)
+                Event(
+                    EventType.values()[randomEventIndex],
+                    LocalDateTime.now().toString(),
+                    altitude, null, null, null, null, null, null
+                )
+            )
         }
 
-        if(generatedEvents == maxNumberOfEvents){
+        if (generatedEvents == maxNumberOfEvents) {
             events = events + listOf(
-                Event(EventType.LANDING, LocalDateTime.now().toString(), 500, feedback = ""),
+                Event(
+                    EventType.LANDING,
+                    LocalDateTime.now().toString(),
+                    altitude, null, null, null, null, null, null
+                )
             )
         }
 
@@ -261,5 +328,19 @@ class SessionViewModel @Inject constructor(
 
     fun isOnline(): Boolean {
         return connectivityChecker.isOnline()
+    }
+
+    fun getRating() {
+        currentRating.value = when (selectedParticipantTabIndex.value) {
+            0 -> {
+                selectedEvent.value.ratingFirstOfficer?.let { selectedEvent.value.ratingFirstOfficer } ?: 0
+            }
+            1 -> {
+                selectedEvent.value.ratingAll?.let { selectedEvent.value.ratingAll } ?: 0
+            }
+            else -> {
+                selectedEvent.value.ratingCaptain?.let { selectedEvent.value.ratingCaptain } ?: 0
+            }
+        }
     }
 }

@@ -14,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
@@ -26,28 +25,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import nl.shekho.videoplayer.viewModels.SessionViewModel
-import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.lightBlue
+import nl.shekho.videoplayer.ui.theme.starYellow
 import nl.shekho.videoplayer.ui.theme.tabBackground
-import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.viewModels.SessionViewModel
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class, ExperimentalComposeUiApi::class)
 @Composable
 fun NoteSection(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel,
-    initialSelectedTab: Int = 1,
     activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = tabBackground,
     context: Context
 ) {
 
+    //feedback and rating states and variables
+    var feedbackFirsOfficer by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedbackFirstOfficer) }
+    var feedbackAll by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedbackAll) }
+    var feedbackCaptain by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedbackCaptain) }
+
+    var ratingFirsOfficer by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingFirstOfficer) }
+    var ratingAll by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingAll) }
+    var ratingCaptain by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingCaptain) }
+
     //Participants tabs
-    var selectedParticipantTabIndex by remember { mutableStateOf(initialSelectedTab) }
-    var givenFeedback by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedback) }
     var editMode by remember { mutableStateOf(false) }
     val participantTabs = listOf(
         stringResource(id = R.string.firstOfficer),
@@ -55,11 +60,11 @@ fun NoteSection(
         stringResource(id = R.string.captain),
     )
 
+
     //Rating states
-    var ratingState by remember { mutableStateOf(4) }
     var selectedRating by remember { mutableStateOf(false) }
     val size by animateDpAsState(
-        targetValue = if (selectedRating) 60.dp else 52.dp,
+        targetValue = if (selectedRating) 50.dp else 42.dp,
         spring(Spring.DampingRatioMediumBouncy)
     )
 
@@ -91,7 +96,7 @@ fun NoteSection(
         //Feedback details section
         Box(
             modifier = Modifier
-                .weight(1f)
+                .weight(1.2f)
                 .fillMaxHeight(),
             contentAlignment = Alignment.CenterEnd
         ) {
@@ -116,11 +121,12 @@ fun NoteSection(
                         for (index in participantTabs.indices) {
                             ParticipantTabs(
                                 tabName = participantTabs.get(index),
-                                isSelected = index == selectedParticipantTabIndex,
+                                isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
                                 activeHighlightColor = activeHighlightColor,
                                 inactiveColor = inactiveColor,
                             ) {
-                                selectedParticipantTabIndex = index
+                                sessionViewModel.selectedParticipantTabIndex.value = index
+                                sessionViewModel.getRating()
                             }
                         }
                     }
@@ -140,10 +146,29 @@ fun NoteSection(
                             backgroundColor = Color.White,
                             textColor = MaterialTheme.colors.primaryVariant
                         ),
-                        value = givenFeedback?.let { givenFeedback } ?: "",
+                        value = when (sessionViewModel.selectedParticipantTabIndex.value) {
+                            0 -> {
+                                sessionViewModel.selectedEvent.value.feedbackFirstOfficer?.let { sessionViewModel.selectedEvent.value.feedbackFirstOfficer } ?: ""
+                            }
+                            1 -> {
+                                sessionViewModel.selectedEvent.value.feedbackAll?.let { sessionViewModel.selectedEvent.value.feedbackAll } ?: ""
+                            }
+                            else -> {
+                                sessionViewModel.selectedEvent.value.feedbackCaptain?.let { sessionViewModel.selectedEvent.value.feedbackCaptain } ?: ""
+                            }
+                        },
                         onValueChange = {
-                            givenFeedback = it
-
+                            when (sessionViewModel.selectedParticipantTabIndex.value) {
+                                0 -> {
+                                    feedbackFirsOfficer = it
+                                }
+                                1 -> {
+                                    feedbackAll = it
+                                }
+                                else -> {
+                                    feedbackCaptain = it
+                                }
+                            }
                         },
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.primaryVariant,
@@ -238,29 +263,51 @@ fun NoteSection(
                                         MotionEvent.ACTION_DOWN -> {
                                             if (editMode) {
                                                 selectedRating = true
-                                                ratingState = i
+
+                                                when (sessionViewModel.selectedParticipantTabIndex.value) {
+                                                    0 -> {
+                                                        ratingFirsOfficer = i
+                                                    }
+                                                    1 -> {
+                                                        ratingAll = i
+                                                    }
+                                                    else -> {
+                                                        ratingCaptain = i
+                                                    }
+                                                }
                                             }
 
                                         }
                                         MotionEvent.ACTION_UP -> {
                                             if (editMode) {
                                                 selectedRating = false
+                                                when (sessionViewModel.selectedParticipantTabIndex.value) {
+                                                    0 -> {
+                                                        ratingFirsOfficer = i
+                                                    }
+                                                    1 -> {
+                                                        ratingAll = i
+                                                    }
+                                                    else -> {
+                                                        ratingCaptain = i
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                     true
                                 },
-                            tint = if (i <= ratingState) Color(0xFFFFD700) else Color(
+                            tint = if (i <= sessionViewModel.currentRating.value) starYellow else Color(
                                 0xFFA2ADB1
                             )
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.weight(3f))
                 //Save changes button 
-                
-                if(accessViewModel.userIsInstructor.value){
+
+                if (accessViewModel.userIsInstructor.value) {
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier
@@ -290,10 +337,10 @@ fun NoteSection(
 
                     }
                 }
-                
+
             }
 
         }
     }
-
 }
+
