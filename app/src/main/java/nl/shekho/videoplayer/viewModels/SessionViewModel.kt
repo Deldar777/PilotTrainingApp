@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -34,6 +35,8 @@ class SessionViewModel @Inject constructor(
 
     //Alert dialog
     var openDialog = mutableStateOf(false)
+    var savingSession: Boolean by mutableStateOf(false)
+    var saveSessionAsked: Boolean by mutableStateOf(false)
 
     //Events automation
     var secondsPassed: Int by mutableStateOf(0)
@@ -60,10 +63,10 @@ class SessionViewModel @Inject constructor(
     var showEmptyReview: MutableState<Boolean> = mutableStateOf(true)
 
     //Sessions
-    private val mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
-    val sessions: StateFlow<Result<List<Session>>?> = mutableSessions
-    val selectedSession = mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null, null))
-    var runningSession: SessionEntity? by mutableStateOf(null)
+    private var mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
+    var sessions: StateFlow<Result<List<Session>>?> = mutableSessions
+    var selectedSession = mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null, null))
+    var runningSession: Session? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
 
 
@@ -78,10 +81,33 @@ class SessionViewModel @Inject constructor(
         showNewSessionWindow.value = false
         showReviewWindow.value = false
         showEmptyReview.value = true
+        runningSession = null
     }
 
-    fun endSession() {
+    fun endSession(sessionId: String, token: String) {
 
+        viewModelScope.launch {
+            savingSession = true
+
+            try {
+                succeeded = true
+//                val response = apiService.updateSessionStatusById(
+//                    sessionId = sessionId,
+//                    token = token,
+//                )
+//
+//                if (response.isSuccessful) {
+//                    succeeded = true
+//                } else {
+//                    failed = response.message()
+//                }
+
+                delay(4000)
+            } catch (e: java.lang.Exception) {
+                failed = e.message.toString()
+            }
+            savingSession = false
+        }
     }
 
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {
@@ -93,9 +119,11 @@ class SessionViewModel @Inject constructor(
                     token = token,
                 )
 
-                if (response.isSuccessful && response.body() != null) {
+                val session = response.body()
+                if (response.isSuccessful && session != null) {
                     succeeded = true
-                    runningSession = response.body()
+                    val sessionMapped = sessionMapper.mapEntityToModel(session)
+                    runningSession = sessionMapped
                 } else {
                     failed = response.message()
                 }

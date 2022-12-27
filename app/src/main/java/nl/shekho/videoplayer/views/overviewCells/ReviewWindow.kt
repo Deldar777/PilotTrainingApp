@@ -355,8 +355,10 @@ fun ReviewWindow(
                                     .clickable {
 
                                         if (sessionViewModel.selectedSession.value.status == SessionStatus.STARTED.type) {
+                                            sessionViewModel.runningSession = sessionViewModel.selectedSession.value
                                             navController.navigate(Screens.SessionScreen.route)
                                         } else {
+                                            sessionViewModel.runningSession = sessionViewModel.selectedSession.value
                                             navController.navigate(Screens.ReviewScreen.route)
                                         }
                                     },

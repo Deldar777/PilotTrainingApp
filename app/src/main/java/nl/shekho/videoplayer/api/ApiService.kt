@@ -44,4 +44,10 @@ interface ApiService {
         @Header("Authorization") token: String?
     ): Response<UsersEntity>
 
+
+    @GET("GetUserBySessionId/{sessionId}")
+    suspend fun updateSessionStatusById(
+        @Path("sessionId") sessionId: String,
+        @Header("Authorization") token: String?
+    ): Response<String>
 }

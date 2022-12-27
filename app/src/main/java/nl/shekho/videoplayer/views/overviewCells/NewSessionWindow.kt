@@ -29,13 +29,13 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
-import nl.shekho.videoplayer.api.entities.UserEntity
 import nl.shekho.videoplayer.models.Role
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.helpers.extensions.Helpers
+import nl.shekho.videoplayer.models.User
 import nl.shekho.videoplayer.ui.theme.deepBlue
 import nl.shekho.videoplayer.views.generalCells.Loading
 import nl.shekho.videoplayer.views.navigation.Screens
@@ -50,14 +50,13 @@ fun NewSessionWindow(
 ) {
 
     //Feedback variables
-    val sameParticipant = stringResource(id = R.string.sameParticipant)
     val noInternet = stringResource(id = R.string.noInternet)
     val sessionCreationError = stringResource(id = R.string.sessionCreationError)
     val noToken = stringResource(id = R.string.noToken)
 
     //session name text field
     var sessionName by remember { mutableStateOf("") }
-//    val mappedUsers = accessViewModel.listUsers?.let { mapUsers(it) }
+    val mappedUsers = mapUsers(accessViewModel.listUsers)
 
 
     //Dropdown participant 1
@@ -197,13 +196,13 @@ fun NewSessionWindow(
                             onDismissRequest = { expanded1 = false },
                             modifier = Modifier.width(with(LocalDensity.current) { textfieldSize1.width.toDp() })
                         ) {
-//                            mappedUsers?.forEach { label ->
-//                                DropdownMenuItem(onClick = {
-//                                    participant1 = label.key
-//                                }) {
-//                                    Text(text = label.key)
-//                                }
-//                            }
+                            mappedUsers.forEach { label ->
+                                DropdownMenuItem(onClick = {
+                                    participant1 = label.key
+                                }) {
+                                    Text(text = label.key)
+                                }
+                            }
                         }
                     }
 
@@ -252,13 +251,13 @@ fun NewSessionWindow(
                             onDismissRequest = { expanded2 = false },
                             modifier = Modifier.width(with(LocalDensity.current) { textfieldSize2.width.toDp() })
                         ) {
-//                            mappedUsers?.forEach { label ->
-//                                DropdownMenuItem(onClick = {
-//                                    participant2 = label.key
-//                                }) {
-//                                    Text(text = label.key)
-//                                }
-//                            }
+                            mappedUsers.forEach { label ->
+                                DropdownMenuItem(onClick = {
+                                    participant2 = label.key
+                                }) {
+                                    Text(text = label.key)
+                                }
+                            }
                         }
                     }
 
@@ -280,24 +279,22 @@ fun NewSessionWindow(
                             onClick = {
                                 if (accessViewModel.isOnline()) {
                                     val instructorId = accessViewModel.loggedInUserId
-//                                    val participant1Id = mappedUsers?.get(participant1)?.id
-//                                    val participant2Id = mappedUsers?.get(participant2)?.id
+                                    val participant1Id = mappedUsers[participant1]?.id
+                                    val participant2Id = mappedUsers[participant2]?.id
                                     val companyId = accessViewModel.companyId
                                     var token = accessViewModel.encodedJwtToken
 
                                     val newSessionEntity = NewSessionEntity(
                                         UserIds = listOf(
-//                                            instructorId, participant1Id, participant2Id
+                                            instructorId, participant1Id, participant2Id
                                         ), CompanyId = companyId
                                     )
 
                                     if (token != null) {
                                         sessionViewModel.createSessionAsked = true
                                         sessionViewModel.createSession(newSessionEntity, token)
-//                                        if (mappedUsers != null) {
-//                                            accessViewModel.participant1 = mappedUsers[participant1]
-//                                            accessViewModel.participant2 = mappedUsers[participant2]
-//                                        }
+                                        accessViewModel.firstOfficer = mappedUsers[participant1]
+                                        accessViewModel.captain = mappedUsers[participant2]
                                     } else {
                                         Toast.makeText(context, noToken, Toast.LENGTH_LONG).show()
                                     }
@@ -330,7 +327,7 @@ fun NewSessionWindow(
 
                 }
             }
-            if(sessionViewModel.createSessionAsked){
+            if (sessionViewModel.createSessionAsked) {
                 if (sessionViewModel.loading) {
                     Loading()
                 } else {
@@ -346,12 +343,14 @@ fun NewSessionWindow(
     }
 }
 
-fun mapUsers(users: List<UserEntity>): MutableMap<String, UserEntity> {
-    val mappedUsers = mutableMapOf<String, UserEntity>()
+fun mapUsers(users: List<User?>): MutableMap<String, User> {
+    val mappedUsers = mutableMapOf<String, User>()
 
     users.forEach { user ->
-        if (user.role == Role.PILOT.type) {
-            mappedUsers["${user.firstname} ${user.lastname}"] = user
+        if (user != null) {
+            if (user.role == Role.PILOT.type) {
+                mappedUsers["${user.firstName} ${user.lastName}"] = user
+            }
         }
     }
     return mappedUsers

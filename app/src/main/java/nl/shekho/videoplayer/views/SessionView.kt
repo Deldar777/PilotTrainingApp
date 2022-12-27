@@ -1,13 +1,16 @@
 package nl.shekho.videoplayer.views
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.*
@@ -15,6 +18,7 @@ import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.HighlightAndVideo
 import nl.shekho.videoplayer.views.highlightSectionCells.*
+import nl.shekho.videoplayer.views.navigation.Screens
 import nl.shekho.videoplayer.views.topbarCells.TopBarSession
 import kotlin.time.ExperimentalTime
 
@@ -26,6 +30,9 @@ fun SessionView(
     accessViewModel: AccessViewModel,
     context: Context
 ) {
+    
+    var cannotSaveSession = stringResource(id = R.string.cannotSaveSession)
+    var sessionSaved = stringResource(id = R.string.sessionSaved)
 
     Box(
         modifier = Modifier
@@ -61,6 +68,33 @@ fun SessionView(
 
             }
         }
+
+        //Save session process
+        if(sessionViewModel.saveSessionAsked){
+            if (sessionViewModel.savingSession) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 220.dp)
+                ) {
+                    CircularProgressIndicator(color = Color.Black)
+                }
+            }else{
+                if (!sessionViewModel.succeeded) {
+                    Toast.makeText(context, cannotSaveSession, Toast.LENGTH_LONG).show()
+                } else {
+                    sessionViewModel.fetchSessionsByUserId(
+                        userId = accessViewModel.loggedInUserId!!,
+                        token = accessViewModel.encodedJwtToken!!
+                    )
+                    sessionViewModel.openDialog.value = false
+                    navController.navigate(Screens.OverviewScreen.route)
+                }
+                sessionViewModel.saveSessionAsked = false
+            }
+        }
+        
     }
 }
 

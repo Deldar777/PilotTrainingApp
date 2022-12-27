@@ -9,7 +9,7 @@ class SessionMapper {
         entity.map { sessionEntity ->  mapEntityToModel(sessionEntity)}
     }
 
-    private fun mapEntityToModel(entity: SessionEntity): Session {
+    fun mapEntityToModel(entity: SessionEntity): Session {
         return Session(
             id = entity.id,
             companyId = entity.companyId,
