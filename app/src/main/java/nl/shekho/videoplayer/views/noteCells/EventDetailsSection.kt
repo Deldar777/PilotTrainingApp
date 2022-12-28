@@ -1,8 +1,9 @@
 package nl.shekho.videoplayer.views.noteCells
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,8 +28,13 @@ import kotlin.time.ExperimentalTime
 fun EventDetailsSection(
     sessionViewModel: SessionViewModel,
     title: String,
-    subTitle: String
+    subTitle: String,
+    context: Context
 ) {
+
+    val saveChangesFailed = stringResource(id = R.string.saveChangesFailed)
+    val saveChangesSucceeded = stringResource(id = R.string.saveChangesSucceeded)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,6 +125,30 @@ fun EventDetailsSection(
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
+        }
+
+        //Feedback on performed action
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+        ) {
+            if(sessionViewModel.loading.value){
+                CircularProgressIndicator()
+            }
+
+            if (sessionViewModel.saveChangesAsked) {
+                if (!sessionViewModel.loading.value) {
+                    if (sessionViewModel.saveChangesSucceeded) {
+                        Toast.makeText(context, saveChangesSucceeded, Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(context, saveChangesFailed, Toast.LENGTH_LONG).show()
+                    }
+                }
+                sessionViewModel.saveChangesAsked = false
+            }
         }
     }
 }

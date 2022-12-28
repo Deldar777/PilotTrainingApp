@@ -275,7 +275,7 @@ fun NewSessionWindow(
                     ) {
 
                         OutlinedButton(
-                            enabled = !sessionViewModel.loading && participant1.isNotEmpty() && participant2.isNotEmpty() && participant1 != participant2,
+                            enabled = !sessionViewModel.loading.value && participant1.isNotEmpty() && participant2.isNotEmpty() && participant1 != participant2,
                             onClick = {
                                 if (accessViewModel.isOnline()) {
                                     val instructorId = accessViewModel.loggedInUserId
@@ -328,7 +328,7 @@ fun NewSessionWindow(
                 }
             }
             if (sessionViewModel.createSessionAsked) {
-                if (sessionViewModel.loading) {
+                if (sessionViewModel.loading.value) {
                     Loading()
                 } else {
                     if (!sessionViewModel.succeeded) {

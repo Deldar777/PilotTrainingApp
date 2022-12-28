@@ -66,7 +66,8 @@ fun HighlightAndVideo(
                 //Feedback and video section
                 SessionFeedbackAndLiveStreaming(
                     sessionViewModel = sessionViewModel,
-                    accessViewModel = accessViewModel
+                    accessViewModel = accessViewModel,
+                    context = context
                 )
             }else{
                 ReviewFeedbackAndVideoSection(

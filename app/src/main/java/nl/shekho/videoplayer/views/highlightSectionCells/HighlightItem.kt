@@ -39,10 +39,6 @@ fun HighlightItem(
         mutableStateOf(!event.feedbackAll.isNullOrEmpty() || !event.feedbackFirstOfficer.isNullOrEmpty() || !event.feedbackCaptain.isNullOrEmpty())
     }
 
-    val rating by remember {
-        mutableStateOf(event.ratingAll)
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -178,7 +174,7 @@ fun HighlightItem(
                                 .fillMaxWidth()
                                 .weight(1.1f)
                         ) {
-                            if (showFeedbackIcon) {
+                            if (!event.feedbackAll.isNullOrEmpty() || !event.feedbackFirstOfficer.isNullOrEmpty() || !event.feedbackCaptain.isNullOrEmpty()) {
                                 Icon(
                                     painter = painterResource(id = event.feedbackIcon),
                                     contentDescription = "",
@@ -196,17 +192,17 @@ fun HighlightItem(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.9f)
-                                .background(if(rating != null) deepPurple else Color.Transparent)
+                                .background(if(event.ratingAll != null) deepPurple else Color.Transparent)
                         ) {
 
-                            if(rating != null){
+                            if(event.ratingAll != null){
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
                                         .fillMaxSize()
                                 ) {
                                     Text(
-                                        text = rating.toString(),
+                                        text = event.ratingAll.toString(),
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 14.sp,
                                         color = MaterialTheme.colors.primary
@@ -221,7 +217,6 @@ fun HighlightItem(
                                     )
                                 }
                             }
-
                         }
                     }
                 }

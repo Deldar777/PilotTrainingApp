@@ -90,5 +90,7 @@
     <string name="confirm">Confirm</string>
     <string name="cannotSaveSession">Sorry for the inconvenience, something went wrong while saving the session. Contact VRef Solutions to resolve the issue</string>
     <string name="sessionSaved">Session saved successfully</string>
+    <string name="saveChangesFailed">Something went wrong with saving the changes!</string>
+    <string name="saveChangesSucceeded">Changes have been saved successfully</string>
 
 </resources>

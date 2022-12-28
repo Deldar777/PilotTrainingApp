@@ -1,6 +1,7 @@
 package nl.shekho.videoplayer.views.noteCells
 
 
+import android.content.Context
 import android.view.MotionEvent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -35,37 +36,31 @@ import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.models.Event
-import nl.shekho.videoplayer.models.EventType
 import nl.shekho.videoplayer.ui.theme.*
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalTime::class, ExperimentalComposeUiApi::class)
 @Composable
 fun FeedbackSection(
     sessionViewModel: SessionViewModel,
-    initialSelectedTab: Int = 1,
     initialSelectedTabFeedback: Int = 0,
     initialRating: Int = 0,
     activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = tabBackground,
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    context: Context
 ) {
-
 
     //Rating states
     var ratingState by remember { mutableStateOf(initialRating) }
     var selectedRating by remember { mutableStateOf(false) }
     val size by animateDpAsState(
-        targetValue = if (selectedRating) 60.dp else 52.dp,
+        targetValue = if (selectedRating) 50.dp else 42.dp,
         spring(Spring.DampingRatioMediumBouncy)
     )
 
     //Feedback blocks states
     var showCommonFeedback by remember { mutableStateOf(true) }
 
-    //Written feedback text field
-    var writtenFeedback by remember { mutableStateOf("") }
 
     // Common feedback dropdown 1
     val commonFeedbackList = listOf<String>(
@@ -86,7 +81,6 @@ fun FeedbackSection(
     else
         Icons.Filled.ArrowDropDown
 
-    var selectedParticipantTabIndex by remember { mutableStateOf(initialSelectedTab) }
     var selectedFeedbackSelectionTabIndex by remember { mutableStateOf(initialSelectedTabFeedback) }
 
     val participantTabs = listOf(
@@ -115,6 +109,7 @@ fun FeedbackSection(
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
+                context = context,
                 sessionViewModel = sessionViewModel,
                 title = stringResource(id = R.string.addNote),
                 subTitle = stringResource(id = R.string.addNoteSubTitle)
@@ -139,13 +134,16 @@ fun FeedbackSection(
 
                     for (index in participantTabs.indices) {
                         ParticipantTabs(
-                            hasFeedback = false,
-                            tabName = participantTabs.get(index),
-                            isSelected = index == selectedParticipantTabIndex,
+                            hasFeedback = sessionViewModel.hasFeedback(index),
+                            tabName = participantTabs[index],
+                            isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
                             activeHighlightColor = activeHighlightColor,
                             inactiveColor = inactiveColor,
                         ) {
-                            selectedParticipantTabIndex = index
+                            sessionViewModel.selectedParticipantTabIndex.value = index
+                            sessionViewModel.getFeedback()
+                            sessionViewModel.getRating()
+
                             if (index == 0 || index == 2) {
                                 feedbackInstruction =
                                     "$noteParticipant ${participantTabs.get(index)}..."
@@ -212,7 +210,7 @@ fun FeedbackSection(
                                             for (indexFeedback in feedbackTabs.indices) {
                                                 ParticipantTabs(
                                                     hasFeedback = false,
-                                                    tabName = feedbackTabs.get(indexFeedback),
+                                                    tabName = feedbackTabs[indexFeedback],
                                                     isSelected = indexFeedback == selectedFeedbackSelectionTabIndex,
                                                     activeHighlightColor = activeHighlightColor,
                                                     inactiveColor = inactiveColor,
@@ -274,15 +272,18 @@ fun FeedbackSection(
                                                             when (it.action) {
                                                                 MotionEvent.ACTION_DOWN -> {
                                                                     selectedRating = true
-                                                                    ratingState = i
+                                                                    sessionViewModel.currentRating.value =
+                                                                        i
                                                                 }
                                                                 MotionEvent.ACTION_UP -> {
                                                                     selectedRating = false
+                                                                    sessionViewModel.currentRating.value =
+                                                                        i
                                                                 }
                                                             }
                                                             true
                                                         },
-                                                    tint = if (i <= ratingState) Color(0xFFFFD700) else Color(
+                                                    tint = if (i <= sessionViewModel.currentRating.value) starYellow else Color(
                                                         0xFFA2ADB1
                                                     )
                                                 )
@@ -322,10 +323,9 @@ fun FeedbackSection(
                                                 backgroundColor = Color.White,
                                                 textColor = MaterialTheme.colors.primaryVariant
                                             ),
-                                            value = selectedCommonFeedback,
+                                            value = sessionViewModel.currentFeedback.value,
                                             onValueChange = {
-                                                selectedCommonFeedback = it
-                                                sessionViewModel.addNoteButtonEnabled.value = true
+
                                             },
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -361,7 +361,8 @@ fun FeedbackSection(
                                         ) {
                                             commonFeedbackList.forEach { label ->
                                                 DropdownMenuItem(onClick = {
-                                                    selectedCommonFeedback = label
+                                                    sessionViewModel.currentFeedback.value = label
+                                                    sessionViewModel.addNoteButtonEnabled.value = true
                                                 }) {
                                                     Text(text = label)
                                                 }
@@ -377,15 +378,15 @@ fun FeedbackSection(
                                             backgroundColor = Color.White,
                                             textColor = MaterialTheme.colors.primaryVariant
                                         ),
-                                        value = writtenFeedback,
+                                        value = sessionViewModel.currentFeedback.value,
                                         onValueChange = {
-                                            writtenFeedback = it
+                                            sessionViewModel.currentFeedback.value = it
                                             if (it != "") {
                                                 sessionViewModel.addNoteButtonEnabled.value = true
                                             }
                                         },
                                         textStyle = TextStyle(
-                                            color = MaterialTheme.colors.primaryVariant,
+                                            color = Color.Black,
                                             fontWeight = FontWeight.Bold
                                         ),
                                         label = {
@@ -421,9 +422,11 @@ fun FeedbackSection(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
 
+                                    // Button to save changes
                                     OutlinedButton(
-                                        enabled = sessionViewModel.addNoteButtonEnabled.value,
+                                        enabled = sessionViewModel.addNoteButtonEnabled.value && !sessionViewModel.loading.value,
                                         onClick = {
+                                            sessionViewModel.saveChanges()
                                         },
                                         colors = ButtonDefaults.buttonColors(
                                             backgroundColor = deepPurple,

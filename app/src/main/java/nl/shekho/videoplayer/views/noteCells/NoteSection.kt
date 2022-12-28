@@ -43,10 +43,6 @@ fun NoteSection(
     context: Context
 ) {
 
-    //feedback and rating states and variables
-    var feedbackFirsOfficer by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedbackFirstOfficer) }
-    var feedbackAll by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedbackAll) }
-    var feedbackCaptain by remember { mutableStateOf(sessionViewModel.selectedEvent.value.feedbackCaptain) }
 
     var ratingFirsOfficer by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingFirstOfficer) }
     var ratingAll by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingAll) }
@@ -87,6 +83,7 @@ fun NoteSection(
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
+                context = context,
                 sessionViewModel = sessionViewModel,
                 title = stringResource(id = R.string.notes),
                 subTitle = stringResource(id = R.string.noteSubTitle)
@@ -120,17 +117,7 @@ fun NoteSection(
 
                         for (index in participantTabs.indices) {
                             ParticipantTabs(
-                                hasFeedback = when (index) {
-                                    0 -> {
-                                        !sessionViewModel.selectedEvent.value.feedbackFirstOfficer.isNullOrEmpty()
-                                    }
-                                    1 -> {
-                                        !sessionViewModel.selectedEvent.value.feedbackAll.isNullOrEmpty()
-                                    }
-                                    else -> {
-                                        !sessionViewModel.selectedEvent.value.feedbackCaptain.isNullOrEmpty()
-                                    }
-                                },
+                                hasFeedback = sessionViewModel.hasFeedback(index),
                                 tabName = participantTabs[index],
                                 isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
                                 activeHighlightColor = activeHighlightColor,
@@ -138,6 +125,7 @@ fun NoteSection(
                             ) {
                                 sessionViewModel.selectedParticipantTabIndex.value = index
                                 sessionViewModel.getRating()
+                                sessionViewModel.getFeedback()
                             }
                         }
                     }
@@ -157,29 +145,9 @@ fun NoteSection(
                             backgroundColor = Color.White,
                             textColor = MaterialTheme.colors.primaryVariant
                         ),
-                        value = when (sessionViewModel.selectedParticipantTabIndex.value) {
-                            0 -> {
-                                sessionViewModel.selectedEvent.value.feedbackFirstOfficer?.let { sessionViewModel.selectedEvent.value.feedbackFirstOfficer } ?: ""
-                            }
-                            1 -> {
-                                sessionViewModel.selectedEvent.value.feedbackAll?.let { sessionViewModel.selectedEvent.value.feedbackAll } ?: ""
-                            }
-                            else -> {
-                                sessionViewModel.selectedEvent.value.feedbackCaptain?.let { sessionViewModel.selectedEvent.value.feedbackCaptain } ?: ""
-                            }
-                        },
+                        value = sessionViewModel.currentFeedback.value,
                         onValueChange = {
-                            when (sessionViewModel.selectedParticipantTabIndex.value) {
-                                0 -> {
-                                    feedbackFirsOfficer = it
-                                }
-                                1 -> {
-                                    feedbackAll = it
-                                }
-                                else -> {
-                                    feedbackCaptain = it
-                                }
-                            }
+                            sessionViewModel.currentFeedback.value = it
                         },
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.primaryVariant,
@@ -274,35 +242,14 @@ fun NoteSection(
                                         MotionEvent.ACTION_DOWN -> {
                                             if (editMode) {
                                                 selectedRating = true
-
-                                                when (sessionViewModel.selectedParticipantTabIndex.value) {
-                                                    0 -> {
-                                                        ratingFirsOfficer = i
-                                                    }
-                                                    1 -> {
-                                                        ratingAll = i
-                                                    }
-                                                    else -> {
-                                                        ratingCaptain = i
-                                                    }
-                                                }
+                                                sessionViewModel.currentRating.value = i
                                             }
 
                                         }
                                         MotionEvent.ACTION_UP -> {
                                             if (editMode) {
                                                 selectedRating = false
-                                                when (sessionViewModel.selectedParticipantTabIndex.value) {
-                                                    0 -> {
-                                                        ratingFirsOfficer = i
-                                                    }
-                                                    1 -> {
-                                                        ratingAll = i
-                                                    }
-                                                    else -> {
-                                                        ratingCaptain = i
-                                                    }
-                                                }
+                                                sessionViewModel.currentRating.value = i
                                             }
                                         }
                                     }

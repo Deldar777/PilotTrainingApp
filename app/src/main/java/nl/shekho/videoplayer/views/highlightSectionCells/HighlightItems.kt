@@ -47,6 +47,7 @@ fun HighlightItems(
                     sessionViewModel.selectedItemIndex.value = index
                     sessionViewModel.selectedEvent.value = event
                     sessionViewModel.getRating()
+                    sessionViewModel.getFeedback()
                 }
             }
         }

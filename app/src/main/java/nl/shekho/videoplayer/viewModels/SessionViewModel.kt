@@ -32,6 +32,14 @@ class SessionViewModel @Inject constructor(
     private val userMapper: UserMapper,
 ) : ViewModel() {
 
+    // Modify and read feedback and rating
+    var selectedParticipantTabIndex: MutableState<Int> = mutableStateOf(1)
+    var currentRating: MutableState<Int> = mutableStateOf(0)
+    var currentFeedback: MutableState<String> = mutableStateOf("")
+    var saveChangesAsked: Boolean by mutableStateOf(false)
+    var saveChangesSucceeded: Boolean by mutableStateOf(false)
+
+
     //Alert dialog
     var openDialog = mutableStateOf(false)
     var savingSession: Boolean by mutableStateOf(false)
@@ -48,7 +56,7 @@ class SessionViewModel @Inject constructor(
     val users: StateFlow<Result<List<User>>?> = mutableUsers
 
     //Session feedback variables
-    var loading: Boolean by mutableStateOf(false)
+    var loading = mutableStateOf(false)
     var succeeded: Boolean by mutableStateOf(false)
     var failed: String by mutableStateOf("")
     var createSessionAsked: Boolean by mutableStateOf(false)
@@ -69,15 +77,23 @@ class SessionViewModel @Inject constructor(
     var runningSession: Session? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
 
-    //Participants tabs
-    var selectedParticipantTabIndex: MutableState<Int> = mutableStateOf(1)
-    var currentRating: MutableState<Int> = mutableStateOf(0)
-    var hasFeedback: MutableState<Boolean> = mutableStateOf(false)
-
     //Events
     private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
     var selectedEvent =
-        mutableStateOf(Event(null,EventType.MARKEDEVENT, null, null, null, null, null, null, null, null))
+        mutableStateOf(
+            Event(
+                null,
+                EventType.MARKEDEVENT,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+        )
     var events: List<Event?> by mutableStateOf(mutableListOf())
     var selectedItemIndex = mutableStateOf(100)
     var altitude: Int by mutableStateOf(0)
@@ -121,7 +137,7 @@ class SessionViewModel @Inject constructor(
 
     fun createSession(newSessionEntity: NewSessionEntity, token: String) {
         viewModelScope.launch {
-            loading = true
+            loading.value = true
             try {
                 val response = apiService.createSession(
                     body = newSessionEntity,
@@ -139,7 +155,7 @@ class SessionViewModel @Inject constructor(
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
-            loading = false
+            loading.value = false
         }
     }
 
@@ -353,5 +369,68 @@ class SessionViewModel @Inject constructor(
                 selectedEvent.value.ratingCaptain?.let { selectedEvent.value.ratingCaptain } ?: 0
             }
         }
+    }
+
+    fun getFeedback() {
+        currentFeedback.value = when (selectedParticipantTabIndex.value) {
+            0 -> {
+                selectedEvent.value.feedbackFirstOfficer?.let { selectedEvent.value.feedbackFirstOfficer }
+                    ?: ""
+            }
+            1 -> {
+                selectedEvent.value.feedbackAll?.let { selectedEvent.value.feedbackAll } ?: ""
+            }
+            else -> {
+                selectedEvent.value.feedbackCaptain?.let { selectedEvent.value.feedbackCaptain }
+                    ?: ""
+            }
+        }
+    }
+
+    fun hasFeedback(index: Int): Boolean {
+        return when (index) {
+            0 -> {
+                !selectedEvent.value.feedbackFirstOfficer.isNullOrEmpty()
+            }
+            1 -> {
+                !selectedEvent.value.feedbackAll.isNullOrEmpty()
+            }
+            else -> {
+                !selectedEvent.value.feedbackCaptain.isNullOrEmpty()
+            }
+        }
+    }
+
+    fun saveChanges() {
+
+        //Start with the process of saving the changes
+        saveChangesAsked = true
+
+        viewModelScope.launch {
+            loading.value = true
+            delay(5000)
+
+            //Save feedback and rating
+            when (selectedParticipantTabIndex.value) {
+                0 -> {
+                    selectedEvent.value.feedbackFirstOfficer = currentFeedback.value
+                    selectedEvent.value.ratingFirstOfficer = currentRating.value
+                }
+                1 -> {
+                    selectedEvent.value.feedbackAll = currentFeedback.value
+                    selectedEvent.value.ratingAll = currentRating.value
+                }
+                else -> {
+                    selectedEvent.value.feedbackCaptain = currentFeedback.value
+                    selectedEvent.value.ratingCaptain = currentRating.value
+                }
+            }
+
+
+            //Give feedback on the performed action
+            loading.value = false
+            saveChangesSucceeded = true
+        }
+
     }
 }
