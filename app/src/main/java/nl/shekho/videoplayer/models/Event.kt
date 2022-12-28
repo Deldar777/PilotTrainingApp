@@ -7,6 +7,7 @@ import nl.shekho.videoplayer.ui.theme.deepPurple
 import nl.shekho.videoplayer.ui.theme.orange
 
 class Event(
+    var eventId: String?,
     var eventType: EventType,
     var timestamp: String?,
     var altitude: Int?,

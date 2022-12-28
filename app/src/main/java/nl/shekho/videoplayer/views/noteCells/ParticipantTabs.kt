@@ -27,6 +27,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 @Composable
 fun ParticipantTabs(
+    hasFeedback: Boolean,
     tabName: String,
     isSelected: Boolean = false,
     activeHighlightColor: Color = lightBlue,
@@ -70,22 +71,22 @@ fun ParticipantTabs(
                 )
             }
 
-//            if (sessionViewModel.hasFeedback.value) {
-//                Box(
-//                    contentAlignment = Alignment.Center,
-//                    modifier = Modifier
-//                        .fillMaxHeight()
-//                        .weight(1f)
-//                ) {
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.feedback_logo),
-//                        contentDescription = "",
-//                        tint = MaterialTheme.colors.primary,
-//                        modifier = Modifier
-//                            .size(24.dp)
-//                    )
-//                }
-//            }
+            if (hasFeedback) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.feedback_logo),
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
+                }
+            }
         }
     }
 }

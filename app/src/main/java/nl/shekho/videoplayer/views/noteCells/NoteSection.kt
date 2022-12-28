@@ -120,7 +120,18 @@ fun NoteSection(
 
                         for (index in participantTabs.indices) {
                             ParticipantTabs(
-                                tabName = participantTabs.get(index),
+                                hasFeedback = when (index) {
+                                    0 -> {
+                                        !sessionViewModel.selectedEvent.value.feedbackFirstOfficer.isNullOrEmpty()
+                                    }
+                                    1 -> {
+                                        !sessionViewModel.selectedEvent.value.feedbackAll.isNullOrEmpty()
+                                    }
+                                    else -> {
+                                        !sessionViewModel.selectedEvent.value.feedbackCaptain.isNullOrEmpty()
+                                    }
+                                },
+                                tabName = participantTabs[index],
                                 isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
                                 activeHighlightColor = activeHighlightColor,
                                 inactiveColor = inactiveColor,

@@ -139,6 +139,7 @@ fun FeedbackSection(
 
                     for (index in participantTabs.indices) {
                         ParticipantTabs(
+                            hasFeedback = false,
                             tabName = participantTabs.get(index),
                             isSelected = index == selectedParticipantTabIndex,
                             activeHighlightColor = activeHighlightColor,
@@ -210,6 +211,7 @@ fun FeedbackSection(
 
                                             for (indexFeedback in feedbackTabs.indices) {
                                                 ParticipantTabs(
+                                                    hasFeedback = false,
                                                     tabName = feedbackTabs.get(indexFeedback),
                                                     isSelected = indexFeedback == selectedFeedbackSelectionTabIndex,
                                                     activeHighlightColor = activeHighlightColor,

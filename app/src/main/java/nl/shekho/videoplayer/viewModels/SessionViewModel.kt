@@ -77,7 +77,7 @@ class SessionViewModel @Inject constructor(
     //Events
     private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
     var selectedEvent =
-        mutableStateOf(Event(EventType.MARKEDEVENT, null, null, null, null, null, null, null, null))
+        mutableStateOf(Event(null,EventType.MARKEDEVENT, null, null, null, null, null, null, null, null))
     var events: List<Event?> by mutableStateOf(mutableListOf())
     var selectedItemIndex = mutableStateOf(100)
     var altitude: Int by mutableStateOf(0)
@@ -241,11 +241,13 @@ class SessionViewModel @Inject constructor(
     fun getEvents() {
         events = events + listOf(
             Event(
+                UUID.randomUUID().toString(),
                 EventType.TAKEOFF,
                 LocalDateTime.now().minusMinutes(80).toString(),
                 altitude = (10000..50000).random(), null, null, null, null, null, null
             ),
             Event(
+                UUID.randomUUID().toString(),
                 EventType.ENGINEFAILURE,
                 LocalDateTime.now().minusMinutes(60).toString(),
                 altitude = (10000..50000).random(),
@@ -257,26 +259,31 @@ class SessionViewModel @Inject constructor(
                 4
             ),
             Event(
+                UUID.randomUUID().toString(),
                 EventType.MARKEDEVENT,
                 LocalDateTime.now().minusMinutes(40).toString(),
                 altitude = (10000..50000).random(), null, null, null, 4, null, null
             ),
             Event(
+                UUID.randomUUID().toString(),
                 EventType.MASTERWARNING,
                 LocalDateTime.now().minusMinutes(15).toString(),
                 altitude = (10000..50000).random(), null, null, null, null, null, null
             ),
             Event(
+                UUID.randomUUID().toString(),
                 EventType.ENGINEFIRE,
                 LocalDateTime.now().minusMinutes(8).toString(),
                 altitude = (10000..50000).random(), null, null, "Good reaction", null, null, 4
             ),
             Event(
+                UUID.randomUUID().toString(),
                 EventType.TCAS,
                 LocalDateTime.now().minusMinutes(4).toString(),
                 altitude = (10000..50000).random(), null, null, null, 1, null, null
             ),
             Event(
+                UUID.randomUUID().toString(),
                 EventType.LANDING,
                 LocalDateTime.now().minusMinutes(1).toString(),
                 altitude = (10000..50000).random(), null, null, null, 2, null, null
@@ -289,6 +296,7 @@ class SessionViewModel @Inject constructor(
         if (generatedEvents == 0) {
             events = events + listOf(
                 Event(
+                    UUID.randomUUID().toString(),
                     EventType.TAKEOFF,
                     LocalDateTime.now().toString(),
                     altitude, null, null, null, null, null, null
@@ -298,6 +306,7 @@ class SessionViewModel @Inject constructor(
             val randomEventIndex = (1..6).random()
             events = events + listOf(
                 Event(
+                    UUID.randomUUID().toString(),
                     EventType.values()[randomEventIndex],
                     LocalDateTime.now().toString(),
                     altitude, null, null, null, null, null, null
@@ -308,6 +317,7 @@ class SessionViewModel @Inject constructor(
         if (generatedEvents == maxNumberOfEvents) {
             events = events + listOf(
                 Event(
+                    UUID.randomUUID().toString(),
                     EventType.LANDING,
                     LocalDateTime.now().toString(),
                     altitude, null, null, null, null, null, null
@@ -333,7 +343,8 @@ class SessionViewModel @Inject constructor(
     fun getRating() {
         currentRating.value = when (selectedParticipantTabIndex.value) {
             0 -> {
-                selectedEvent.value.ratingFirstOfficer?.let { selectedEvent.value.ratingFirstOfficer } ?: 0
+                selectedEvent.value.ratingFirstOfficer?.let { selectedEvent.value.ratingFirstOfficer }
+                    ?: 0
             }
             1 -> {
                 selectedEvent.value.ratingAll?.let { selectedEvent.value.ratingAll } ?: 0

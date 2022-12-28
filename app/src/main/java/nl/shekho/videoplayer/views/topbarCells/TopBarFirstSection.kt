@@ -41,7 +41,7 @@ fun SessionTopBarFirstSection(
 
         //Session name
         Text(
-            text = "${stringResource(id = R.string.session)} - ${sessionDate.let { Helpers.formatDateTimeSessionShort(it)} ?: kotlin.run { "Date" }} ",
+            text = "${sessionDate.let { Helpers.formatDateTimeSessionShort(it)} ?: kotlin.run { "Date" }} ",
             fontSize = 18.sp,
             color = titleColor,
             fontWeight = FontWeight.Bold
