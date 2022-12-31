@@ -41,7 +41,7 @@ fun MarkEventAndAltitudeSection(
             .fillMaxWidth()
     ) {
         OutlinedButton(
-            enabled = sessionViewModel.selectedEvent.value.eventType.type != EventType.MARKEDEVENT.type,
+            enabled =  sessionViewModel.markEventButtonEnabled(),
             onClick = {
                 sessionViewModel.selectedEvent.value = Event(null,EventType.MARKEDEVENT, null, null, null,null,null,null,null,null)
                 sessionViewModel.selectedItemIndex.value = 400

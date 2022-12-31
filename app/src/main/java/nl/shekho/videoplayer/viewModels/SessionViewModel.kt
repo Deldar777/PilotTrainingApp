@@ -433,4 +433,18 @@ class SessionViewModel @Inject constructor(
         }
 
     }
+
+
+
+    //Enable mark event button when not loading and the selected event is not mark event
+    fun markEventButtonEnabled(): Boolean {
+        return when (selectedEvent.value.eventType) {
+            EventType.MARKEDEVENT -> {
+                selectedEvent.value.altitude != null && !loading.value
+            }
+            else -> {
+                !loading.value
+            }
+        }
+    }
 }
