@@ -27,8 +27,6 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.models.Role
-import nl.shekho.videoplayer.models.SessionStatus
 import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
@@ -47,6 +45,8 @@ fun ReviewWindow(
 
     //Get users for the selected session
     val users by sessionViewModel.users.collectAsState()
+    val reviewSession = stringResource(id = R.string.review)
+    val continueSession = stringResource(id = R.string.continueProcess)
 
     Box(
         modifier = Modifier
@@ -354,18 +354,20 @@ fun ReviewWindow(
                                     .background(lightBlue, shape = RoundedCornerShape(20.dp))
                                     .clickable {
 
-                                        if (sessionViewModel.selectedSession.value.status == SessionStatus.STARTED.type) {
-                                            sessionViewModel.runningSession = sessionViewModel.selectedSession.value
+                                        if (sessionViewModel.isSessionStillRunning()) {
+                                            sessionViewModel.runningSession =
+                                                sessionViewModel.selectedSession.value
                                             navController.navigate(Screens.SessionScreen.route)
                                         } else {
-                                            sessionViewModel.runningSession = sessionViewModel.selectedSession.value
+                                            sessionViewModel.runningSession =
+                                                sessionViewModel.selectedSession.value
                                             navController.navigate(Screens.ReviewScreen.route)
                                         }
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.review),
+                                    text = if(sessionViewModel.isSessionStillRunning()) continueSession else reviewSession ,
                                     color = MaterialTheme.colors.primary,
                                     textAlign = TextAlign.Center,
                                     fontSize = 30.sp,

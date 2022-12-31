@@ -71,14 +71,14 @@ fun EventDetailsSection(
             )
 
             Icon(
-                painter = painterResource(id = sessionViewModel.selectedEvent.value.eventIcon),
+                painter = painterResource(id = sessionViewModel.getEventIcon(sessionViewModel.selectedEvent.value.eventType)),
                 contentDescription = "",
-                tint = Color(sessionViewModel.selectedEvent.value.eventIconColor),
+                tint = Color(sessionViewModel.getEventIconColor(sessionViewModel.selectedEvent.value.eventType)),
                 modifier = Modifier.size(24.dp)
             )
 
             Text(
-                text = sessionViewModel.selectedEvent.value.eventType.type,
+                text = sessionViewModel.selectedEvent.value.eventType,
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
@@ -99,7 +99,7 @@ fun EventDetailsSection(
                 fontSize = 16.sp,
             )
             Text(
-                text = if (sessionViewModel.selectedEvent.value.altitude != null) sessionViewModel.selectedEvent.value.altitude.toString() else "Current altitude",
+                text = "Current altitude",
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
@@ -114,14 +114,8 @@ fun EventDetailsSection(
                 color = MaterialTheme.colors.primary,
                 fontSize = 16.sp,
             )
-
-            val timestamp = sessionViewModel.selectedEvent.value.timestamp?.let {
-                formatDate(it)
-            } ?: run {
-                stringResource(id = R.string.currentTimestamp)
-            }
             Text(
-                text = timestamp,
+                text =  stringResource(id = R.string.currentTimestamp),
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
@@ -151,10 +145,4 @@ fun EventDetailsSection(
             }
         }
     }
-}
-
-
-private fun formatDate(date: String): String {
-    val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
-    return parsedDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 }

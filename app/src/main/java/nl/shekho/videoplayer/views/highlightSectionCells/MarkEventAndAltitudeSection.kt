@@ -30,10 +30,6 @@ fun MarkEventAndAltitudeSection(
     sessionViewModel: SessionViewModel
 ) {
 
-    var currentAltitude by remember {
-        mutableStateOf(29550)
-    }
-
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

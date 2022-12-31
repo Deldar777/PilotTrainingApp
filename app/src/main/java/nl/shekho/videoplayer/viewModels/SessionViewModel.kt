@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.viewModels
 
+import android.graphics.Color
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,12 +9,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.ApiService
 import nl.shekho.videoplayer.api.SessionMapper
 import nl.shekho.videoplayer.api.UserMapper
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.models.*
+import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.ui.theme.deepPurple
+import nl.shekho.videoplayer.ui.theme.orange
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
@@ -78,29 +83,27 @@ class SessionViewModel @Inject constructor(
     var selectedSessionIndex = mutableStateOf(100)
 
     //Events
-    private val mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
-    var selectedEvent =
-        mutableStateOf(
-            Event(
-                null,
-                EventType.MARKEDEVENT,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            )
+    private var mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
+    var events: StateFlow<Result<List<Event>>?> = mutableEvents
+    var selectedEvent = mutableStateOf(
+        Event(
+            "dsd",
+            "dsd",
+            233,
+            EventType.MARKEDEVENT.type,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         )
-    var events: List<Event?> by mutableStateOf(mutableListOf())
+    )
     var selectedItemIndex = mutableStateOf(100)
     var altitude: Int by mutableStateOf(0)
 
-    init {
-        getEvents()
-    }
 
     fun resetViewWindowsValues() {
         showNewSessionWindow.value = false
@@ -249,100 +252,100 @@ class SessionViewModel @Inject constructor(
         altitude = (10000..50000).random()
         if (generatedEvents <= maxNumberOfEvents) {
             if (secondsPassed % cycleTimeInSeconds == 0) {
-                generateEvent()
+//                generateEvent()
             }
         }
     }
 
-    fun getEvents() {
-        events = events + listOf(
-            Event(
-                UUID.randomUUID().toString(),
-                EventType.TAKEOFF,
-                LocalDateTime.now().minusMinutes(80).toString(),
-                altitude = (10000..50000).random(), null, null, null, null, null, null
-            ),
-            Event(
-                UUID.randomUUID().toString(),
-                EventType.ENGINEFAILURE,
-                LocalDateTime.now().minusMinutes(60).toString(),
-                altitude = (10000..50000).random(),
-                "Good communication",
-                "More attention",
-                null,
-                5,
-                3,
-                4
-            ),
-            Event(
-                UUID.randomUUID().toString(),
-                EventType.MARKEDEVENT,
-                LocalDateTime.now().minusMinutes(40).toString(),
-                altitude = (10000..50000).random(), null, null, null, 4, null, null
-            ),
-            Event(
-                UUID.randomUUID().toString(),
-                EventType.MASTERWARNING,
-                LocalDateTime.now().minusMinutes(15).toString(),
-                altitude = (10000..50000).random(), null, null, null, null, null, null
-            ),
-            Event(
-                UUID.randomUUID().toString(),
-                EventType.ENGINEFIRE,
-                LocalDateTime.now().minusMinutes(8).toString(),
-                altitude = (10000..50000).random(), null, null, "Good reaction", null, null, 4
-            ),
-            Event(
-                UUID.randomUUID().toString(),
-                EventType.TCAS,
-                LocalDateTime.now().minusMinutes(4).toString(),
-                altitude = (10000..50000).random(), null, null, null, 1, null, null
-            ),
-            Event(
-                UUID.randomUUID().toString(),
-                EventType.LANDING,
-                LocalDateTime.now().minusMinutes(1).toString(),
-                altitude = (10000..50000).random(), null, null, null, 2, null, null
-            )
-        )
-    }
+//    fun getEvents() {
+//        events = events + listOf(
+//            Event(
+//                UUID.randomUUID().toString(),
+//                EventType.TAKEOFF,
+//                LocalDateTime.now().minusMinutes(80).toString(),
+//                altitude = (10000..50000).random(), null, null, null, null, null, null
+//            ),
+//            Event(
+//                UUID.randomUUID().toString(),
+//                EventType.ENGINEFAILURE,
+//                LocalDateTime.now().minusMinutes(60).toString(),
+//                altitude = (10000..50000).random(),
+//                "Good communication",
+//                "More attention",
+//                null,
+//                5,
+//                3,
+//                4
+//            ),
+//            Event(
+//                UUID.randomUUID().toString(),
+//                EventType.MARKEDEVENT,
+//                LocalDateTime.now().minusMinutes(40).toString(),
+//                altitude = (10000..50000).random(), null, null, null, 4, null, null
+//            ),
+//            Event(
+//                UUID.randomUUID().toString(),
+//                EventType.MASTERWARNING,
+//                LocalDateTime.now().minusMinutes(15).toString(),
+//                altitude = (10000..50000).random(), null, null, null, null, null, null
+//            ),
+//            Event(
+//                UUID.randomUUID().toString(),
+//                EventType.ENGINEFIRE,
+//                LocalDateTime.now().minusMinutes(8).toString(),
+//                altitude = (10000..50000).random(), null, null, "Good reaction", null, null, 4
+//            ),
+//            Event(
+//                UUID.randomUUID().toString(),
+//                EventType.TCAS,
+//                LocalDateTime.now().minusMinutes(4).toString(),
+//                altitude = (10000..50000).random(), null, null, null, 1, null, null
+//            ),
+//            Event(
+//                UUID.randomUUID().toString(),
+//                EventType.LANDING,
+//                LocalDateTime.now().minusMinutes(1).toString(),
+//                altitude = (10000..50000).random(), null, null, null, 2, null, null
+//            )
+//        )
+//    }
 
-    private fun generateEvent() {
-
-        if (generatedEvents == 0) {
-            events = events + listOf(
-                Event(
-                    UUID.randomUUID().toString(),
-                    EventType.TAKEOFF,
-                    LocalDateTime.now().toString(),
-                    altitude, null, null, null, null, null, null
-                )
-            )
-        } else {
-            val randomEventIndex = (1..6).random()
-            events = events + listOf(
-                Event(
-                    UUID.randomUUID().toString(),
-                    EventType.values()[randomEventIndex],
-                    LocalDateTime.now().toString(),
-                    altitude, null, null, null, null, null, null
-                )
-            )
-        }
-
-        if (generatedEvents == maxNumberOfEvents) {
-            events = events + listOf(
-                Event(
-                    UUID.randomUUID().toString(),
-                    EventType.LANDING,
-                    LocalDateTime.now().toString(),
-                    altitude, null, null, null, null, null, null
-                )
-            )
-        }
-
-        generatedEvents += 1
-    }
+//    private fun generateEvent() {
+//
+//        if (generatedEvents == 0) {
+//            events = events + listOf(
+//                Event(
+//                    UUID.randomUUID().toString(),
+//                    EventType.TAKEOFF,
+//                    LocalDateTime.now().toString(),
+//                    altitude, null, null, null, null, null, null
+//                )
+//            )
+//        } else {
+//            val randomEventIndex = (1..6).random()
+//            events.value = events.value + listOf(
+//                Event(
+//                    UUID.randomUUID().toString(),
+//                    EventType.values()[randomEventIndex],
+//                    LocalDateTime.now().toString(),
+//                    altitude, null, null, null, null, null, null
+//                )
+//            )
+//        }
+//
+//        if (generatedEvents == maxNumberOfEvents) {
+//            events = events.value + listOf(
+//                Event(
+//                    UUID.randomUUID().toString(),
+//                    EventType.LANDING,
+//                    LocalDateTime.now().toString(),
+//                    altitude, null, null, null, null, null, null
+//                )
+//            )
+//        }
+//
+//        generatedEvents += 1
+//    }
 
     private fun Int.pad(): String {
         return this.toString().padStart(2, '0')
@@ -359,6 +362,7 @@ class SessionViewModel @Inject constructor(
     fun getRating() {
         currentRating.value = when (selectedParticipantTabIndex.value) {
             0 -> {
+                selectedEvent.value.ratingFirstOfficer
                 selectedEvent.value.ratingFirstOfficer?.let { selectedEvent.value.ratingFirstOfficer }
                     ?: 0
             }
@@ -426,7 +430,6 @@ class SessionViewModel @Inject constructor(
                 }
             }
 
-
             //Give feedback on the performed action
             loading.value = false
             saveChangesSucceeded = true
@@ -438,8 +441,8 @@ class SessionViewModel @Inject constructor(
     //Enable mark event button when not loading and the selected event is not mark event
     fun markEventButtonEnabled(): Boolean {
         return when (selectedEvent.value.eventType) {
-            EventType.MARKEDEVENT -> {
-                selectedEvent.value.altitude != null && !loading.value
+            EventType.MARKEDEVENT.type -> {
+                selectedEvent.value.timeStamp > 0 && !loading.value
             }
             else -> {
                 !loading.value
@@ -447,9 +450,41 @@ class SessionViewModel @Inject constructor(
         }
     }
 
+    //Add empty marked event
     fun addMarkEvent() {
-        selectedEvent.value =
-            Event(null, EventType.MARKEDEVENT, null, null, null, null, null, null, null, null)
+        selectedEvent.value = Event("dsd", "dsd", 233, EventType.MARKEDEVENT.type, null, null, null, null, null,null, null, null)
         selectedItemIndex.value = 400
+    }
+
+    //Check if the session is still running
+    fun isSessionStillRunning(): Boolean {
+        return selectedSession.value.status == SessionStatus.STARTED.type
+    }
+
+
+    //Get the event icon based on the event type
+    fun getEventIcon(eventType: String): Int {
+        return when (eventType) {
+            EventType.TAKEOFF.type -> R.drawable.takeoff_logo
+            EventType.MASTERWARNING.type, EventType.MASTERCAUTION.type -> R.drawable.warning_logo
+            EventType.ENGINEFIRE.type -> R.drawable.local_fire_department_black_24dp
+            EventType.ENGINEFAILURE.type -> R.drawable.failure_logo
+            EventType.LANDING.type -> R.drawable.landing_logo
+            else -> R.drawable.marked_event_logo
+        }
+    }
+
+    //Get the event icon color based on the event type
+    fun getEventIconColor(eventType: String): Int {
+        return when (eventType) {
+            EventType.TAKEOFF.type -> deepBlue.hashCode()
+            EventType.LANDING.type -> deepBlue.hashCode()
+            EventType.MASTERCAUTION.type -> Color.YELLOW
+            EventType.MASTERWARNING.type -> Color.RED
+            EventType.TCAS.type -> Color.RED
+            EventType.ENGINEFIRE.type -> Color.RED
+            EventType.ENGINEFAILURE.type -> orange.hashCode()
+            else -> deepPurple.hashCode()
+        }
     }
 }

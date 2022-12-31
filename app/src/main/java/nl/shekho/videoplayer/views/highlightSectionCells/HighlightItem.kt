@@ -23,11 +23,15 @@ import androidx.compose.ui.zIndex
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.*
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightItem(
+    sessionViewModel: SessionViewModel,
     event: Event,
     isSelected: Boolean = false,
     activeHighlightColor: Color = lightBlue,
@@ -71,7 +75,8 @@ fun HighlightItem(
                         .padding(top = 6.dp, bottom = 2.dp)
                 ) {
                     Text(
-                        text = event.timestamp?.let { formatDate(it) } ?: "",
+                        //Should be formatted
+                        text = event.timeStamp.toString(),
                         fontSize = 12.sp,
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier
@@ -81,7 +86,7 @@ fun HighlightItem(
                 }
 
                 Text(
-                    text = "${event.altitude} ft",
+                    text = "Altitude",
                     color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
@@ -108,9 +113,9 @@ fun HighlightItem(
             )
 
             Icon(
-                painter = painterResource(id = event.eventIcon),
-                contentDescription = event.eventType.type,
-                tint = Color(event.eventIconColor),
+                painter = painterResource(id = sessionViewModel.getEventIcon(eventType = event.eventType)),
+                contentDescription = "",
+                tint = Color(sessionViewModel.getEventIconColor(eventType = event.eventType)),
                 modifier = Modifier
                     .zIndex(4f)
                     .background(
@@ -119,7 +124,7 @@ fun HighlightItem(
                     )
                     .border(
                         width = 2.dp,
-                        color = Color(event.eventIconColor),
+                        color = Color(sessionViewModel.getEventIconColor(eventType = event.eventType)),
                         shape = CircleShape
                     )
                     .padding(4.dp)
@@ -148,7 +153,7 @@ fun HighlightItem(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = event.eventType.type,
+                        text = event.eventType,
                         color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
@@ -176,7 +181,7 @@ fun HighlightItem(
                         ) {
                             if (!event.feedbackAll.isNullOrEmpty() || !event.feedbackFirstOfficer.isNullOrEmpty() || !event.feedbackCaptain.isNullOrEmpty()) {
                                 Icon(
-                                    painter = painterResource(id = event.feedbackIcon),
+                                    painter = painterResource(id = R.drawable.feedback_logo),
                                     contentDescription = "",
                                     tint = MaterialTheme.colors.primary,
                                     modifier = Modifier
