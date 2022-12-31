@@ -435,7 +435,6 @@ class SessionViewModel @Inject constructor(
     }
 
 
-
     //Enable mark event button when not loading and the selected event is not mark event
     fun markEventButtonEnabled(): Boolean {
         return when (selectedEvent.value.eventType) {
@@ -446,5 +445,11 @@ class SessionViewModel @Inject constructor(
                 !loading.value
             }
         }
+    }
+
+    fun addMarkEvent() {
+        selectedEvent.value =
+            Event(null, EventType.MARKEDEVENT, null, null, null, null, null, null, null, null)
+        selectedItemIndex.value = 400
     }
 }

@@ -37,6 +37,7 @@ import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.models.User
 import nl.shekho.videoplayer.ui.theme.deepBlue
+import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.views.generalCells.Loading
 import nl.shekho.videoplayer.views.navigation.Screens
 
@@ -305,7 +306,7 @@ fun NewSessionWindow(
                             },
                             shape = RoundedCornerShape(20.dp),
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = deepBlue,
+                                backgroundColor = lightBlue,
                                 contentColor = MaterialTheme.colors.primary
                             ),
                             modifier = Modifier.width(300.dp)
