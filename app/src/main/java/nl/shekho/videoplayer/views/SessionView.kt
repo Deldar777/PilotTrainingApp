@@ -31,7 +31,6 @@ fun SessionView(
     context: Context
 ) {
 
-    //Get the events for the started session
 
     var cannotSaveSession = stringResource(id = R.string.cannotSaveSession)
     var sessionSaved = stringResource(id = R.string.sessionSaved)

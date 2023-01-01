@@ -12,6 +12,7 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import nl.shekho.videoplayer.ui.theme.lightBlue
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.FeedbackMessage
 import kotlin.time.ExperimentalTime
@@ -25,40 +26,53 @@ import nl.shekho.videoplayer.views.overviewCells.SessionItem
 fun HighlightItems(
     activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = highlightItemGray,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    accessViewModel: AccessViewModel
 ) {
 
     //Get sessions that the logged in user has participated in
-    val events by sessionViewModel.events.collectAsState()
-
-//    if (sessionViewModel.events.isEmpty()) {
-//        ShowFeedback(
-//            color = Color.White,
-//            text = stringResource(id = R.string.noEventsYet)
-//        )
-//    }
+    val logBook by sessionViewModel.logBook.collectAsState()
 
     if (sessionViewModel.isOnline()) {
-        events?.let { listEvents ->
+
+        //Get the logBook for the session (Event and records)
+        sessionViewModel.getLogBookById(
+            logBookId = "027e23c0-39e5-4a0c-94fe-08daebee5de3",
+            token = accessViewModel.encodedJwtToken!!
+        )
+
+        logBook?.let { listEvents ->
             listEvents
                 .onSuccess {
-                    LazyColumn {
-                        itemsIndexed(items = it) { index, event ->
-                            HighlightItem(
-                                sessionViewModel = sessionViewModel,
-                                event = event,
-                                isSelected = index == sessionViewModel.selectedItemIndex.value,
-                                activeHighlightColor = activeHighlightColor,
-                                inactiveColor = inactiveColor,
-                            ) {
-                                sessionViewModel.addNoteButtonEnabled.value = false
-                                sessionViewModel.selectedItemIndex.value = index
-                                sessionViewModel.selectedEvent.value = event
-                                sessionViewModel.getRating()
-                                sessionViewModel.getFeedback()
+
+                    if (it.events.isNotEmpty()) {
+
+                        LazyColumn {
+                            itemsIndexed(items = it.events) { index, event ->
+                                if (event != null) {
+                                    HighlightItem(
+                                        sessionViewModel = sessionViewModel,
+                                        event = event,
+                                        isSelected = index == sessionViewModel.selectedItemIndex.value,
+                                        activeHighlightColor = activeHighlightColor,
+                                        inactiveColor = inactiveColor,
+                                    ) {
+                                        sessionViewModel.addNoteButtonEnabled.value = false
+                                        sessionViewModel.selectedItemIndex.value = index
+                                        sessionViewModel.selectedEvent.value = event
+                                        sessionViewModel.getRating()
+                                        sessionViewModel.getFeedback()
+                                    }
+                                }
                             }
                         }
+                    } else {
+                        ShowFeedback(
+                            color = Color.White,
+                            text = stringResource(id = R.string.noEventsYet)
+                        )
                     }
+
                 }
                 .onFailure {
                     ShowFeedback(

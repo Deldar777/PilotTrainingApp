@@ -12,13 +12,15 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightSection(
     sessionViewModel: SessionViewModel,
     screen: String,
-    navController: NavController
+    navController: NavController,
+    accessViewModel: AccessViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -45,7 +47,8 @@ fun HighlightSection(
         ) {
             // Highlights lazy columns
             HighlightItems(
-                sessionViewModel = sessionViewModel
+                sessionViewModel = sessionViewModel,
+                accessViewModel = accessViewModel
             )
         }
 

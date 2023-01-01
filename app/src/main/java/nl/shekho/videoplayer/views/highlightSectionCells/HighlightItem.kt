@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.ui.theme.*
 import nl.shekho.videoplayer.viewModels.SessionViewModel
@@ -38,10 +39,6 @@ fun HighlightItem(
     inactiveColor: Color = highlightItemGray,
     onItemClick: () -> Unit,
 ) {
-
-    val showFeedbackIcon by remember {
-        mutableStateOf(!event.feedbackAll.isNullOrEmpty() || !event.feedbackFirstOfficer.isNullOrEmpty() || !event.feedbackCaptain.isNullOrEmpty())
-    }
 
     Row(
         modifier = Modifier
@@ -76,7 +73,7 @@ fun HighlightItem(
                 ) {
                     Text(
                         //Should be formatted
-                        text = event.timeStamp.toString(),
+                        text = Helpers.convertSecondsToTime(event.timeStamp),
                         fontSize = 12.sp,
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier
@@ -86,7 +83,7 @@ fun HighlightItem(
                 }
 
                 Text(
-                    text = "Altitude",
+                    text = sessionViewModel.altitude.toString(),
                     color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
@@ -153,7 +150,7 @@ fun HighlightItem(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = event.eventType,
+                        text = sessionViewModel.getEventName(event.eventType),
                         color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp

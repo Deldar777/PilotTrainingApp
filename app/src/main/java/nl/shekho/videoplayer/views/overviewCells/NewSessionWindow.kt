@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.ui.theme.tabBackground
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
+import nl.shekho.videoplayer.api.entities.VideoRequestEntity
 import nl.shekho.videoplayer.models.Role
 import nl.shekho.videoplayer.ui.theme.textSecondaryDarkMode
 import nl.shekho.videoplayer.viewModels.AccessViewModel
@@ -175,11 +176,11 @@ fun NewSessionWindow(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = stringResource(id = R.string.captain),
+                                        text = stringResource(id = R.string.firstOfficer),
                                         color = Color.Black
                                     )
                                     Text(
-                                        text = stringResource(id = R.string.selectParticipant2),
+                                        text = stringResource(id = R.string.selectParticipant1),
                                         color = textSecondaryDarkMode
                                     )
                                 }
@@ -207,7 +208,7 @@ fun NewSessionWindow(
                         }
                     }
 
-                    //Consent participant 1
+                    //Consent participant 2
                     Consent()
 
                     //Dropdown participant2
@@ -283,7 +284,7 @@ fun NewSessionWindow(
                                     val participant1Id = mappedUsers[participant1]?.id
                                     val participant2Id = mappedUsers[participant2]?.id
                                     val companyId = accessViewModel.companyId
-                                    var token = accessViewModel.encodedJwtToken
+                                    val token = accessViewModel.encodedJwtToken
 
                                     val newSessionEntity = NewSessionEntity(
                                         UserIds = listOf(
@@ -335,6 +336,18 @@ fun NewSessionWindow(
                     if (!sessionViewModel.succeeded) {
                         Toast.makeText(context, sessionCreationError, Toast.LENGTH_LONG).show()
                     } else {
+
+                        //If the session was created successfully, post video for the session assets
+                        val token = accessViewModel.encodedJwtToken
+                        if (sessionViewModel.runningSession != null && token != null) {
+                            sessionViewModel.postVideo(
+                                videoRequestEntity = VideoRequestEntity(
+                                    sessionId = sessionViewModel.runningSession!!.id
+                                ),
+                                token = token
+                            )
+                        }
+
                         navController.navigate(Screens.SessionScreen.route)
                     }
                     sessionViewModel.createSessionAsked = false

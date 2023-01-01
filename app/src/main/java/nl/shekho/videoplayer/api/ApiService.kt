@@ -38,12 +38,23 @@ interface ApiService {
         @Header("Authorization") token: String?
     ):Response<SessionEntity>
 
+    @POST("PostVideo")
+    suspend fun postVideo(
+        @Body body: VideoRequestEntity,
+        @Header("Authorization") token: String?
+    ):Response<VideoResponseEntity>
+
+    @GET("Logbooks/get-single/{logbookId}")
+    suspend fun getLogBookById(
+        @Path("logbookId") logBookId: String,
+        @Header("Authorization") token: String?
+    ): Response<LogBookEntity>
+
     @GET("GetUserBySessionId/{sessionId}")
     suspend fun getUsersBySessionId(
         @Path("sessionId") sessionId: String,
         @Header("Authorization") token: String?
     ): Response<UsersEntity>
-
 
     @GET("GetUserBySessionId/{sessionId}")
     suspend fun updateSessionStatusById(

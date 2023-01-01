@@ -50,7 +50,8 @@ fun HighlightAndVideo(
             HighlightSection(
                 sessionViewModel = sessionViewModel,
                 screen = screen,
-                navController = navController
+                navController = navController,
+                accessViewModel = accessViewModel
             )
         }
 

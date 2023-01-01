@@ -8,8 +8,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import nl.shekho.videoplayer.api.LogBookMapper
 import nl.shekho.videoplayer.api.SessionMapper
 import nl.shekho.videoplayer.api.UserMapper
+import nl.shekho.videoplayer.api.SessionPropertiesMapper
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
 
@@ -46,5 +48,17 @@ object ViewModelModule {
     @ViewModelScoped
     fun providerUserMapper(): UserMapper{
         return UserMapper()
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providerVideoMapper(): SessionPropertiesMapper{
+        return SessionPropertiesMapper()
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providerLogBookMapper(): LogBookMapper{
+        return LogBookMapper()
     }
 }

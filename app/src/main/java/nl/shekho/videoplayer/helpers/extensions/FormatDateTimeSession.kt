@@ -90,5 +90,19 @@ class Helpers {
             val oneDayOld = LocalDateTime.now().minusHours(24)
             return formattedDate.isAfter(oneDayOld) || formattedDate.isEqual(oneDayOld)
         }
+
+        fun convertSecondsToTime(NumberOfSeconds: Int): String{
+
+            val hours = NumberOfSeconds / 3600;
+            val minutes = (NumberOfSeconds % 3600) / 60;
+            val seconds = NumberOfSeconds % 60;
+
+            return hours.pad() + " : " + minutes.pad() + " : " + seconds.pad();
+        }
+
+        private fun Int.pad(): String {
+            return this.toString().padStart(2, '0')
+        }
+
     }
 }

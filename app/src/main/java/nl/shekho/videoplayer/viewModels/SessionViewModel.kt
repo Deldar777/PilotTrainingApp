@@ -10,10 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.api.ApiService
-import nl.shekho.videoplayer.api.SessionMapper
-import nl.shekho.videoplayer.api.UserMapper
+import nl.shekho.videoplayer.api.*
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
+import nl.shekho.videoplayer.api.entities.VideoRequestEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.models.*
 import nl.shekho.videoplayer.ui.theme.deepBlue
@@ -23,6 +22,7 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
+import kotlin.math.log
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -35,6 +35,8 @@ class SessionViewModel @Inject constructor(
     private val apiService: ApiService,
     private val sessionMapper: SessionMapper,
     private val userMapper: UserMapper,
+    private val sessionPropertiesMapper: SessionPropertiesMapper,
+    private val logBookMapper: LogBookMapper
 ) : ViewModel() {
 
     // Modify and read feedback and rating
@@ -78,19 +80,20 @@ class SessionViewModel @Inject constructor(
     private var mutableSessions = MutableStateFlow<Result<List<Session>>?>(null)
     var sessions: StateFlow<Result<List<Session>>?> = mutableSessions
     var selectedSession =
-        mutableStateOf(Session(null, LocalDateTime.now().toString(), null, null, null))
+        mutableStateOf(Session("", LocalDateTime.now().toString(), null, null, null))
     var runningSession: Session? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
 
     //Events
-    private var mutableEvents = MutableStateFlow<Result<List<Event>>?>(null)
-    var events: StateFlow<Result<List<Event>>?> = mutableEvents
+    var sessionProperties: SessionProperties? by mutableStateOf(null)
+    private var mutableLogBook = MutableStateFlow<Result<LogBook>?>(null)
+    var logBook: StateFlow<Result<LogBook>?> = mutableLogBook
     var selectedEvent = mutableStateOf(
         Event(
             "dsd",
             "dsd",
             233,
-            EventType.MARKEDEVENT.type,
+            EventType.MARKED_EVENT.name,
             null,
             null,
             null,
@@ -155,10 +158,60 @@ class SessionViewModel @Inject constructor(
                 } else {
                     failed = response.message()
                 }
+
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
             loading.value = false
+        }
+    }
+
+    fun postVideo(videoRequestEntity: VideoRequestEntity, token: String) {
+        viewModelScope.launch {
+            loading.value = true
+            try {
+                val response = apiService.postVideo(
+                    body = videoRequestEntity,
+                    token = token,
+                )
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    succeeded = true
+                    val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body)
+                    sessionProperties = sessionPropertiesMapped
+                } else {
+                    failed = response.message()
+                }
+            } catch (e: java.lang.Exception) {
+                failed = e.message.toString()
+            }
+            loading.value = false
+        }
+    }
+
+    fun getLogBookById(logBookId: String, token: String) {
+        viewModelScope.launch {
+
+            val response = apiService.getLogBookById(
+                logBookId = logBookId,
+                token = token,
+            )
+
+            delay(3000)
+
+            val result = when {
+                response.isSuccessful -> {
+                    val body = response.body()
+                    if (body != null) {
+                        logBookMapper.map(body)
+                    } else {
+                        Result.failure(Exception("Body was empty"))
+                    }
+                }
+                else -> Result.failure(Exception("Something went wrong: Code ${response.code()}"))
+            }
+
+            mutableLogBook.emit(result)
         }
     }
 
@@ -257,58 +310,6 @@ class SessionViewModel @Inject constructor(
         }
     }
 
-//    fun getEvents() {
-//        events = events + listOf(
-//            Event(
-//                UUID.randomUUID().toString(),
-//                EventType.TAKEOFF,
-//                LocalDateTime.now().minusMinutes(80).toString(),
-//                altitude = (10000..50000).random(), null, null, null, null, null, null
-//            ),
-//            Event(
-//                UUID.randomUUID().toString(),
-//                EventType.ENGINEFAILURE,
-//                LocalDateTime.now().minusMinutes(60).toString(),
-//                altitude = (10000..50000).random(),
-//                "Good communication",
-//                "More attention",
-//                null,
-//                5,
-//                3,
-//                4
-//            ),
-//            Event(
-//                UUID.randomUUID().toString(),
-//                EventType.MARKEDEVENT,
-//                LocalDateTime.now().minusMinutes(40).toString(),
-//                altitude = (10000..50000).random(), null, null, null, 4, null, null
-//            ),
-//            Event(
-//                UUID.randomUUID().toString(),
-//                EventType.MASTERWARNING,
-//                LocalDateTime.now().minusMinutes(15).toString(),
-//                altitude = (10000..50000).random(), null, null, null, null, null, null
-//            ),
-//            Event(
-//                UUID.randomUUID().toString(),
-//                EventType.ENGINEFIRE,
-//                LocalDateTime.now().minusMinutes(8).toString(),
-//                altitude = (10000..50000).random(), null, null, "Good reaction", null, null, 4
-//            ),
-//            Event(
-//                UUID.randomUUID().toString(),
-//                EventType.TCAS,
-//                LocalDateTime.now().minusMinutes(4).toString(),
-//                altitude = (10000..50000).random(), null, null, null, 1, null, null
-//            ),
-//            Event(
-//                UUID.randomUUID().toString(),
-//                EventType.LANDING,
-//                LocalDateTime.now().minusMinutes(1).toString(),
-//                altitude = (10000..50000).random(), null, null, null, 2, null, null
-//            )
-//        )
-//    }
 
 //    private fun generateEvent() {
 //
@@ -316,7 +317,7 @@ class SessionViewModel @Inject constructor(
 //            events = events + listOf(
 //                Event(
 //                    UUID.randomUUID().toString(),
-//                    EventType.TAKEOFF,
+//                    EventType.TAKE_OFF,
 //                    LocalDateTime.now().toString(),
 //                    altitude, null, null, null, null, null, null
 //                )
@@ -441,7 +442,7 @@ class SessionViewModel @Inject constructor(
     //Enable mark event button when not loading and the selected event is not mark event
     fun markEventButtonEnabled(): Boolean {
         return when (selectedEvent.value.eventType) {
-            EventType.MARKEDEVENT.type -> {
+            EventType.MARKED_EVENT.name -> {
                 selectedEvent.value.timeStamp > 0 && !loading.value
             }
             else -> {
@@ -452,39 +453,54 @@ class SessionViewModel @Inject constructor(
 
     //Add empty marked event
     fun addMarkEvent() {
-        selectedEvent.value = Event("dsd", "dsd", 233, EventType.MARKEDEVENT.type, null, null, null, null, null,null, null, null)
+        selectedEvent.value = Event("dsd", "dsd", 233, EventType.MARKED_EVENT.name, null, null, null, null, null,null, null, null)
         selectedItemIndex.value = 400
     }
 
     //Check if the session is still running
     fun isSessionStillRunning(): Boolean {
-        return selectedSession.value.status == SessionStatus.STARTED.type
+        return selectedSession.value.status == SessionStatus.STARTED.name
     }
 
 
-    //Get the event icon based on the event type
+    //Get the event icon based on the event name
     fun getEventIcon(eventType: String): Int {
+
         return when (eventType) {
-            EventType.TAKEOFF.type -> R.drawable.takeoff_logo
-            EventType.MASTERWARNING.type, EventType.MASTERCAUTION.type -> R.drawable.warning_logo
-            EventType.ENGINEFIRE.type -> R.drawable.local_fire_department_black_24dp
-            EventType.ENGINEFAILURE.type -> R.drawable.failure_logo
-            EventType.LANDING.type -> R.drawable.landing_logo
+            EventType.TAKE_OFF.name -> R.drawable.takeoff_logo
+            EventType.MASTER_WARNING.name, EventType.MASTER_CAUTION.name -> R.drawable.warning_logo
+            EventType.ENGINE_FIRE.name -> R.drawable.local_fire_department_black_24dp
+            EventType.ENGINE_FAILURE.name -> R.drawable.failure_logo
+            EventType.LANDING.name -> R.drawable.landing_logo
             else -> R.drawable.marked_event_logo
         }
     }
 
-    //Get the event icon color based on the event type
+    //Get the event icon color based on the event name
     fun getEventIconColor(eventType: String): Int {
         return when (eventType) {
-            EventType.TAKEOFF.type -> deepBlue.hashCode()
-            EventType.LANDING.type -> deepBlue.hashCode()
-            EventType.MASTERCAUTION.type -> Color.YELLOW
-            EventType.MASTERWARNING.type -> Color.RED
-            EventType.TCAS.type -> Color.RED
-            EventType.ENGINEFIRE.type -> Color.RED
-            EventType.ENGINEFAILURE.type -> orange.hashCode()
+            EventType.TAKE_OFF.name -> deepBlue.hashCode()
+            EventType.LANDING.name -> deepBlue.hashCode()
+            EventType.MASTER_CAUTION.name -> Color.YELLOW
+            EventType.MASTER_WARNING.name -> Color.RED
+            EventType.TCAS.name -> Color.RED
+            EventType.ENGINE_FIRE.name -> Color.RED
+            EventType.ENGINE_FAILURE.name -> orange.hashCode()
             else -> deepPurple.hashCode()
+        }
+    }
+
+    //Get the event name
+    fun getEventName(eventType: String): String {
+        return when (eventType) {
+            EventType.TAKE_OFF.name -> EventType.TAKE_OFF.type
+            EventType.LANDING.name -> EventType.LANDING.type
+            EventType.MASTER_CAUTION.name -> EventType.MASTER_CAUTION.type
+            EventType.MASTER_WARNING.name -> EventType.MASTER_WARNING.type
+            EventType.TCAS.name -> EventType.TCAS.type
+            EventType.ENGINE_FIRE.name -> EventType.ENGINE_FIRE.type
+            EventType.ENGINE_FAILURE.name -> EventType.ENGINE_FAILURE.type
+            else -> EventType.MARKED_EVENT.type
         }
     }
 }
