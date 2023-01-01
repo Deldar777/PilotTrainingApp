@@ -18,9 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.log
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -29,7 +31,8 @@ fun EventDetailsSection(
     sessionViewModel: SessionViewModel,
     title: String,
     subTitle: String,
-    context: Context
+    context: Context,
+    accessViewModel: AccessViewModel
 ) {
 
     val saveChangesFailed = stringResource(id = R.string.saveChangesFailed)
@@ -115,7 +118,7 @@ fun EventDetailsSection(
                 fontSize = 16.sp,
             )
             Text(
-                text =  stringResource(id = R.string.currentTimestamp),
+                text = stringResource(id = R.string.currentTimestamp),
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
@@ -129,20 +132,21 @@ fun EventDetailsSection(
                 .fillMaxWidth()
                 .padding(4.dp)
         ) {
-            if(sessionViewModel.loading.value){
+            if (sessionViewModel.loading.value) {
                 CircularProgressIndicator()
             }
 
             if (sessionViewModel.saveChangesAsked) {
                 if (!sessionViewModel.loading.value) {
-                    if (sessionViewModel.saveChangesSucceeded) {
-                        Toast.makeText(context, saveChangesSucceeded, Toast.LENGTH_LONG).show()
-                    } else {
+                    if (!sessionViewModel.saveChangesSucceeded) {
                         Toast.makeText(context, saveChangesFailed, Toast.LENGTH_LONG).show()
                     }
                 }
+                sessionViewModel.saveChangesSucceeded = false
                 sessionViewModel.saveChangesAsked = false
             }
+
+
         }
     }
 }

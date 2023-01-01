@@ -2,6 +2,7 @@ package nl.shekho.videoplayer.api
 
 import nl.shekho.videoplayer.api.entities.*
 import nl.shekho.videoplayer.models.Asset
+import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.models.JwtToken
 import retrofit2.Response
 import retrofit2.http.*
@@ -55,6 +56,13 @@ interface ApiService {
         @Path("sessionId") sessionId: String,
         @Header("Authorization") token: String?
     ): Response<UsersEntity>
+
+    //Create event
+    @POST("Events/create")
+    suspend fun createEvent(
+        @Body body: EventRequestEntity,
+        @Header("Authorization") token: String?
+    ):Response<Event>
 
     @GET("GetUserBySessionId/{sessionId}")
     suspend fun updateSessionStatusById(

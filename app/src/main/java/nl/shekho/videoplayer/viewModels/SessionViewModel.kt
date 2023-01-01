@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.*
+import nl.shekho.videoplayer.api.entities.EventRequestEntity
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
 import nl.shekho.videoplayer.api.entities.VideoRequestEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
@@ -90,8 +91,8 @@ class SessionViewModel @Inject constructor(
     var logBook: StateFlow<Result<LogBook>?> = mutableLogBook
     var selectedEvent = mutableStateOf(
         Event(
-            "dsd",
-            "dsd",
+            "MARKED_EVENT",
+            "LOG_BOOK",
             233,
             EventType.MARKED_EVENT.name,
             null,
@@ -189,6 +190,23 @@ class SessionViewModel @Inject constructor(
         }
     }
 
+    private fun createEvent(eventRequestEntity: EventRequestEntity, token: String) {
+        viewModelScope.launch {
+            try {
+                loading.value = true
+                saveChangesAsked = true
+                val response = apiService.createEvent(
+                    body = eventRequestEntity,
+                    token = token,
+                )
+                saveChangesSucceeded = response.isSuccessful && response.body() != null
+            } catch (e: java.lang.Exception) {
+                saveChangesSucceeded = false
+            }
+            loading.value = false
+        }
+    }
+
     fun getLogBookById(logBookId: String, token: String) {
         viewModelScope.launch {
 
@@ -196,7 +214,6 @@ class SessionViewModel @Inject constructor(
                 logBookId = logBookId,
                 token = token,
             )
-
             delay(3000)
 
             val result = when {
@@ -406,54 +423,91 @@ class SessionViewModel @Inject constructor(
         }
     }
 
-    fun saveChanges() {
+    fun saveChanges(token: String) {
+        val eventRequestEntity = createEventRequestEntity()
 
-        //Start with the process of saving the changes
-        saveChangesAsked = true
 
-        viewModelScope.launch {
-            loading.value = true
-            delay(5000)
+        if (selectedEvent.value.id == EventType.MARKED_EVENT.name) {
+            //If it is a new event call the create event endpoint
 
-            //Save feedback and rating
-            when (selectedParticipantTabIndex.value) {
-                0 -> {
-                    selectedEvent.value.feedbackFirstOfficer = currentFeedback.value
-                    selectedEvent.value.ratingFirstOfficer = currentRating.value
-                }
-                1 -> {
-                    selectedEvent.value.feedbackAll = currentFeedback.value
-                    selectedEvent.value.ratingAll = currentRating.value
-                }
-                else -> {
-                    selectedEvent.value.feedbackCaptain = currentFeedback.value
-                    selectedEvent.value.ratingCaptain = currentRating.value
-                }
+            if (eventRequestEntity != null) {
+                createEvent(
+                    eventRequestEntity = eventRequestEntity,
+                    token = token
+                )
             }
 
-            //Give feedback on the performed action
-            loading.value = false
-            saveChangesSucceeded = true
+        } else {
+            //If it is an exiting event call the update event endpoint
+
         }
 
+        if (eventRequestEntity != null) {
+            getLogBookById(
+                logBookId = eventRequestEntity.logbookId,
+                token = token
+            )
+        }
     }
 
+    private fun createEventRequestEntity(): EventRequestEntity? {
+        addFeedbackAndRatingToSelectedEvent()
+        return sessionProperties?.let {
+            EventRequestEntity(
+                timeStamp = secondsPassed,
+                eventType = EventType.MARKED_EVENT.name,
+                logbookId = it.logbookId,
+                captain = null,
+                firstOfficer = null,
+                feedbackAll = selectedEvent.value.feedbackAll,
+                feedbackCaptain = selectedEvent.value.feedbackCaptain,
+                feedbackFirstOfficer = selectedEvent.value.feedbackFirstOfficer,
+                ratingAll = selectedEvent.value.ratingAll,
+                ratingCaptain = selectedEvent.value.ratingCaptain,
+                ratingFirstOfficer = selectedEvent.value.ratingFirstOfficer,
+            )
+        }
+    }
+
+    private fun addFeedbackAndRatingToSelectedEvent() {
+        //Save feedback and rating
+        when (selectedParticipantTabIndex.value) {
+            0 -> {
+                selectedEvent.value.feedbackFirstOfficer = currentFeedback.value
+                selectedEvent.value.ratingFirstOfficer = currentRating.value
+            }
+            1 -> {
+                selectedEvent.value.feedbackAll = currentFeedback.value
+                selectedEvent.value.ratingAll = currentRating.value
+            }
+            else -> {
+                selectedEvent.value.feedbackCaptain = currentFeedback.value
+                selectedEvent.value.ratingCaptain = currentRating.value
+            }
+        }
+    }
 
     //Enable mark event button when not loading and the selected event is not mark event
     fun markEventButtonEnabled(): Boolean {
-        return when (selectedEvent.value.eventType) {
-            EventType.MARKED_EVENT.name -> {
-                selectedEvent.value.timeStamp > 0 && !loading.value
-            }
-            else -> {
-                !loading.value
-            }
-        }
+        return selectedEvent.value.id != EventType.MARKED_EVENT.name && !loading.value
     }
 
     //Add empty marked event
     fun addMarkEvent() {
-        selectedEvent.value = Event("dsd", "dsd", 233, EventType.MARKED_EVENT.name, null, null, null, null, null,null, null, null)
+        selectedEvent.value = Event(
+            "MARKED_EVENT",
+            "LOG_BOOK",
+            233,
+            EventType.MARKED_EVENT.name,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
         selectedItemIndex.value = 400
     }
 

@@ -109,6 +109,7 @@ fun FeedbackSection(
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
+                accessViewModel = accessViewModel,
                 context = context,
                 sessionViewModel = sessionViewModel,
                 title = stringResource(id = R.string.addNote),
@@ -426,7 +427,11 @@ fun FeedbackSection(
                                     OutlinedButton(
                                         enabled = sessionViewModel.addNoteButtonEnabled.value && !sessionViewModel.loading.value,
                                         onClick = {
-                                            sessionViewModel.saveChanges()
+                                            accessViewModel.encodedJwtToken?.let {
+                                                sessionViewModel.saveChanges(
+                                                    it
+                                                )
+                                            }
                                         },
                                         colors = ButtonDefaults.buttonColors(
                                             backgroundColor = deepPurple,

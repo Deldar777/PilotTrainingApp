@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.helpers.extensions.Helpers
+import nl.shekho.videoplayer.models.SessionProperties
 import nl.shekho.videoplayer.ui.theme.highlightItemGray
 import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.viewModels.AccessViewModel
@@ -36,6 +37,14 @@ fun HighlightItems(
     if (sessionViewModel.isOnline()) {
 
         //Get the logBook for the session (Event and records)
+
+        val sessionProperties = SessionProperties(
+            videoURL = "",
+            logbookId = "027e23c0-39e5-4a0c-94fe-08daebee5de3",
+            sessionId = ""
+        )
+        sessionViewModel.sessionProperties = sessionProperties
+
         sessionViewModel.getLogBookById(
             logBookId = "027e23c0-39e5-4a0c-94fe-08daebee5de3",
             token = accessViewModel.encodedJwtToken!!

@@ -86,7 +86,8 @@ fun NoteSection(
                 context = context,
                 sessionViewModel = sessionViewModel,
                 title = stringResource(id = R.string.notes),
-                subTitle = stringResource(id = R.string.noteSubTitle)
+                subTitle = stringResource(id = R.string.noteSubTitle),
+                accessViewModel = accessViewModel
             )
         }
 
