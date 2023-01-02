@@ -294,6 +294,7 @@ fun NewSessionWindow(
 
                                     if (token != null) {
                                         sessionViewModel.createSessionAsked = true
+                                        sessionViewModel.token.value = token
                                         sessionViewModel.createSession(newSessionEntity, token)
                                         accessViewModel.firstOfficer = mappedUsers[participant1]
                                         accessViewModel.captain = mappedUsers[participant2]
@@ -336,18 +337,6 @@ fun NewSessionWindow(
                     if (!sessionViewModel.succeeded) {
                         Toast.makeText(context, sessionCreationError, Toast.LENGTH_LONG).show()
                     } else {
-
-                        //If the session was created successfully, post video for the session assets
-                        val token = accessViewModel.encodedJwtToken
-                        if (sessionViewModel.runningSession != null && token != null) {
-                            sessionViewModel.postVideo(
-                                videoRequestEntity = VideoRequestEntity(
-                                    sessionId = sessionViewModel.runningSession!!.id
-                                ),
-                                token = token
-                            )
-                        }
-
                         navController.navigate(Screens.SessionScreen.route)
                     }
                     sessionViewModel.createSessionAsked = false

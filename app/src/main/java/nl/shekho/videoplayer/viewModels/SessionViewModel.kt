@@ -46,7 +46,7 @@ class SessionViewModel @Inject constructor(
     var currentFeedback: MutableState<String> = mutableStateOf("")
     var saveChangesAsked: Boolean by mutableStateOf(false)
     var saveChangesSucceeded: Boolean by mutableStateOf(false)
-    var savingChanges = mutableStateOf(false)
+    var savingChanges: Boolean by mutableStateOf(false)
 
 
     //Alert dialog
@@ -56,8 +56,8 @@ class SessionViewModel @Inject constructor(
 
     //Events automation
     var secondsPassed: Int by mutableStateOf(0)
-    var maxNumberOfEvents = 20
-    var cycleTimeInSeconds = 10
+    var maxNumberOfEvents = 10
+    var cycleTimeInSeconds = 20
     var generatedEvents = 0
 
     //Review window
@@ -85,6 +85,7 @@ class SessionViewModel @Inject constructor(
         mutableStateOf(Session("", LocalDateTime.now().toString(), null, null, null))
     var runningSession: Session? by mutableStateOf(null)
     var selectedSessionIndex = mutableStateOf(100)
+    var token = mutableStateOf("")
 
     //Events
     var sessionProperties: SessionProperties? by mutableStateOf(null)
@@ -157,10 +158,16 @@ class SessionViewModel @Inject constructor(
                     succeeded = true
                     val sessionMapped = sessionMapper.mapEntityToModel(session)
                     runningSession = sessionMapped
+
+                    postVideo(
+                        videoRequestEntity = VideoRequestEntity(
+                            sessionId = session.id
+                        ),
+                        token = token
+                    )
                 } else {
                     failed = response.message()
                 }
-
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
@@ -184,6 +191,7 @@ class SessionViewModel @Inject constructor(
                 } else {
                     failed = response.message()
                 }
+
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
@@ -198,7 +206,6 @@ class SessionViewModel @Inject constructor(
                     body = eventRequestEntity,
                     token = token,
                 )
-                delay(3000)
                 response.isSuccessful && response.body() != null
             } catch (e: java.lang.Exception) {
                 false
@@ -218,7 +225,6 @@ class SessionViewModel @Inject constructor(
                     body = eventRequestEntity,
                     token = token,
                 )
-                delay(3000)
                 response.isSuccessful && response.body() != null
             } catch (e: java.lang.Exception) {
                 false
@@ -341,48 +347,64 @@ class SessionViewModel @Inject constructor(
         altitude = (10000..50000).random()
         if (generatedEvents <= maxNumberOfEvents) {
             if (secondsPassed % cycleTimeInSeconds == 0) {
-//                generateEvent()
+                if (!token.value.isEmpty()) {
+                    generateEvent(token.value)
+                }
             }
         }
     }
 
 
-//    private fun generateEvent() {
-//
-//        if (generatedEvents == 0) {
-//            events = events + listOf(
-//                Event(
-//                    UUID.randomUUID().toString(),
-//                    EventType.TAKE_OFF,
-//                    LocalDateTime.now().toString(),
-//                    altitude, null, null, null, null, null, null
-//                )
-//            )
-//        } else {
-//            val randomEventIndex = (1..6).random()
-//            events.value = events.value + listOf(
-//                Event(
-//                    UUID.randomUUID().toString(),
-//                    EventType.values()[randomEventIndex],
-//                    LocalDateTime.now().toString(),
-//                    altitude, null, null, null, null, null, null
-//                )
-//            )
-//        }
-//
-//        if (generatedEvents == maxNumberOfEvents) {
-//            events = events.value + listOf(
-//                Event(
-//                    UUID.randomUUID().toString(),
-//                    EventType.LANDING,
-//                    LocalDateTime.now().toString(),
-//                    altitude, null, null, null, null, null, null
-//                )
-//            )
-//        }
-//
-//        generatedEvents += 1
-//    }
+    private fun generateEvent(token: String) {
+
+        if (sessionProperties != null && generatedEvents <= maxNumberOfEvents) {
+
+            if (generatedEvents < maxNumberOfEvents) {
+                if (generatedEvents == 0) {
+                    createEvent(
+                        eventRequestEntity = getEventRequestEntity(EventType.TAKE_OFF.name),
+                        token = token
+                    )
+                } else {
+                    val randomEventIndex = (1..6).random()
+                    createEvent(
+                        eventRequestEntity = getEventRequestEntity(EventType.values()[randomEventIndex].name),
+                        token = token
+                    )
+                }
+            }
+
+            if (generatedEvents == maxNumberOfEvents) {
+                createEvent(
+                    eventRequestEntity = getEventRequestEntity(EventType.LANDING.name),
+                    token = token
+                )
+            }
+
+
+            getLogBookById(
+                logBookId = sessionProperties!!.logbookId,
+                token = token
+            )
+        }
+        generatedEvents += 1
+    }
+
+    private fun getEventRequestEntity(eventType: String): EventRequestEntity {
+        return EventRequestEntity(
+            timeStamp = secondsPassed,
+            eventType = eventType,
+            logbookId = sessionProperties!!.logbookId,
+            captain = null,
+            firstOfficer = null,
+            feedbackAll = null,
+            feedbackCaptain = null,
+            feedbackFirstOfficer = null,
+            ratingAll = null,
+            ratingCaptain = null,
+            ratingFirstOfficer = null,
+        )
+    }
 
     private fun Int.pad(): String {
         return this.toString().padStart(2, '0')
@@ -444,9 +466,8 @@ class SessionViewModel @Inject constructor(
 
     fun saveChanges(token: String) {
         saveChangesAsked = true
-        savingChanges.value = true
+        savingChanges = true
         val eventRequestEntity = createEventRequestEntity()
-
 
         //Check if it is a new mark event otherwise update it
         if (isMarkEvent()) {
@@ -477,7 +498,7 @@ class SessionViewModel @Inject constructor(
             )
         }
 
-        savingChanges.value = false
+        savingChanges = false
     }
 
     fun isMarkEvent(): Boolean {

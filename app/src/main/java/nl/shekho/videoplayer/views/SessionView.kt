@@ -32,7 +32,7 @@ fun SessionView(
 ) {
 
 
-    var cannotSaveSession = stringResource(id = R.string.cannotSaveSession)
+    val cannotSaveSession = stringResource(id = R.string.cannotSaveSession)
     var sessionSaved = stringResource(id = R.string.sessionSaved)
 
     Box(

@@ -38,17 +38,12 @@ fun HighlightItems(
 
         //Get the logBook for the session (Event and records)
 
-        val sessionProperties = SessionProperties(
-            videoURL = "",
-            logbookId = "027e23c0-39e5-4a0c-94fe-08daebee5de3",
-            sessionId = ""
-        )
-        sessionViewModel.sessionProperties = sessionProperties
-
-        sessionViewModel.getLogBookById(
-            logBookId = "027e23c0-39e5-4a0c-94fe-08daebee5de3",
-            token = accessViewModel.encodedJwtToken!!
-        )
+        if (sessionViewModel.sessionProperties != null) {
+            sessionViewModel.getLogBookById(
+                logBookId = sessionViewModel.sessionProperties!!.logbookId,
+                token = accessViewModel.encodedJwtToken!!
+            )
+        }
 
         logBook?.let { listEvents ->
             listEvents
@@ -96,5 +91,6 @@ fun HighlightItems(
     } else {
         NoInternetView()
     }
+
 }
 

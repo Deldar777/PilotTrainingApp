@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.views.generalCells.Loading
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.log
@@ -133,9 +134,8 @@ fun EventDetailsSection(
                 .padding(4.dp)
         ) {
             if(sessionViewModel.saveChangesAsked){
-                if(sessionViewModel.savingChanges.value){
-                    CircularProgressIndicator()
-
+                if(sessionViewModel.savingChanges){
+                    Loading()
                 }else{
                     if (!sessionViewModel.saveChangesSucceeded) {
                         Toast.makeText(context, saveChangesFailed, Toast.LENGTH_LONG).show()
