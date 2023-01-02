@@ -64,6 +64,14 @@ interface ApiService {
         @Header("Authorization") token: String?
     ):Response<Event>
 
+    //Update event
+    @PUT("Events/update-single/{eventId}")
+    suspend fun updateEvent(
+        @Path("eventId") eventId: String,
+        @Body body: EventRequestEntity,
+        @Header("Authorization") token: String?
+    ):Response<Event>
+
     @GET("GetUserBySessionId/{sessionId}")
     suspend fun updateSessionStatusById(
         @Path("sessionId") sessionId: String,

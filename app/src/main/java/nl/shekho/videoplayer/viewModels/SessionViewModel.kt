@@ -46,6 +46,7 @@ class SessionViewModel @Inject constructor(
     var currentFeedback: MutableState<String> = mutableStateOf("")
     var saveChangesAsked: Boolean by mutableStateOf(false)
     var saveChangesSucceeded: Boolean by mutableStateOf(false)
+    var savingChanges = mutableStateOf(false)
 
 
     //Alert dialog
@@ -192,18 +193,36 @@ class SessionViewModel @Inject constructor(
 
     private fun createEvent(eventRequestEntity: EventRequestEntity, token: String) {
         viewModelScope.launch {
-            try {
-                loading.value = true
-                saveChangesAsked = true
+            saveChangesSucceeded = try {
                 val response = apiService.createEvent(
                     body = eventRequestEntity,
                     token = token,
                 )
-                saveChangesSucceeded = response.isSuccessful && response.body() != null
+                delay(3000)
+                response.isSuccessful && response.body() != null
             } catch (e: java.lang.Exception) {
-                saveChangesSucceeded = false
+                false
             }
-            loading.value = false
+        }
+    }
+
+    private fun updateEvent(
+        eventRequestEntity: EventRequestEntity,
+        token: String,
+        eventId: String
+    ) {
+        viewModelScope.launch {
+            saveChangesSucceeded = try {
+                val response = apiService.updateEvent(
+                    eventId = eventId,
+                    body = eventRequestEntity,
+                    token = token,
+                )
+                delay(3000)
+                response.isSuccessful && response.body() != null
+            } catch (e: java.lang.Exception) {
+                false
+            }
         }
     }
 
@@ -424,10 +443,13 @@ class SessionViewModel @Inject constructor(
     }
 
     fun saveChanges(token: String) {
+        saveChangesAsked = true
+        savingChanges.value = true
         val eventRequestEntity = createEventRequestEntity()
 
 
-        if (selectedEvent.value.id == EventType.MARKED_EVENT.name) {
+        //Check if it is a new mark event otherwise update it
+        if (isMarkEvent()) {
             //If it is a new event call the create event endpoint
 
             if (eventRequestEntity != null) {
@@ -439,7 +461,13 @@ class SessionViewModel @Inject constructor(
 
         } else {
             //If it is an exiting event call the update event endpoint
-
+            if (eventRequestEntity != null) {
+                updateEvent(
+                    eventId = selectedEvent.value.id,
+                    eventRequestEntity = eventRequestEntity,
+                    token = token
+                )
+            }
         }
 
         if (eventRequestEntity != null) {
@@ -448,7 +476,14 @@ class SessionViewModel @Inject constructor(
                 token = token
             )
         }
+
+        savingChanges.value = false
     }
+
+    fun isMarkEvent(): Boolean {
+        return selectedEvent.value.id == EventType.MARKED_EVENT.name
+    }
+
 
     private fun createEventRequestEntity(): EventRequestEntity? {
         addFeedbackAndRatingToSelectedEvent()

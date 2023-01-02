@@ -81,7 +81,7 @@ fun EventDetailsSection(
             )
 
             Text(
-                text = sessionViewModel.selectedEvent.value.eventType,
+                text = sessionViewModel.getEventName(stringResource(id = R.string.eventType)),
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
@@ -102,7 +102,7 @@ fun EventDetailsSection(
                 fontSize = 16.sp,
             )
             Text(
-                text = "Current altitude",
+                text = stringResource(id = R.string.currentAltitude),
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
@@ -132,21 +132,20 @@ fun EventDetailsSection(
                 .fillMaxWidth()
                 .padding(4.dp)
         ) {
-            if (sessionViewModel.loading.value) {
-                CircularProgressIndicator()
-            }
+            if(sessionViewModel.saveChangesAsked){
+                if(sessionViewModel.savingChanges.value){
+                    CircularProgressIndicator()
 
-            if (sessionViewModel.saveChangesAsked) {
-                if (!sessionViewModel.loading.value) {
+                }else{
                     if (!sessionViewModel.saveChangesSucceeded) {
                         Toast.makeText(context, saveChangesFailed, Toast.LENGTH_LONG).show()
+                    }else{
+                        Toast.makeText(context, saveChangesSucceeded, Toast.LENGTH_LONG).show()
                     }
                 }
                 sessionViewModel.saveChangesSucceeded = false
                 sessionViewModel.saveChangesAsked = false
             }
-
-
         }
     }
 }

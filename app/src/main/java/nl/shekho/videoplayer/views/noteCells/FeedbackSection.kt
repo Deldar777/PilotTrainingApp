@@ -439,8 +439,8 @@ fun FeedbackSection(
                                         ),
                                         modifier = Modifier
                                             .clip(RoundedCornerShape(10.dp))
-                                            .width(160.dp)
-                                            .height(40.dp)
+                                            .width(180.dp)
+                                            .height(50.dp)
                                     ) {
                                         Icon(
                                             painter = painterResource(id = R.drawable.feedback_logo),
@@ -451,10 +451,12 @@ fun FeedbackSection(
                                                 .padding(end = 4.dp)
                                         )
                                         Text(
-                                            text = stringResource(id = R.string.addNote),
+                                            text = if(sessionViewModel.isMarkEvent()) stringResource(
+                                                id = R.string.addNote
+                                            ) else stringResource(id = R.string.saveChanges),
                                             fontFamily = FontFamily.Monospace,
                                             textAlign = TextAlign.Center,
-                                            fontSize = 16.sp,
+                                            fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colors.primary,
                                         )
