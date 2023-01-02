@@ -52,7 +52,7 @@ fun AlertDialog(
                 TextButton(
                     onClick = {
                         sessionViewModel.saveSessionAsked = true
-                        sessionViewModel.runningSession!!.id?.let {
+                        sessionViewModel.runningSession!!.id.let {
                             sessionViewModel.endSession(
                                 sessionId = it,
                                 token = accessViewModel.encodedJwtToken!!

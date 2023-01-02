@@ -72,7 +72,7 @@ interface ApiService {
         @Header("Authorization") token: String?
     ):Response<Event>
 
-    @GET("GetUserBySessionId/{sessionId}")
+    @PUT("UpdateSessionStatusById/{sessionId}")
     suspend fun updateSessionStatusById(
         @Path("sessionId") sessionId: String,
         @Header("Authorization") token: String?

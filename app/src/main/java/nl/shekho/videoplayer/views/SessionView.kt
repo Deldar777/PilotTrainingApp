@@ -82,7 +82,7 @@ fun SessionView(
                     CircularProgressIndicator(color = Color.Black)
                 }
             }else{
-                if (!sessionViewModel.succeeded) {
+                if (!sessionViewModel.savingSessionSucceeded) {
                     Toast.makeText(context, cannotSaveSession, Toast.LENGTH_LONG).show()
                 } else {
                     sessionViewModel.fetchSessionsByUserId(
@@ -92,6 +92,8 @@ fun SessionView(
                     sessionViewModel.openDialog.value = false
                     navController.navigate(Screens.OverviewScreen.route)
                 }
+
+                sessionViewModel.savingSessionSucceeded = false
                 sessionViewModel.saveSessionAsked = false
             }
         }

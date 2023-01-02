@@ -23,7 +23,6 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
-import kotlin.math.log
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -53,6 +52,7 @@ class SessionViewModel @Inject constructor(
     var openDialog = mutableStateOf(false)
     var savingSession: Boolean by mutableStateOf(false)
     var saveSessionAsked: Boolean by mutableStateOf(false)
+    var savingSessionSucceeded: Boolean by mutableStateOf(false)
 
     //Events automation
     var secondsPassed: Int by mutableStateOf(0)
@@ -119,26 +119,19 @@ class SessionViewModel @Inject constructor(
     }
 
     fun endSession(sessionId: String, token: String) {
+        saveSessionAsked = true
+        savingSession = true
 
         viewModelScope.launch {
-            savingSession = true
-
-            try {
-                succeeded = true
-//                val response = apiService.updateSessionStatusById(
-//                    sessionId = sessionId,
-//                    token = token,
-//                )
-//
-//                if (response.isSuccessful) {
-//                    succeeded = true
-//                } else {
-//                    failed = response.message()
-//                }
-
-                delay(4000)
+            savingSessionSucceeded = try {
+                val response = apiService.updateSessionStatusById(
+                    sessionId = sessionId,
+                    token = token,
+                )
+                delay(5000)
+                response.isSuccessful
             } catch (e: java.lang.Exception) {
-                failed = e.message.toString()
+                false
             }
             savingSession = false
         }
@@ -469,7 +462,7 @@ class SessionViewModel @Inject constructor(
         savingChanges = true
         val eventRequestEntity = createEventRequestEntity()
 
-        //Check if it is a new mark event otherwise update it
+        //Check if it is a new mark event
         if (isMarkEvent()) {
             //If it is a new event call the create event endpoint
 
