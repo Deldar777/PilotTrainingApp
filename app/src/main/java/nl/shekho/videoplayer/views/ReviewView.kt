@@ -27,6 +27,15 @@ fun ReviewView(
 ) {
 
 
+    //Get video and logbook with events for the session is going to be reviewed
+    if(accessViewModel.isOnline() && sessionViewModel.runningSession != null && accessViewModel.encodedJwtToken != null){
+        sessionViewModel.getVideo(
+            sessionId = sessionViewModel.runningSession!!.id,
+            token = accessViewModel.encodedJwtToken!!
+        )
+    }
+
+
     Box(
         modifier = Modifier
             .background(MaterialTheme.colors.background)

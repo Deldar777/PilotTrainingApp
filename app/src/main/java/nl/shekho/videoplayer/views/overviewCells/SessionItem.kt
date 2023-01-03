@@ -86,7 +86,7 @@ fun SessionItem(
         modifier = Modifier.fillMaxWidth()
     ) {
 
-        if(accessViewModel.userIsInstructor.value){
+        if(accessViewModel.userIsInstructor){
             Text(
                 text = if (session.status == SessionStatus.STARTED.type) stringResource(id = R.string.inProgress) else stringResource(
                     id = R.string.finished

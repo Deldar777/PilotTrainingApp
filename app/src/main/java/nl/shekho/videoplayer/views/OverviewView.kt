@@ -153,7 +153,7 @@ fun OverviewWindow(
                             .weight(0.4f)
 
                     ) {
-                        if (accessViewModel.userIsInstructor.value) {
+                        if (accessViewModel.userIsInstructor) {
                             NewSessionButton(
                                 sessionViewModel = sessionViewModel
                             )

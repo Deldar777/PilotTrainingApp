@@ -355,10 +355,12 @@ fun ReviewWindow(
                                     .clickable {
 
                                         if (sessionViewModel.isSessionStillRunning()) {
+                                            //If the session is still running for instructor then navigate to session screen
                                             sessionViewModel.runningSession =
                                                 sessionViewModel.selectedSession.value
                                             navController.navigate(Screens.SessionScreen.route)
                                         } else {
+                                            //if the session is already finished then navigate to the review screen
                                             sessionViewModel.runningSession =
                                                 sessionViewModel.selectedSession.value
                                             navController.navigate(Screens.ReviewScreen.route)
@@ -367,7 +369,7 @@ fun ReviewWindow(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = if(sessionViewModel.isSessionStillRunning()) continueSession else reviewSession ,
+                                    text = if (sessionViewModel.isSessionStillRunning()) continueSession else reviewSession,
                                     color = MaterialTheme.colors.primary,
                                     textAlign = TextAlign.Center,
                                     fontSize = 30.sp,

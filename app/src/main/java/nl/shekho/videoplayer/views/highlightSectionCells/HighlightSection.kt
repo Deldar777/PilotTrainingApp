@@ -47,6 +47,7 @@ fun HighlightSection(
         ) {
             // Highlights lazy columns
             HighlightItems(
+                screen = screen,
                 sessionViewModel = sessionViewModel,
                 accessViewModel = accessViewModel
             )

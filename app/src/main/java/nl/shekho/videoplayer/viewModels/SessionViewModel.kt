@@ -192,6 +192,35 @@ class SessionViewModel @Inject constructor(
         }
     }
 
+    fun getVideo(sessionId: String, token: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getVideoBySessionId(
+                    sessionId = sessionId,
+                    token = token,
+                )
+
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body[0])
+                    sessionProperties = sessionPropertiesMapped
+
+                    //If the video entity fetched successfully then get the logbook with events
+                    getLogBookById(
+                        logBookId = body[0].logbookId,
+                        token = token
+                    )
+
+                } else {
+                    failed = response.message()
+                }
+
+            } catch (e: java.lang.Exception) {
+                failed = e.message.toString()
+            }
+        }
+    }
+
     private fun createEvent(eventRequestEntity: EventRequestEntity, token: String) {
         viewModelScope.launch {
             saveChangesSucceeded = try {
@@ -234,6 +263,7 @@ class SessionViewModel @Inject constructor(
             )
             delay(3000)
 
+            print(response)
             val result = when {
                 response.isSuccessful -> {
                     val body = response.body()

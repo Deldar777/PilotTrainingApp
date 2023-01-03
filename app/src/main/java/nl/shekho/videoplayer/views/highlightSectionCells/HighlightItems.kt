@@ -25,6 +25,7 @@ import nl.shekho.videoplayer.views.overviewCells.SessionItem
 @OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightItems(
+    screen: String,
     activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = highlightItemGray,
     sessionViewModel: SessionViewModel,
@@ -36,9 +37,8 @@ fun HighlightItems(
 
     if (sessionViewModel.isOnline()) {
 
-        //Get the logBook for the session (Event and records)
-
-        if (sessionViewModel.sessionProperties != null) {
+        //Get the logBook for the running session (Event and records)
+        if (sessionViewModel.sessionProperties != null && screen != stringResource(id = R.string.review)) {
             sessionViewModel.getLogBookById(
                 logBookId = sessionViewModel.sessionProperties!!.logbookId,
                 token = accessViewModel.encodedJwtToken!!

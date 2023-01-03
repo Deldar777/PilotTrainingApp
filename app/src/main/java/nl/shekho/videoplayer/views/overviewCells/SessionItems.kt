@@ -52,7 +52,7 @@ fun SessionItems(
             sessions?.let { sessions ->
                 sessions
                     .onSuccess {
-                        val filteredArray = Helpers.filterSessionIfUserIsInstructor(it,accessViewModel.userIsInstructor.value)
+                        val filteredArray = Helpers.filterSessionIfUserIsInstructor(it,accessViewModel.userIsInstructor)
                         if (filteredArray.isNotEmpty()) {
                             LazyColumn {
                                 itemsIndexed(items = filteredArray) { index, session ->
@@ -75,7 +75,7 @@ fun SessionItems(
 
                         } else {
                             ShowFeedback(
-                                text = if (accessViewModel.userIsInstructor.value) noSessionsInstructor else noSessionsPilot,
+                                text = if (accessViewModel.userIsInstructor) noSessionsInstructor else noSessionsPilot,
                                 color = MaterialTheme.colors.primary
                             )
                         }

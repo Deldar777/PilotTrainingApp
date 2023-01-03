@@ -165,7 +165,7 @@ fun NoteSection(
                             .fillMaxWidth()
                             .zIndex(1f)
                     ) {
-                        if (accessViewModel.userIsInstructor.value) {
+                        if (accessViewModel.userIsInstructor) {
                             if (editMode) {
                                 IconButton(onClick = {
                                     editMode = false
@@ -266,7 +266,7 @@ fun NoteSection(
                 Spacer(modifier = Modifier.weight(3f))
                 //Save changes button 
 
-                if (accessViewModel.userIsInstructor.value) {
+                if (accessViewModel.userIsInstructor) {
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier

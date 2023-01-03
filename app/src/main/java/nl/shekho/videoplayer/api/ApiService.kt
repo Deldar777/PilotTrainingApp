@@ -45,6 +45,13 @@ interface ApiService {
         @Header("Authorization") token: String?
     ):Response<VideoResponseEntity>
 
+    //Get video by session id to fetch video URL and events that belongs to a logbook
+    @GET("GetVideoBySessionId/{sessionId}")
+    suspend fun getVideoBySessionId(
+        @Path("sessionId") sessionId: String,
+        @Header("Authorization") token: String?
+    ): Response<List<VideoResponseEntity>>
+
     @GET("Logbooks/get-single/{logbookId}")
     suspend fun getLogBookById(
         @Path("logbookId") logBookId: String,
