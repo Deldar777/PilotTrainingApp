@@ -188,8 +188,6 @@ fun HighlightItem(
                         }
 
                         //Rating icon and number
-
-
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -229,8 +227,3 @@ fun HighlightItem(
     Divider(color = highlightDivider, thickness = 1.dp)
 }
 
-
-private fun formatDate(date: String): String {
-    val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
-    return parsedDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-}

@@ -487,7 +487,6 @@ class SessionViewModel @Inject constructor(
     }
 
     fun saveChanges(token: String) {
-        saveChangesAsked = true
         savingChanges = true
         val eventRequestEntity = createEventRequestEntity()
 
@@ -520,7 +519,10 @@ class SessionViewModel @Inject constructor(
             )
         }
 
-        savingChanges = false
+        viewModelScope.launch {
+            delay(4000)
+            savingChanges = false
+        }
     }
 
     fun isMarkEvent(): Boolean {

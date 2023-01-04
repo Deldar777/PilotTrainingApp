@@ -3,6 +3,7 @@ package nl.shekho.videoplayer.views.noteCells
 
 import android.content.Context
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -43,15 +44,15 @@ import nl.shekho.videoplayer.ui.theme.*
 fun FeedbackSection(
     sessionViewModel: SessionViewModel,
     initialSelectedTabFeedback: Int = 0,
-    initialRating: Int = 0,
     activeHighlightColor: Color = lightBlue,
     inactiveColor: Color = tabBackground,
     accessViewModel: AccessViewModel,
     context: Context
 ) {
 
+    val notInternet = stringResource(id = R.string.noInternet)
+
     //Rating states
-    var ratingState by remember { mutableStateOf(initialRating) }
     var selectedRating by remember { mutableStateOf(false) }
     val size by animateDpAsState(
         targetValue = if (selectedRating) 50.dp else 42.dp,
@@ -109,7 +110,6 @@ fun FeedbackSection(
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
-                accessViewModel = accessViewModel,
                 context = context,
                 sessionViewModel = sessionViewModel,
                 title = stringResource(id = R.string.addNote),
@@ -425,12 +425,17 @@ fun FeedbackSection(
 
                                     // Button to save changes
                                     OutlinedButton(
-                                        enabled = sessionViewModel.addNoteButtonEnabled.value && !sessionViewModel.loading.value,
+                                        enabled = sessionViewModel.addNoteButtonEnabled.value && !sessionViewModel.savingChanges,
                                         onClick = {
-                                            accessViewModel.encodedJwtToken?.let {
-                                                sessionViewModel.saveChanges(
-                                                    it
-                                                )
+                                            if(accessViewModel.isOnline()){
+                                                sessionViewModel.saveChangesAsked = true
+                                                accessViewModel.encodedJwtToken?.let {
+                                                    sessionViewModel.saveChanges(
+                                                        it
+                                                    )
+                                                }
+                                            }else{
+                                                Toast.makeText(context, notInternet, Toast.LENGTH_LONG).show()
                                             }
                                         },
                                         colors = ButtonDefaults.buttonColors(

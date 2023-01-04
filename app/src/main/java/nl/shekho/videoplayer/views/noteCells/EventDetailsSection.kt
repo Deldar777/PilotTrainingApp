@@ -1,9 +1,7 @@
 package nl.shekho.videoplayer.views.noteCells
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -11,19 +9,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
-import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.views.generalCells.Loading
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.math.log
+import nl.shekho.videoplayer.views.generalCells.SavingSessionFeedback
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -32,12 +26,8 @@ fun EventDetailsSection(
     sessionViewModel: SessionViewModel,
     title: String,
     subTitle: String,
-    context: Context,
-    accessViewModel: AccessViewModel
+    context: Context
 ) {
-
-    val saveChangesFailed = stringResource(id = R.string.saveChangesFailed)
-    val saveChangesSucceeded = stringResource(id = R.string.saveChangesSucceeded)
 
     Column(
         modifier = Modifier
@@ -103,7 +93,7 @@ fun EventDetailsSection(
                 fontSize = 16.sp,
             )
             Text(
-                text = stringResource(id = R.string.currentAltitude),
+                text = "${(10000..50000).random()} ft",
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
@@ -114,38 +104,21 @@ fun EventDetailsSection(
                 .fillMaxWidth()
         ) {
             Text(
-                text = "${stringResource(id = R.string.timestamp)}: ",
+                text = stringResource(id = R.string.currentTimestamp),
                 color = MaterialTheme.colors.primary,
                 fontSize = 16.sp,
             )
             Text(
-                text = stringResource(id = R.string.currentTimestamp),
+                text = Helpers.convertSecondsToTime(sessionViewModel.selectedEvent.value.timeStamp),
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
         }
 
         //Feedback on performed action
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        ) {
-            if(sessionViewModel.saveChangesAsked){
-                if(sessionViewModel.savingChanges){
-                    Loading()
-                }else{
-                    if (!sessionViewModel.saveChangesSucceeded) {
-                        Toast.makeText(context, saveChangesFailed, Toast.LENGTH_LONG).show()
-                    }else{
-                        Toast.makeText(context, saveChangesSucceeded, Toast.LENGTH_LONG).show()
-                    }
-                }
-                sessionViewModel.saveChangesSucceeded = false
-                sessionViewModel.saveChangesAsked = false
-            }
-        }
+        SavingSessionFeedback(
+            sessionViewModel = sessionViewModel,
+            context = context
+        )
     }
 }

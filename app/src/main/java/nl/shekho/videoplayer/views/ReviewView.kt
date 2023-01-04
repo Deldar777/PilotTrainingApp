@@ -30,7 +30,7 @@ fun ReviewView(
 
 
     //Get video and logbook with events for the session is going to be reviewed
-    if(accessViewModel.isOnline() && sessionViewModel.runningSession != null && accessViewModel.encodedJwtToken != null){
+    if (accessViewModel.isOnline() && sessionViewModel.runningSession != null && accessViewModel.encodedJwtToken != null) {
 
         sessionViewModel.getVideo(
             sessionId = sessionViewModel.runningSession!!.id,
@@ -39,7 +39,11 @@ fun ReviewView(
 
 
         //If the video url has been fetched successfully, then pass it to the player
-        videoPlayerViewModel.fetchVideoFromUrl("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+        if (sessionViewModel.sessionProperties != null) {
+            if (sessionViewModel.sessionProperties!!.videoURL.isNotEmpty())
+                videoPlayerViewModel.fetchVideoFromUrl(sessionViewModel.sessionProperties!!.videoURL)
+        }
+
     }
 
     Box(

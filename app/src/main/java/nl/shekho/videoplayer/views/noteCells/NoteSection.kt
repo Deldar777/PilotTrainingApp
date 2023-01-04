@@ -86,8 +86,7 @@ fun NoteSection(
                 context = context,
                 sessionViewModel = sessionViewModel,
                 title = stringResource(id = R.string.notes),
-                subTitle = stringResource(id = R.string.noteSubTitle),
-                accessViewModel = accessViewModel
+                subTitle = stringResource(id = R.string.noteSubTitle)
             )
         }
 
@@ -264,8 +263,7 @@ fun NoteSection(
                 }
 
                 Spacer(modifier = Modifier.weight(3f))
-                //Save changes button 
-
+                //Save changes button
                 if (accessViewModel.userIsInstructor) {
                     Row(
                         horizontalArrangement = Arrangement.End,
@@ -273,8 +271,14 @@ fun NoteSection(
                             .fillMaxWidth()
                     ) {
                         OutlinedButton(
-                            enabled = editMode,
+                            enabled = editMode && !sessionViewModel.savingChanges,
                             onClick = {
+                                sessionViewModel.saveChangesAsked = true
+                                accessViewModel.encodedJwtToken?.let {
+                                    sessionViewModel.saveChanges(
+                                        it
+                                    )
+                                }
                             },
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(
