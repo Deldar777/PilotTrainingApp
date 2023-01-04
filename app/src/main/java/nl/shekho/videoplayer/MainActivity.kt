@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import nl.shekho.videoplayer.ui.theme.pilotTrainingThemes.PilotTrainingTheme
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.ReviewView
 import nl.shekho.videoplayer.views.SessionView
 import nl.shekho.videoplayer.views.navigation.SetupNavGraph
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalTime::class)
     private val sessionViewModel by viewModels<SessionViewModel>()
     private val accessViewModel by viewModels<AccessViewModel>()
+    private val videoPlayerViewModel by viewModels<VideoPlayerViewModel>()
 
     @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalTime::class)
@@ -67,7 +69,8 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     accessViewModel = accessViewModel,
                     sessionViewModel = sessionViewModel,
-                    context = this
+                    context = this,
+                    videoPlayerModel = videoPlayerViewModel
                 )
             }
         }

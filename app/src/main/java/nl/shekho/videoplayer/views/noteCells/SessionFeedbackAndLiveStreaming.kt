@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.views.VideoView
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import kotlin.time.ExperimentalTime
 
 
@@ -20,7 +21,8 @@ import kotlin.time.ExperimentalTime
 fun SessionFeedbackAndLiveStreaming(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel,
-    context: Context
+    context: Context,
+    videoPlayerViewModel: VideoPlayerViewModel
 ) {
     val shape = RoundedCornerShape(20.dp)
     Column(
@@ -39,7 +41,10 @@ fun SessionFeedbackAndLiveStreaming(
             contentAlignment = Alignment.Center
         ) {
 
-            VideoView(accessViewModel = accessViewModel)
+            VideoView(
+                accessViewModel = accessViewModel,
+                videoPlayerViewModel = videoPlayerViewModel
+            )
         }
 
         //Feedback section

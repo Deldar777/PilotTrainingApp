@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.*
 import kotlin.time.ExperimentalTime
 
@@ -16,7 +17,8 @@ fun SetupNavGraph(
     navController: NavHostController,
     accessViewModel: AccessViewModel,
     sessionViewModel: SessionViewModel,
-    context: Context
+    context: Context,
+    videoPlayerModel: VideoPlayerViewModel
 ) {
     NavHost(
         navController = navController,
@@ -36,10 +38,11 @@ fun SetupNavGraph(
             route = Screens.SessionScreen.route
         ){
             SessionView(
+                videoPlayerViewModel = videoPlayerModel,
                 sessionViewModel = sessionViewModel,
                 navController = navController,
                 accessViewModel = accessViewModel,
-                context = context
+                context = context,
             )
         }
 
@@ -50,7 +53,8 @@ fun SetupNavGraph(
                 sessionViewModel = sessionViewModel,
                 navController = navController,
                 accessViewModel = accessViewModel,
-                context = context
+                context = context,
+                videoPlayerViewModel = videoPlayerModel
             )
         }
 

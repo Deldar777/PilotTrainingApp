@@ -16,6 +16,7 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.*
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.generalCells.HighlightAndVideo
 import nl.shekho.videoplayer.views.highlightSectionCells.*
 import nl.shekho.videoplayer.views.navigation.Screens
@@ -28,7 +29,8 @@ fun SessionView(
     sessionViewModel: SessionViewModel,
     navController: NavController,
     accessViewModel: AccessViewModel,
-    context: Context
+    context: Context,
+    videoPlayerViewModel: VideoPlayerViewModel
 ) {
 
 
@@ -56,7 +58,8 @@ fun SessionView(
                 accessViewModel = accessViewModel,
                 screen = stringResource(id = R.string.session),
                 navController = navController,
-                context = context
+                context = context,
+                videoPlayerViewModel = videoPlayerViewModel
             )
         }
 

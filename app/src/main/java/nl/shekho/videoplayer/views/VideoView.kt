@@ -27,10 +27,10 @@ import nl.shekho.videoplayer.viewModels.AccessViewModel
 
 @Composable
 fun VideoView(
-    accessViewModel: AccessViewModel
+    accessViewModel: AccessViewModel,
+    videoPlayerViewModel: VideoPlayerViewModel
 ){
 
-    val videoPlayerViewModel = hiltViewModel<VideoPlayerViewModel>()
     val videoItems by videoPlayerViewModel.videoItems.collectAsState()
     val selectVideoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),

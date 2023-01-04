@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.generalCells.HighlightAndVideo
 import nl.shekho.videoplayer.views.topbarCells.TopBarReview
 import kotlin.time.ExperimentalTime
@@ -23,18 +24,23 @@ fun ReviewView(
     sessionViewModel: SessionViewModel,
     navController: NavController,
     accessViewModel: AccessViewModel,
-    context: Context
+    context: Context,
+    videoPlayerViewModel: VideoPlayerViewModel
 ) {
 
 
     //Get video and logbook with events for the session is going to be reviewed
     if(accessViewModel.isOnline() && sessionViewModel.runningSession != null && accessViewModel.encodedJwtToken != null){
+
         sessionViewModel.getVideo(
             sessionId = sessionViewModel.runningSession!!.id,
             token = accessViewModel.encodedJwtToken!!
         )
-    }
 
+
+        //If the video url has been fetched successfully, then pass it to the player
+        videoPlayerViewModel.fetchVideoFromUrl("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+    }
 
     Box(
         modifier = Modifier
@@ -56,7 +62,8 @@ fun ReviewView(
                 accessViewModel = accessViewModel,
                 screen = stringResource(id = R.string.review),
                 navController = navController,
-                context = context
+                context = context,
+                videoPlayerViewModel = videoPlayerViewModel
             )
 
         }

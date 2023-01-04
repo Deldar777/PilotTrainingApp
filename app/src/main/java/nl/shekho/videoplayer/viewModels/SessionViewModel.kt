@@ -57,7 +57,7 @@ class SessionViewModel @Inject constructor(
     //Events automation
     var secondsPassed: Int by mutableStateOf(0)
     var maxNumberOfEvents = 10
-    var cycleTimeInSeconds = 20
+    var cycleTimeInSeconds = 10
     var generatedEvents = 0
 
     //Review window
@@ -263,7 +263,6 @@ class SessionViewModel @Inject constructor(
             )
             delay(3000)
 
-            print(response)
             val result = when {
                 response.isSuccessful -> {
                     val body = response.body()

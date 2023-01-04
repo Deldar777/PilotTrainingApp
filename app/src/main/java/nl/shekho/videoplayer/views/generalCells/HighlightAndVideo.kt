@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.highlightSectionCells.HighlightSection
 import nl.shekho.videoplayer.views.noteCells.ReviewFeedbackAndVideoSection
 import nl.shekho.videoplayer.views.noteCells.SessionFeedbackAndLiveStreaming
@@ -26,7 +27,8 @@ fun HighlightAndVideo(
     accessViewModel: AccessViewModel,
     screen: String,
     navController: NavController,
-    context: Context
+    context: Context,
+    videoPlayerViewModel: VideoPlayerViewModel
 ) {
     val shape = RoundedCornerShape(20.dp)
 
@@ -68,13 +70,15 @@ fun HighlightAndVideo(
                 SessionFeedbackAndLiveStreaming(
                     sessionViewModel = sessionViewModel,
                     accessViewModel = accessViewModel,
-                    context = context
+                    context = context,
+                    videoPlayerViewModel = videoPlayerViewModel
                 )
             }else{
                 ReviewFeedbackAndVideoSection(
                     sessionViewModel = sessionViewModel,
                     accessViewModel = accessViewModel,
-                    context = context
+                    context = context,
+                    videoPlayerViewModel = videoPlayerViewModel
                 )
             }
 

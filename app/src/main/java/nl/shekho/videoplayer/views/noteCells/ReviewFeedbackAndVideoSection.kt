@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
+import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.VideoView
 import kotlin.time.ExperimentalTime
 
@@ -19,7 +20,8 @@ import kotlin.time.ExperimentalTime
 fun ReviewFeedbackAndVideoSection(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel,
-    context: Context
+    context: Context,
+    videoPlayerViewModel: VideoPlayerViewModel
 ) {
     val shape = RoundedCornerShape(20.dp)
     Column(
@@ -37,7 +39,10 @@ fun ReviewFeedbackAndVideoSection(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            VideoView(accessViewModel = accessViewModel)
+            VideoView(
+                accessViewModel = accessViewModel,
+                videoPlayerViewModel = videoPlayerViewModel
+            )
         }
 
         //Note section

@@ -56,10 +56,7 @@ class VideoPlayerViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
-        loading = true
         player.prepare()
-        addMockVideo()
-        loading = false
     }
 
     fun addVideoUri(uri: Uri) {
@@ -78,10 +75,8 @@ class VideoPlayerViewModel @Inject constructor(
         player.release()
     }
 
-    fun addMockVideo(){
-        var videoURL =  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-
-        val videoURI: Uri = Uri.parse(videoURL)
+    fun fetchVideoFromUrl(videoUrl: String){
+        val videoURI: Uri = Uri.parse(videoUrl)
         addVideoUri(videoURI)
         playVideo(videoURI)
         player.prepare()
