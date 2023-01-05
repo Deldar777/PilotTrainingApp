@@ -27,8 +27,7 @@ import nl.shekho.videoplayer.views.topbarCells.*
 fun TopBarSession(
     modifier: Modifier = Modifier,
     sessionViewModel: SessionViewModel,
-    accessViewModel: AccessViewModel,
-    navController: NavController
+    accessViewModel: AccessViewModel
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -95,7 +94,6 @@ fun TopBarSession(
             ) {
                 SessionTopBarThirdSection(
                     sessionViewModel = sessionViewModel,
-                    navController = navController,
                     accessViewModel = accessViewModel
                 )
             }

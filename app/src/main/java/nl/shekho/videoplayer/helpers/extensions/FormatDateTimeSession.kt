@@ -97,7 +97,7 @@ class Helpers {
             val minutes = (NumberOfSeconds % 3600) / 60;
             val seconds = NumberOfSeconds % 60;
 
-            return hours.pad() + " : " + minutes.pad() + " : " + seconds.pad();
+            return hours.pad() + ":" + minutes.pad() + ":" + seconds.pad();
         }
 
         private fun Int.pad(): String {

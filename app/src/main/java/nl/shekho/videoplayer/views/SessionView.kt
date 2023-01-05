@@ -48,8 +48,7 @@ fun SessionView(
             // Top bar
             TopBarSession(
                 sessionViewModel = sessionViewModel,
-                accessViewModel = accessViewModel,
-                navController = navController
+                accessViewModel = accessViewModel
             )
 
             // Middle part of the screen (highlight - video and add feedback block)
@@ -63,13 +62,13 @@ fun SessionView(
             )
         }
 
+        //To put a white overlay on the screen if end session was asked
         if(sessionViewModel.openDialog.value){
             Box(
                 modifier = Modifier
                     .background(color = Color.White.copy(alpha = 0.8f))
                     .fillMaxSize()
             ){
-
             }
         }
 
@@ -88,15 +87,9 @@ fun SessionView(
                 if (!sessionViewModel.savingSessionSucceeded) {
                     Toast.makeText(context, cannotSaveSession, Toast.LENGTH_LONG).show()
                 } else {
-                    sessionViewModel.fetchSessionsByUserId(
-                        userId = accessViewModel.loggedInUserId!!,
-                        token = accessViewModel.encodedJwtToken!!
-                    )
                     sessionViewModel.openDialog.value = false
                     navController.navigate(Screens.OverviewScreen.route)
                 }
-
-                sessionViewModel.savingSessionSucceeded = false
                 sessionViewModel.saveSessionAsked = false
             }
         }

@@ -132,7 +132,7 @@ class AccessViewModel @Inject constructor(
                         val body = response.body()
 
                         if (body != null) {
-                            var users = response.body()
+                            val users = response.body()
                             if (users != null) {
                                 val mappedUsers = userMapper.mapListEntityToModel(users.results)
                                 listUsers = mappedUsers

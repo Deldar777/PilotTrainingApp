@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.helpers.extensions.Helpers
+import nl.shekho.videoplayer.models.EventType
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.generalCells.SavingSessionFeedback
 import kotlin.time.ExperimentalTime
@@ -93,7 +94,8 @@ fun EventDetailsSection(
                 fontSize = 16.sp,
             )
             Text(
-                text = "${(10000..50000).random()} ft",
+                text = if(sessionViewModel.selectedEvent.value.eventType == EventType.MARKED_EVENT.name) stringResource(
+                    id = R.string.currentAltitude) else "${(10000..50000).random()} ft",
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )
@@ -104,7 +106,7 @@ fun EventDetailsSection(
                 .fillMaxWidth()
         ) {
             Text(
-                text = stringResource(id = R.string.currentTimestamp),
+                text = "${stringResource(id = R.string.currentTimestamp)}: ",
                 color = MaterialTheme.colors.primary,
                 fontSize = 16.sp,
             )

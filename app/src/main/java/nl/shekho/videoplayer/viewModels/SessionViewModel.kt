@@ -118,21 +118,28 @@ class SessionViewModel @Inject constructor(
         runningSession = null
     }
 
-    fun endSession(sessionId: String, token: String) {
-        saveSessionAsked = true
-        savingSession = true
+    fun endSession(sessionId: String, token: String, userId: String) {
 
         viewModelScope.launch {
-            savingSessionSucceeded = try {
+            savingSession = true
+            try {
                 val response = apiService.updateSessionStatusById(
                     sessionId = sessionId,
                     token = token,
                 )
-                delay(5000)
-                response.isSuccessful
+
+                if(response.isSuccessful){
+                    savingSessionSucceeded = true
+                    fetchSessionsByUserId(
+                        userId = userId,
+                        token = token
+                    )
+                }
+
             } catch (e: java.lang.Exception) {
-                false
+                failed = e.message.toString()
             }
+            delay(4000)
             savingSession = false
         }
     }

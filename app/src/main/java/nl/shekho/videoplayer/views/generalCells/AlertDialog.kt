@@ -28,11 +28,9 @@ import nl.shekho.videoplayer.views.navigation.Screens
 @Composable
 fun AlertDialog(
     sessionViewModel: SessionViewModel,
-    accessViewModel: AccessViewModel,
-    navController: NavController
+    accessViewModel: AccessViewModel
 ) {
     val openDialog = sessionViewModel.openDialog
-
 
     if (openDialog.value) {
         AlertDialog(
@@ -52,12 +50,14 @@ fun AlertDialog(
                 TextButton(
                     onClick = {
                         sessionViewModel.saveSessionAsked = true
-                        sessionViewModel.runningSession!!.id.let {
+                        if(accessViewModel.loggedInUserId != null && sessionViewModel.runningSession != null){
                             sessionViewModel.endSession(
-                                sessionId = it,
-                                token = accessViewModel.encodedJwtToken!!
+                                sessionId = sessionViewModel.runningSession!!.id,
+                                token = accessViewModel.encodedJwtToken!!,
+                                userId = accessViewModel.loggedInUserId!!
                             )
                         }
+
                     }) {
                     Text(
                         text = stringResource(id = R.string.confirm),
@@ -85,7 +85,4 @@ fun AlertDialog(
                 .width(260.dp)
         )
     }
-
-
-
 }

@@ -30,7 +30,6 @@ import nl.shekho.videoplayer.views.generalCells.AlertDialog
 @Composable
 fun SessionTopBarThirdSection(
     sessionViewModel: SessionViewModel,
-    navController: NavController,
     accessViewModel: AccessViewModel
 ) {
     OutlinedButton(
@@ -66,8 +65,7 @@ fun SessionTopBarThirdSection(
 
     AlertDialog(
         sessionViewModel = sessionViewModel,
-        accessViewModel = accessViewModel,
-        navController = navController
+        accessViewModel = accessViewModel
     )
 }
 
