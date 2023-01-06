@@ -1,7 +1,7 @@
 package nl.shekho.videoplayer.viewModels
 
+import android.media.session.PlaybackState
 import android.net.Uri
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,22 +10,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlaybackException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
+import nl.shekho.videoplayer.api.entities.*
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.helpers.MetaDataReader
-import nl.shekho.videoplayer.models.LiveStreamingSetup
 import nl.shekho.videoplayer.models.VideoItem
 import javax.inject.Inject
-import nl.shekho.videoplayer.api.ApiMediaService
-import nl.shekho.videoplayer.api.entities.*
-import nl.shekho.videoplayer.models.Asset
-import nl.shekho.videoplayer.models.LiveStreamingStatus
-import java.time.LocalDateTime
 
 
 @HiltViewModel
@@ -56,6 +50,7 @@ class VideoPlayerViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
+        addPlayerListeners()
         player.prepare()
     }
 
@@ -70,10 +65,6 @@ class VideoPlayerViewModel @Inject constructor(
         )
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        player.release()
-    }
 
     fun fetchVideoFromUrl(videoUrl: String){
         val videoURI: Uri = Uri.parse(videoUrl)
@@ -83,7 +74,28 @@ class VideoPlayerViewModel @Inject constructor(
         player.playWhenReady = true
     }
 
+    fun fetchLiveStreaming(videoUrl: String){
+        loading = true
+        val videoURI: Uri = Uri.parse(videoUrl)
+
+        addVideoUri(videoURI)
+        playVideo(videoURI)
+        player.prepare()
+        player.playWhenReady = true
+    }
+
     fun isOnline(): Boolean {
         return connectivityChecker.isOnline()
+    }
+
+
+    //Add event listener to the player to update loading status
+    private fun addPlayerListeners() {
+        player.addListener(object : Player.Listener{
+            override fun onIsLoadingChanged(isLoading: Boolean) {
+                super.onIsLoadingChanged(isLoading)
+                loading = isLoading
+            }
+        })
     }
 }

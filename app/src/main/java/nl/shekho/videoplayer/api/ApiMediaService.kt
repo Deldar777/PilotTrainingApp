@@ -10,9 +10,6 @@ interface ApiMediaService {
 
     // Asset ive streaming endpoints
 
-
-
-
     // 1-Create empty asset
     @Headers(
         "Content-Type: application/json; charset=utf-8",
@@ -46,7 +43,7 @@ interface ApiMediaService {
         @Body body: LiveEventUpdateEntity,
     ):Response<LiveEventUpdateEntity>
 
-    // 5-Update live event
+    // 5-Get list live events
     @POST("ListStreamingEndpoints")
     suspend fun fetchStreamingEndpoints(
         @Header("Authorization") token: String?,

@@ -54,7 +54,8 @@ class MainActivity : ComponentActivity() {
 //                    sessionViewModel = sessionViewModel,
 //                    navController = navController,
 //                    accessViewModel = accessViewModel,
-//                    context = this
+//                    context = this,
+//                    videoPlayerViewModel = videoPlayerViewModel
 //                )
 //                ReviewView(
 //                    sessionViewModel = sessionViewModel,
