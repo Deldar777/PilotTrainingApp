@@ -42,7 +42,7 @@ fun SessionFeedbackAndLiveStreaming(
         ) {
 
             VideoView(
-                accessViewModel = accessViewModel,
+                sessionViewModel = sessionViewModel,
                 videoPlayerViewModel = videoPlayerViewModel
             )
         }

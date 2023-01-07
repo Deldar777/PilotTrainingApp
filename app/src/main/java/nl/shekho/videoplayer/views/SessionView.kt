@@ -33,6 +33,16 @@ fun SessionView(
     videoPlayerViewModel: VideoPlayerViewModel
 ) {
 
+    //Start the live event
+    if(accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null){
+        sessionViewModel.updateLiveEvent(
+            stopLiveEvent = false,
+            token = accessViewModel.encodedJwtToken!!
+        )
+
+        print(sessionViewModel.runningLiveEvent.value?.HLS)
+    }
+
 
     val cannotSaveSession = stringResource(id = R.string.cannotSaveSession)
     var sessionSaved = stringResource(id = R.string.sessionSaved)

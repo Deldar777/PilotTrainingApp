@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.*
 import nl.shekho.videoplayer.api.entities.EventRequestEntity
+import nl.shekho.videoplayer.api.entities.LiveEventEntity
 import nl.shekho.videoplayer.api.entities.NewSessionEntity
 import nl.shekho.videoplayer.api.entities.VideoRequestEntity
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
@@ -37,8 +38,14 @@ class SessionViewModel @Inject constructor(
     private val sessionMapper: SessionMapper,
     private val userMapper: UserMapper,
     private val sessionPropertiesMapper: SessionPropertiesMapper,
-    private val logBookMapper: LogBookMapper
+    private val logBookMapper: LogBookMapper,
+    private val apiMediaService: ApiMediaService
 ) : ViewModel() {
+
+    //Live events states
+    var updatingLiveEvent: Boolean by mutableStateOf(false)
+    var runningLiveEvent: MutableState<LiveEvent?> = mutableStateOf(null)
+
 
     // Modify and read feedback and rating
     var selectedParticipantTabIndex: MutableState<Int> = mutableStateOf(1)
@@ -330,6 +337,33 @@ class SessionViewModel @Inject constructor(
                 else -> Result.failure(Exception("Something went wrong: Code ${response.code()}"))
             }
             mutableUsers.emit(result)
+        }
+    }
+
+
+    //Media services API endpoints
+    //Start and stops camera 1 streaming
+    fun updateLiveEvent(stopLiveEvent: Boolean, token: String){
+        viewModelScope.launch {
+            updatingLiveEvent = true
+            try {
+                val response = apiMediaService.updateLiveEvent(
+                    body = LiveEventEntity(
+                        StopLiveBool = stopLiveEvent
+                    ),
+                    token = token,
+                )
+                val body = response.body()
+
+                if (response.isSuccessful && body != null) {
+                    runningLiveEvent.value = body
+                } else {
+                    failed = response.message()
+                }
+            } catch (e: java.lang.Exception) {
+                failed = e.message.toString()
+            }
+            updatingLiveEvent = true
         }
     }
 

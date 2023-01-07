@@ -40,7 +40,7 @@ fun ReviewFeedbackAndVideoSection(
             contentAlignment = Alignment.Center
         ) {
             VideoView(
-                accessViewModel = accessViewModel,
+                sessionViewModel = sessionViewModel,
                 videoPlayerViewModel = videoPlayerViewModel
             )
         }

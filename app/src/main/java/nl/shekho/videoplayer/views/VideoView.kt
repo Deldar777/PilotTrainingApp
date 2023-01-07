@@ -24,10 +24,13 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.ui.PlayerView
 import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.viewModels.AccessViewModel
+import nl.shekho.videoplayer.viewModels.SessionViewModel
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun VideoView(
-    accessViewModel: AccessViewModel,
+    sessionViewModel: SessionViewModel,
     videoPlayerViewModel: VideoPlayerViewModel
 ){
 
@@ -56,7 +59,7 @@ fun VideoView(
         }
     }
 
-    if(videoPlayerViewModel.loading){
+    if(videoPlayerViewModel.loading || sessionViewModel.updatingLiveEvent){
         CircularProgressIndicator()
     }else{
 
