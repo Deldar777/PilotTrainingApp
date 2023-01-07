@@ -6,6 +6,7 @@ import nl.shekho.videoplayer.models.SessionProperties
 class SessionPropertiesMapper {
     fun mapEntityToModel(entity: VideoResponseEntity): SessionProperties {
         return SessionProperties(
+            videoId = entity.id,
             videoURL = entity.videoURL,
             sessionId = entity.sessionId,
             logbookId = entity.logbookId

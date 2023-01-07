@@ -24,10 +24,8 @@ fun ReviewView(
     sessionViewModel: SessionViewModel,
     navController: NavController,
     accessViewModel: AccessViewModel,
-    context: Context,
-    videoPlayerViewModel: VideoPlayerViewModel
+    context: Context
 ) {
-
 
     //Get video and logbook with events for the session is going to be reviewed
     if (accessViewModel.isOnline() && sessionViewModel.runningSession != null && accessViewModel.encodedJwtToken != null) {
@@ -38,8 +36,9 @@ fun ReviewView(
 
         //If the video url has been fetched successfully, then pass it to the player
         if (sessionViewModel.sessionProperties != null) {
+            sessionViewModel.liveStreamingLoading = false
             if (sessionViewModel.sessionProperties!!.videoURL.isNotEmpty())
-                videoPlayerViewModel.fetchVideoFromUrl(sessionViewModel.sessionProperties!!.videoURL)
+                sessionViewModel.startLiveStreaming(sessionViewModel.sessionProperties!!.videoURL)
         }
     }
 
@@ -63,10 +62,8 @@ fun ReviewView(
                 accessViewModel = accessViewModel,
                 screen = stringResource(id = R.string.review),
                 navController = navController,
-                context = context,
-                videoPlayerViewModel = videoPlayerViewModel
+                context = context
             )
-
         }
     }
 }

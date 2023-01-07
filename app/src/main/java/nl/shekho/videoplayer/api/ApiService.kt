@@ -39,11 +39,19 @@ interface ApiService {
         @Header("Authorization") token: String?
     ):Response<SessionEntity>
 
+    //Post video and create logbook
     @POST("PostVideo")
     suspend fun postVideo(
         @Body body: VideoRequestEntity,
         @Header("Authorization") token: String?
     ):Response<VideoResponseEntity>
+
+    //Update HLS url to the posted video
+    @PUT("EditVideoDetails")
+    suspend fun editVideoDetails(
+        @Body body: VideoDetailsEntity,
+        @Header("Authorization") token: String?
+    ):Response<Void>
 
     //Get video by session id to fetch video URL and events that belongs to a logbook
     @GET("GetVideoBySessionId/{sessionId}")

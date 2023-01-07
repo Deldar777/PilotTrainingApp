@@ -31,8 +31,7 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun VideoView(
     sessionViewModel: SessionViewModel,
-    videoPlayerViewModel: VideoPlayerViewModel
-){
+) {
 
     var lifeCycle by remember {
         mutableStateOf(Lifecycle.Event.ON_CREATE)
@@ -51,53 +50,38 @@ fun VideoView(
         }
     }
 
-    if(videoPlayerViewModel.loading){
+    if (sessionViewModel.liveStreamingLoading) {
         CircularProgressIndicator()
-    }else{
+    } else {
+        Column(
+            modifier = Modifier
+                .background(color = Color.Transparent, RoundedCornerShape(20.dp))
+        ) {
 
-        if(videoPlayerViewModel.failed){
-            Box(
-                contentAlignment = Alignment.Center,
+            AndroidView(
                 modifier = Modifier
-                    .fillMaxSize()
-            ){
-                Text(
-                    text = videoPlayerViewModel.failedMessage,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Red
-                )
-            }
-        }else{
-            Column(
-                modifier = Modifier
-                    .background(color = Color.Transparent, RoundedCornerShape(20.dp))
-            ) {
-
-                AndroidView(
-                    modifier = Modifier
-                        .clip(shape = RoundedCornerShape(20.dp))
-                        .fillMaxSize(),
-                    factory = { context ->
-                        PlayerView(context).also {
-                            it.player = videoPlayerViewModel.player
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .fillMaxSize(),
+                factory = { context ->
+                    PlayerView(context).also {
+                        it.player = sessionViewModel.player
+                    }
+                },
+                update = {
+                    when (lifeCycle) {
+                        Lifecycle.Event.ON_PAUSE -> {
+                            it.onPause()
+                            it.player?.pause()
                         }
-                    },
-                    update = {
-                        when (lifeCycle) {
-                            Lifecycle.Event.ON_PAUSE -> {
-                                it.onPause()
-                                it.player?.pause()
-                            }
 
-                            Lifecycle.Event.ON_RESUME -> {
-                                it.onResume()
-                            }
-                            else -> Unit
+                        Lifecycle.Event.ON_RESUME -> {
+                            it.onResume()
                         }
-                    },
-                )
-            }
+                        else -> Unit
+                    }
+                }
+            )
         }
+
     }
 }

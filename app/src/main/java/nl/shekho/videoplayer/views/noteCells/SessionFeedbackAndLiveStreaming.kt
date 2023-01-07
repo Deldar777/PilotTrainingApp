@@ -21,8 +21,7 @@ import kotlin.time.ExperimentalTime
 fun SessionFeedbackAndLiveStreaming(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel,
-    context: Context,
-    videoPlayerViewModel: VideoPlayerViewModel
+    context: Context
 ) {
     val shape = RoundedCornerShape(20.dp)
     Column(
@@ -42,8 +41,7 @@ fun SessionFeedbackAndLiveStreaming(
         ) {
 
             VideoView(
-                sessionViewModel = sessionViewModel,
-                videoPlayerViewModel = videoPlayerViewModel
+                sessionViewModel = sessionViewModel
             )
         }
 

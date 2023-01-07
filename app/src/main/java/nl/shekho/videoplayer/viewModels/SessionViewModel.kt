@@ -1,9 +1,13 @@
 package nl.shekho.videoplayer.viewModels
 
 import android.graphics.Color
+import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.util.MimeTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,10 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.*
-import nl.shekho.videoplayer.api.entities.EventRequestEntity
-import nl.shekho.videoplayer.api.entities.LiveEventEntity
-import nl.shekho.videoplayer.api.entities.NewSessionEntity
-import nl.shekho.videoplayer.api.entities.VideoRequestEntity
+import nl.shekho.videoplayer.api.entities.*
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.models.*
 import nl.shekho.videoplayer.ui.theme.deepBlue
@@ -39,11 +40,13 @@ class SessionViewModel @Inject constructor(
     private val userMapper: UserMapper,
     private val sessionPropertiesMapper: SessionPropertiesMapper,
     private val logBookMapper: LogBookMapper,
-    private val apiMediaService: ApiMediaService
+    private val apiMediaService: ApiMediaService,
+    val player: Player,
 ) : ViewModel() {
 
     //Live events states
     var updatingLiveEvent: Boolean by mutableStateOf(false)
+    var liveStreamingLoading: Boolean by mutableStateOf(true)
     var runningLiveEvent: MutableState<LiveEvent?> = mutableStateOf(null)
 
 
@@ -67,6 +70,7 @@ class SessionViewModel @Inject constructor(
     var maxNumberOfEvents = 10
     var cycleTimeInSeconds = 10
     var generatedEvents = 0
+    var liveStreamingStart = 20
 
     //Review window
     private val mutableUsers = MutableStateFlow<Result<List<User>>?>(null)
@@ -126,8 +130,43 @@ class SessionViewModel @Inject constructor(
         runningSession = null
     }
 
-    fun endSession(sessionId: String, token: String, userId: String) {
+    //Exo player functions
+    fun startLiveStreaming(mediaUrl: String) {
+        //Creating a media item of HLS Type
+        val mediaItem = MediaItem.Builder()
+            .setUri(mediaUrl)
+            .setMimeType(MimeTypes.APPLICATION_M3U8) //m3u8 is the extension used with HLS sources
+            .build()
 
+        player.setMediaItem(mediaItem)
+
+        player.prepare()
+        player.repeatMode = Player.REPEAT_MODE_ONE //repeating the video from start after it's over
+        player.playWhenReady = true
+    }
+
+    fun fetchVideoFromUrl(videoUrl: String) {
+        addPlayerListeners()
+        val videoURI: Uri = Uri.parse(videoUrl)
+        val mediaItem = MediaItem.fromUri(videoURI)
+        player.addMediaItem(MediaItem.fromUri(videoURI))
+        player.setMediaItem(mediaItem)
+        player.repeatMode = Player.REPEAT_MODE_ONE //repeating the video from start after it's over
+        player.prepare()
+        player.playWhenReady = true
+    }
+
+    //Add event listener to the player to update loading status
+    private fun addPlayerListeners() {
+        player.addListener(object : Player.Listener {
+            override fun onIsLoadingChanged(isLoading: Boolean) {
+                super.onIsLoadingChanged(isLoading)
+                loading.value = isLoading
+            }
+        })
+    }
+
+    fun endSession(sessionId: String, token: String, userId: String) {
         viewModelScope.launch {
             savingSession = true
             try {
@@ -136,7 +175,7 @@ class SessionViewModel @Inject constructor(
                     token = token,
                 )
 
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     savingSessionSucceeded = true
                     fetchSessionsByUserId(
                         userId = userId,
@@ -204,6 +243,22 @@ class SessionViewModel @Inject constructor(
                 failed = e.message.toString()
             }
             loading.value = false
+        }
+    }
+
+    fun updateVideo(videoId: String, hlsUrl: String, token: String) {
+        viewModelScope.launch {
+            try {
+                apiService.editVideoDetails(
+                    body = VideoDetailsEntity(
+                        VideoId = videoId,
+                        VideoURL = hlsUrl
+                    ),
+                    token = token,
+                )
+            } catch (e: java.lang.Exception) {
+                failed = e.message.toString()
+            }
         }
     }
 
@@ -343,7 +398,7 @@ class SessionViewModel @Inject constructor(
 
     //Media services API endpoints
     //Start and stops camera 1 streaming
-    fun updateLiveEvent(stopLiveEvent: Boolean, token: String){
+    fun updateLiveEvent(stopLiveEvent: Boolean, token: String) {
         viewModelScope.launch {
             updatingLiveEvent = true
             try {
@@ -357,9 +412,21 @@ class SessionViewModel @Inject constructor(
 
                 if (response.isSuccessful && body != null) {
                     runningLiveEvent.value = body
+
+                    delay(4000)
+
+                    //Save the HLS url to the running session
+                    if ( sessionProperties != null)
+                        updateVideo(
+                            videoId = sessionProperties!!.videoId,
+                            token = token,
+                            hlsUrl = body.HLS,
+                        )
+
                 } else {
                     failed = response.message()
                 }
+
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
@@ -406,7 +473,6 @@ class SessionViewModel @Inject constructor(
 
 
     private fun taskTimer() {
-        secondsPassed += 1
 
         altitude = (10000..50000).random()
         if (generatedEvents <= maxNumberOfEvents) {
@@ -416,12 +482,22 @@ class SessionViewModel @Inject constructor(
                 }
             }
         }
+
+        //Start fetching the livestreaming
+        if (secondsPassed == liveStreamingStart) {
+            liveStreamingLoading = false
+            if (runningLiveEvent.value != null) {
+                startLiveStreaming(runningLiveEvent.value!!.HLS)
+            }
+        }
+        secondsPassed += 1
     }
 
 
     private fun generateEvent(token: String) {
 
         if (sessionProperties != null && generatedEvents <= maxNumberOfEvents) {
+
 
             if (generatedEvents < maxNumberOfEvents) {
                 if (generatedEvents == 0) {

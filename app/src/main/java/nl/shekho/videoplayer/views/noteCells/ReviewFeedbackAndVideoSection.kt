@@ -20,8 +20,7 @@ import kotlin.time.ExperimentalTime
 fun ReviewFeedbackAndVideoSection(
     sessionViewModel: SessionViewModel,
     accessViewModel: AccessViewModel,
-    context: Context,
-    videoPlayerViewModel: VideoPlayerViewModel
+    context: Context
 ) {
     val shape = RoundedCornerShape(20.dp)
     Column(
@@ -40,8 +39,7 @@ fun ReviewFeedbackAndVideoSection(
             contentAlignment = Alignment.Center
         ) {
             VideoView(
-                sessionViewModel = sessionViewModel,
-                videoPlayerViewModel = videoPlayerViewModel
+                sessionViewModel = sessionViewModel
             )
         }
 

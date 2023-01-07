@@ -29,24 +29,22 @@ fun SessionView(
     sessionViewModel: SessionViewModel,
     navController: NavController,
     accessViewModel: AccessViewModel,
-    context: Context,
-    videoPlayerViewModel: VideoPlayerViewModel
+    context: Context
 ) {
 
     //Start the live event
-//    if(accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null){
-//        sessionViewModel.updateLiveEvent(
-//            stopLiveEvent = false,
-//            token = accessViewModel.encodedJwtToken!!
-//        )
-//    }
+    if(accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null){
+        sessionViewModel.updateLiveEvent(
+            stopLiveEvent = false,
+            token = accessViewModel.encodedJwtToken!!
+        )
+    }
 
 //    videoPlayerViewModel.fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
-    videoPlayerViewModel.startLiveStreaming("https://msvrefsolutions002-euwe.streaming.media.azure.net/1c26c9c3-92fb-4c7a-b10a-fd27cee9332a/93fce18b-a54f-46dd-bbaa-f58e3d434338.ism/manifest(format=m3u8-cmaf)")
+//    sessionViewModel.startLiveStreaming("https://msvrefsolutions002-euwe.streaming.media.azure.net/467883fd-1929-44b9-8cde-589db1fdf432/1fb51010-b520-4a22-8ef5-189c69467740.ism/manifest(format=m3u8-cmaf)")
 
 
     val cannotSaveSession = stringResource(id = R.string.cannotSaveSession)
-    var sessionSaved = stringResource(id = R.string.sessionSaved)
 
     Box(
         modifier = Modifier
@@ -68,8 +66,7 @@ fun SessionView(
                 accessViewModel = accessViewModel,
                 screen = stringResource(id = R.string.session),
                 navController = navController,
-                context = context,
-                videoPlayerViewModel = videoPlayerViewModel
+                context = context
             )
         }
 

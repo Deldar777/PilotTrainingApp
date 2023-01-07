@@ -18,7 +18,7 @@ fun SetupNavGraph(
     accessViewModel: AccessViewModel,
     sessionViewModel: SessionViewModel,
     context: Context,
-    videoPlayerModel: VideoPlayerViewModel
+//    videoPlayerModel: VideoPlayerViewModel
 ) {
     NavHost(
         navController = navController,
@@ -38,7 +38,6 @@ fun SetupNavGraph(
             route = Screens.SessionScreen.route
         ){
             SessionView(
-                videoPlayerViewModel = videoPlayerModel,
                 sessionViewModel = sessionViewModel,
                 navController = navController,
                 accessViewModel = accessViewModel,
@@ -53,8 +52,7 @@ fun SetupNavGraph(
                 sessionViewModel = sessionViewModel,
                 navController = navController,
                 accessViewModel = accessViewModel,
-                context = context,
-                videoPlayerViewModel = videoPlayerModel
+                context = context
             )
         }
 

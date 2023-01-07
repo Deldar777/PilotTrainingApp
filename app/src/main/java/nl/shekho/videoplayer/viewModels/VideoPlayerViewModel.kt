@@ -61,7 +61,7 @@ class VideoPlayerViewModel @Inject constructor(
         player.playWhenReady = true
     }
 
-        //Add event listener to the player to update loading status
+    //Add event listener to the player to update loading status
     private fun addPlayerListeners() {
         player.addListener(object : Player.Listener{
             override fun onIsLoadingChanged(isLoading: Boolean) {

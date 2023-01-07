@@ -27,8 +27,7 @@ fun HighlightAndVideo(
     accessViewModel: AccessViewModel,
     screen: String,
     navController: NavController,
-    context: Context,
-    videoPlayerViewModel: VideoPlayerViewModel
+    context: Context
 ) {
     val shape = RoundedCornerShape(20.dp)
 
@@ -70,15 +69,13 @@ fun HighlightAndVideo(
                 SessionFeedbackAndLiveStreaming(
                     sessionViewModel = sessionViewModel,
                     accessViewModel = accessViewModel,
-                    context = context,
-                    videoPlayerViewModel = videoPlayerViewModel
+                    context = context
                 )
             }else{
                 ReviewFeedbackAndVideoSection(
                     sessionViewModel = sessionViewModel,
                     accessViewModel = accessViewModel,
-                    context = context,
-                    videoPlayerViewModel = videoPlayerViewModel
+                    context = context
                 )
             }
 
