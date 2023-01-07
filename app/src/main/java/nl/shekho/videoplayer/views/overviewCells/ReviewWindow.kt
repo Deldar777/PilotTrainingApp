@@ -4,8 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -199,9 +197,9 @@ fun ReviewWindow(
 
                                     if (sessionViewModel.isOnline()) {
 
-                                        if (accessViewModel.encodedJwtToken != null && sessionViewModel.selectedSession.value.id != null) {
+                                        if (accessViewModel.encodedJwtToken != null) {
                                             sessionViewModel.fetchUsersBySessionId(
-                                                sessionId = sessionViewModel.selectedSession.value.id!!,
+                                                sessionId = sessionViewModel.selectedSession.value.id,
                                                 token = accessViewModel.encodedJwtToken!!
                                             )
                                         }
@@ -247,11 +245,8 @@ fun ReviewWindow(
                                     } else {
                                         NoInternetView()
                                     }
-
-
                                 }
                             }
-
                         }
                     }
                 }
@@ -358,6 +353,16 @@ fun ReviewWindow(
                                             //If the session is still running for instructor then navigate to session screen
                                             sessionViewModel.runningSession =
                                                 sessionViewModel.selectedSession.value
+
+                                            //Get video and logbook with events for the session is going to be reviewed
+                                            if (accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null) {
+                                                sessionViewModel.getVideo(
+                                                    sessionId = sessionViewModel.selectedSession.value.id,
+                                                    token = accessViewModel.encodedJwtToken!!
+                                                )
+                                            }
+
+
                                             navController.navigate(Screens.SessionScreen.route)
                                         } else {
                                             //if the session is already finished then navigate to the review screen

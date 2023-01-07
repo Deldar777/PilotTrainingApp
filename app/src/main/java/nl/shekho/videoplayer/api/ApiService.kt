@@ -83,5 +83,5 @@ interface ApiService {
     suspend fun updateSessionStatusById(
         @Path("sessionId") sessionId: String,
         @Header("Authorization") token: String?
-    ): Response<String>
+    ): Response<Void>
 }

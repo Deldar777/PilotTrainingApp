@@ -31,19 +31,16 @@ fun ReviewView(
 
     //Get video and logbook with events for the session is going to be reviewed
     if (accessViewModel.isOnline() && sessionViewModel.runningSession != null && accessViewModel.encodedJwtToken != null) {
-
         sessionViewModel.getVideo(
             sessionId = sessionViewModel.runningSession!!.id,
             token = accessViewModel.encodedJwtToken!!
         )
-
 
         //If the video url has been fetched successfully, then pass it to the player
         if (sessionViewModel.sessionProperties != null) {
             if (sessionViewModel.sessionProperties!!.videoURL.isNotEmpty())
                 videoPlayerViewModel.fetchVideoFromUrl(sessionViewModel.sessionProperties!!.videoURL)
         }
-
     }
 
     Box(

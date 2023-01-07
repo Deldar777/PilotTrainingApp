@@ -192,10 +192,10 @@ fun HighlightItem(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.9f)
-                                .background(if(event.ratingAll != null) deepPurple else Color.Transparent)
+                                .background(if (event.ratingAll != null && event.ratingAll != 0) deepPurple else Color.Transparent)
                         ) {
 
-                            if(event.ratingAll != null){
+                            if (event.ratingAll != null && event.ratingAll != 0) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
