@@ -21,7 +21,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.media3.ui.PlayerView
+import com.google.android.exoplayer2.ui.PlayerView
 import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
@@ -33,14 +33,6 @@ fun VideoView(
     sessionViewModel: SessionViewModel,
     videoPlayerViewModel: VideoPlayerViewModel
 ){
-
-    val videoItems by videoPlayerViewModel.videoItems.collectAsState()
-    val selectVideoLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            uri?.let(videoPlayerViewModel::addVideoUri)
-        }
-    )
 
     var lifeCycle by remember {
         mutableStateOf(Lifecycle.Event.ON_CREATE)
@@ -59,7 +51,7 @@ fun VideoView(
         }
     }
 
-    if(videoPlayerViewModel.loading || sessionViewModel.updatingLiveEvent){
+    if(videoPlayerViewModel.loading){
         CircularProgressIndicator()
     }else{
 

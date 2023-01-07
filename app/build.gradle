@@ -69,8 +69,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
 
     //Exoplayer
-    implementation 'androidx.media3:media3-exoplayer:1.0.0-beta03'
-    implementation 'androidx.media3:media3-ui:1.0.0-beta03'
+    implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
+
+
 
     // Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.42"
