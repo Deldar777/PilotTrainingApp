@@ -16,7 +16,6 @@ import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.*
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.generalCells.HighlightAndVideo
 import nl.shekho.videoplayer.views.highlightSectionCells.*
 import nl.shekho.videoplayer.views.navigation.Screens
@@ -34,14 +33,14 @@ fun SessionView(
 
     //Start the live event
     if(accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null){
-        sessionViewModel.updateLiveEvent(
+        sessionViewModel.startLiveEvent(
             stopLiveEvent = false,
             token = accessViewModel.encodedJwtToken!!
         )
     }
 
 //    videoPlayerViewModel.fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
-//    sessionViewModel.startLiveStreaming("https://msvrefsolutions002-euwe.streaming.media.azure.net/467883fd-1929-44b9-8cde-589db1fdf432/1fb51010-b520-4a22-8ef5-189c69467740.ism/manifest(format=m3u8-cmaf)")
+//    sessionViewModel.startLiveStreaming("https://msvrefsolutions002-euwe.streaming.media.azure.net/e1d3b9fa-dc49-4b54-a88c-df01508aafa7/255f7307-ba76-482b-823e-fa071540bc1b.ism/manifest(format=m3u8-cmaf)")
 
 
     val cannotSaveSession = stringResource(id = R.string.cannotSaveSession)

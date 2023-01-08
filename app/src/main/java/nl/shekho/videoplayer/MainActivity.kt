@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalTime::class)
     private val sessionViewModel by viewModels<SessionViewModel>()
     private val accessViewModel by viewModels<AccessViewModel>()
-//    private val videoPlayerViewModel by viewModels<VideoPlayerViewModel>()
 
     @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalTime::class)
@@ -54,8 +53,7 @@ class MainActivity : ComponentActivity() {
 //                    sessionViewModel = sessionViewModel,
 //                    navController = navController,
 //                    accessViewModel = accessViewModel,
-//                    context = this,
-//                    videoPlayerViewModel = videoPlayerViewModel
+//                    context = this
 //                )
 //                ReviewView(
 //                    sessionViewModel = sessionViewModel,
@@ -70,8 +68,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     accessViewModel = accessViewModel,
                     sessionViewModel = sessionViewModel,
-                    context = this,
-//                    videoPlayerModel = videoPlayerViewModel
+                    context = this
                 )
             }
         }

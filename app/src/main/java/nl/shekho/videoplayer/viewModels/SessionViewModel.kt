@@ -25,7 +25,6 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
-import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -46,7 +45,7 @@ class SessionViewModel @Inject constructor(
 
     //Live events states
     var updatingLiveEvent: Boolean by mutableStateOf(false)
-    var liveStreamingLoading: Boolean by mutableStateOf(true)
+    var liveStreamingLoading: Boolean by mutableStateOf(false)
     var runningLiveEvent: MutableState<LiveEvent?> = mutableStateOf(null)
 
 
@@ -70,7 +69,6 @@ class SessionViewModel @Inject constructor(
     var maxNumberOfEvents = 10
     var cycleTimeInSeconds = 10
     var generatedEvents = 0
-    var liveStreamingStart = 20
 
     //Review window
     private val mutableUsers = MutableStateFlow<Result<List<User>>?>(null)
@@ -176,6 +174,10 @@ class SessionViewModel @Inject constructor(
                 )
 
                 if (response.isSuccessful) {
+
+                    //If the session status stopped successfully, then stop the live streaming
+                    stopLiveEvent(token = token)
+
                     savingSessionSucceeded = true
                     fetchSessionsByUserId(
                         userId = userId,
@@ -398,9 +400,8 @@ class SessionViewModel @Inject constructor(
 
     //Media services API endpoints
     //Start and stops camera 1 streaming
-    fun updateLiveEvent(stopLiveEvent: Boolean, token: String) {
+    fun startLiveEvent(stopLiveEvent: Boolean, token: String) {
         viewModelScope.launch {
-            updatingLiveEvent = true
             try {
                 val response = apiMediaService.updateLiveEvent(
                     body = LiveEventEntity(
@@ -411,28 +412,43 @@ class SessionViewModel @Inject constructor(
                 val body = response.body()
 
                 if (response.isSuccessful && body != null) {
+                    //If the HLS url has been fetched successfully, pass it to the streamer
+                    startLiveStreaming(body.HLS)
                     runningLiveEvent.value = body
 
-                    delay(4000)
-
                     //Save the HLS url to the running session
-                    if ( sessionProperties != null)
+                    if (sessionProperties != null) {
                         updateVideo(
                             videoId = sessionProperties!!.videoId,
                             token = token,
                             hlsUrl = body.HLS,
                         )
-
+                    }
                 } else {
                     failed = response.message()
                 }
-
             } catch (e: java.lang.Exception) {
                 failed = e.message.toString()
             }
-            updatingLiveEvent = true
         }
     }
+
+    fun stopLiveEvent(token: String) {
+        viewModelScope.launch {
+            succeeded =  try {
+                val response = apiMediaService.updateLiveEvent(
+                    body = LiveEventEntity(
+                        StopLiveBool = true
+                    ),
+                    token = token,
+                )
+               response.isSuccessful
+            } catch (e: java.lang.Exception) {
+                false
+            }
+        }
+    }
+
 
     //Stopwatch
     private var time: Duration = Duration.ZERO
@@ -482,14 +498,6 @@ class SessionViewModel @Inject constructor(
                 }
             }
         }
-
-        //Start fetching the livestreaming
-        if (secondsPassed == liveStreamingStart) {
-            liveStreamingLoading = false
-            if (runningLiveEvent.value != null) {
-                startLiveStreaming(runningLiveEvent.value!!.HLS)
-            }
-        }
         secondsPassed += 1
     }
 
@@ -497,8 +505,6 @@ class SessionViewModel @Inject constructor(
     private fun generateEvent(token: String) {
 
         if (sessionProperties != null && generatedEvents <= maxNumberOfEvents) {
-
-
             if (generatedEvents < maxNumberOfEvents) {
                 if (generatedEvents == 0) {
                     createEvent(
