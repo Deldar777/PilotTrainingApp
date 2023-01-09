@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -50,38 +51,54 @@ fun VideoView(
         }
     }
 
-    if (sessionViewModel.liveStreamingLoading) {
-        CircularProgressIndicator()
-    } else {
-        Column(
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Transparent, RoundedCornerShape(20.dp))
+    ) {
+        Box(
             modifier = Modifier
-                .background(color = Color.Transparent, RoundedCornerShape(20.dp))
+                .fillMaxSize()
         ) {
-
-            AndroidView(
+            Box(
                 modifier = Modifier
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .fillMaxSize(),
-                factory = { context ->
-                    PlayerView(context).also {
-                        it.player = sessionViewModel.player
-                    }
-                },
-                update = {
-                    when (lifeCycle) {
-                        Lifecycle.Event.ON_PAUSE -> {
-                            it.onPause()
-                            it.player?.pause()
+                    .fillMaxSize()
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .clip(shape = RoundedCornerShape(20.dp))
+                        .fillMaxSize(),
+                    factory = { context ->
+                        PlayerView(context).also {
+                            it.player = sessionViewModel.player
                         }
-
-                        Lifecycle.Event.ON_RESUME -> {
-                            it.onResume()
+                    },
+                    update = {
+                        when (lifeCycle) {
+                            Lifecycle.Event.ON_PAUSE -> {
+                                it.onPause()
+                                it.player?.pause()
+                            }
+                            Lifecycle.Event.ON_RESUME -> {
+                                it.onResume()
+                            }
+                            else -> Unit
                         }
-                        else -> Unit
                     }
+                )
+            }
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Transparent)
+            ) {
+                if (sessionViewModel.liveStreamingLoading) {
+                    CircularProgressIndicator()
                 }
-            )
+            }
         }
-
     }
 }

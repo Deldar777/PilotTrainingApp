@@ -32,14 +32,14 @@ fun SessionView(
 ) {
 
     //Start the live event
-    if(accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null){
-        sessionViewModel.startLiveEvent(
-            stopLiveEvent = false,
-            token = accessViewModel.encodedJwtToken!!
-        )
-    }
+//    if(accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null){
+//        sessionViewModel.startLiveEvent(
+//            stopLiveEvent = false,
+//            token = accessViewModel.encodedJwtToken!!
+//        )
+//    }
 
-//    videoPlayerViewModel.fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
+//    sessionViewModel.fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 //    sessionViewModel.startLiveStreaming("https://msvrefsolutions002-euwe.streaming.media.azure.net/e1d3b9fa-dc49-4b54-a88c-df01508aafa7/255f7307-ba76-482b-823e-fa071540bc1b.ism/manifest(format=m3u8-cmaf)")
 
 
@@ -70,17 +70,17 @@ fun SessionView(
         }
 
         //To put a white overlay on the screen if end session was asked
-        if(sessionViewModel.openDialog.value){
+        if (sessionViewModel.openDialog.value) {
             Box(
                 modifier = Modifier
                     .background(color = Color.White.copy(alpha = 0.8f))
                     .fillMaxSize()
-            ){
+            ) {
             }
         }
 
         //Save session process
-        if(sessionViewModel.saveSessionAsked){
+        if (sessionViewModel.saveSessionAsked) {
             if (sessionViewModel.savingSession) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -90,7 +90,7 @@ fun SessionView(
                 ) {
                     CircularProgressIndicator(color = Color.Black)
                 }
-            }else{
+            } else {
                 if (!sessionViewModel.savingSessionSucceeded) {
                     Toast.makeText(context, cannotSaveSession, Toast.LENGTH_LONG).show()
                 } else {
@@ -100,7 +100,7 @@ fun SessionView(
                 sessionViewModel.saveSessionAsked = false
             }
         }
-        
+
     }
 }
 

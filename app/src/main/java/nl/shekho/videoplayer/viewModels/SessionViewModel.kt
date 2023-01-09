@@ -43,8 +43,10 @@ class SessionViewModel @Inject constructor(
     val player: Player,
 ) : ViewModel() {
 
+    init {
+        addPlayerListeners()
+    }
     //Live events states
-    var updatingLiveEvent: Boolean by mutableStateOf(false)
     var liveStreamingLoading: Boolean by mutableStateOf(false)
     var runningLiveEvent: MutableState<LiveEvent?> = mutableStateOf(null)
 
@@ -144,7 +146,6 @@ class SessionViewModel @Inject constructor(
     }
 
     fun fetchVideoFromUrl(videoUrl: String) {
-        addPlayerListeners()
         val videoURI: Uri = Uri.parse(videoUrl)
         val mediaItem = MediaItem.fromUri(videoURI)
         player.addMediaItem(MediaItem.fromUri(videoURI))
@@ -159,7 +160,7 @@ class SessionViewModel @Inject constructor(
         player.addListener(object : Player.Listener {
             override fun onIsLoadingChanged(isLoading: Boolean) {
                 super.onIsLoadingChanged(isLoading)
-                loading.value = isLoading
+                liveStreamingLoading = isLoading
             }
         })
     }
