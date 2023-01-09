@@ -349,25 +349,20 @@ fun ReviewWindow(
                                     .background(lightBlue, shape = RoundedCornerShape(20.dp))
                                     .clickable {
 
+                                        sessionViewModel.runningSession = sessionViewModel.selectedSession.value
+                                        //Get video and logbook with events for the session is going to be reviewed
+                                        if (accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null) {
+                                            sessionViewModel.getVideo(
+                                                sessionId = sessionViewModel.selectedSession.value.id,
+                                                token = accessViewModel.encodedJwtToken!!
+                                            )
+                                        }
+
                                         if (sessionViewModel.isSessionStillRunning()) {
                                             //If the session is still running for instructor then navigate to session screen
-                                            sessionViewModel.runningSession =
-                                                sessionViewModel.selectedSession.value
-
-                                            //Get video and logbook with events for the session is going to be reviewed
-                                            if (accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null) {
-                                                sessionViewModel.getVideo(
-                                                    sessionId = sessionViewModel.selectedSession.value.id,
-                                                    token = accessViewModel.encodedJwtToken!!
-                                                )
-                                            }
-
-
                                             navController.navigate(Screens.SessionScreen.route)
                                         } else {
                                             //if the session is already finished then navigate to the review screen
-                                            sessionViewModel.runningSession =
-                                                sessionViewModel.selectedSession.value
                                             navController.navigate(Screens.ReviewScreen.route)
                                         }
                                     },

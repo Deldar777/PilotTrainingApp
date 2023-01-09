@@ -278,6 +278,9 @@ class SessionViewModel @Inject constructor(
                     val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body[0])
                     sessionProperties = sessionPropertiesMapped
 
+                    //Pass the fetched url to the player
+                    startLiveStreaming(body[0].videoURL)
+
                     //If the video entity fetched successfully then get the logbook with events
                     getLogBookById(
                         logBookId = body[0].logbookId,

@@ -90,7 +90,7 @@ fun VideoView(
                 )
             }
             Box(
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Transparent)
