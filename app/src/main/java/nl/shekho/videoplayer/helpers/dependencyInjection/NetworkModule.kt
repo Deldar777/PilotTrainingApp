@@ -20,6 +20,7 @@ object ApiModule {
 
     @Provides
     fun provideBaseUrl() = BASE_URL
+
     @Provides
     fun provideMediaServicesBaseUrl() = MEDIA_SERVICE_BASE_URL
 
@@ -41,9 +42,11 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideApiService(@Named("ApiService")retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(@Named("ApiService") retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideApiMediaService(@Named("ApiMediaService")retrofit: Retrofit): ApiMediaService = retrofit.create(ApiMediaService::class.java)
+    fun provideApiMediaService(@Named("ApiMediaService") retrofit: Retrofit): ApiMediaService =
+        retrofit.create(ApiMediaService::class.java)
 }

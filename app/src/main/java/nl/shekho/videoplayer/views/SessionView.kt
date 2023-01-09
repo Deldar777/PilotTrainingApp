@@ -31,14 +31,11 @@ fun SessionView(
     context: Context
 ) {
 
-    //Start the live event
-//    if(accessViewModel.isOnline() && accessViewModel.encodedJwtToken != null){
-//        sessionViewModel.startLiveEvent(
-//            stopLiveEvent = false,
-//            token = accessViewModel.encodedJwtToken!!
-//        )
-//    }
 
+//    sessionViewModel.startLiveEvent(
+//        videoId = "56874348-0ff1-4773-a26c-852e1cd25fd0",
+//        token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJST0xFX0lOU1RSVUNUT1IiLCJDb21wYW55SWQiOiJkNjg0ZGFlMy03NDJiLTQ4ZDQtYjVjMC0wYmJkMDZiYzVjM2EiLCJVc2VySWQiOiI0ZmI4ZGRjNy02NzFhLTQ0ZWMtODBhYy0zMzE2NGE1NjYxODIiLCJuYmYiOjE2NzMzMDI1MDYsImV4cCI6MTY3MzM4ODkwNiwiaWF0IjoxNjczMzAyNTA2LCJpc3MiOiJodHRwczovL3ZyZWZzb2x1dGlvbnNkZXYwMDEuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpLyIsImF1ZCI6Imh0dHBzOi8vdnJlZnNvbHV0aW9uc2RldjAwMS5henVyZXdlYnNpdGVzLm5ldC9hcGkvIn0.wvN5J5Hi5azhikQENfMr_zyfgt43YbxphcESlylyOWk"
+//    )
 //    sessionViewModel.fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 //    sessionViewModel.startLiveStreaming("https://msvrefsolutions002-euwe.streaming.media.azure.net/e1d3b9fa-dc49-4b54-a88c-df01508aafa7/255f7307-ba76-482b-823e-fa071540bc1b.ism/manifest(format=m3u8-cmaf)")
 

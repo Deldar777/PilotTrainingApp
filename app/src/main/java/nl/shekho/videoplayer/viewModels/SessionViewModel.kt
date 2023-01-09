@@ -46,10 +46,11 @@ class SessionViewModel @Inject constructor(
     init {
         addPlayerListeners()
     }
+
     //Live events states
     var liveStreamingLoading: Boolean by mutableStateOf(false)
+    var liveStreamingSettingUp: Boolean by mutableStateOf(false)
     var runningLiveEvent: MutableState<LiveEvent?> = mutableStateOf(null)
-
 
     // Modify and read feedback and rating
     var selectedParticipantTabIndex: MutableState<Int> = mutableStateOf(1)
@@ -58,7 +59,6 @@ class SessionViewModel @Inject constructor(
     var saveChangesAsked: Boolean by mutableStateOf(false)
     var saveChangesSucceeded: Boolean by mutableStateOf(false)
     var savingChanges: Boolean by mutableStateOf(false)
-
 
     //Alert dialog
     var openDialog = mutableStateOf(false)
@@ -121,7 +121,6 @@ class SessionViewModel @Inject constructor(
     )
     var selectedItemIndex = mutableStateOf(100)
     var altitude: Int by mutableStateOf(0)
-
 
     fun resetViewWindowsValues() {
         showNewSessionWindow.value = false
@@ -227,7 +226,6 @@ class SessionViewModel @Inject constructor(
 
     fun postVideo(videoRequestEntity: VideoRequestEntity, token: String) {
         viewModelScope.launch {
-            loading.value = true
             try {
                 val response = apiService.postVideo(
                     body = videoRequestEntity,
@@ -235,9 +233,14 @@ class SessionViewModel @Inject constructor(
                 )
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
-                    succeeded = true
                     val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body)
                     sessionProperties = sessionPropertiesMapped
+
+                    //Start the live event
+                    startLiveEvent(
+                        token = token,
+                        videoId = body.id
+                    )
                 } else {
                     failed = response.message()
                 }
@@ -403,31 +406,30 @@ class SessionViewModel @Inject constructor(
 
 
     //Media services API endpoints
-    //Start and stops camera 1 streaming
-    fun startLiveEvent(stopLiveEvent: Boolean, token: String) {
+    //Start camera 1 streaming
+    fun startLiveEvent(token: String, videoId: String) {
         viewModelScope.launch {
+            liveStreamingSettingUp = true
             try {
                 val response = apiMediaService.updateLiveEvent(
                     body = LiveEventEntity(
-                        StopLiveBool = stopLiveEvent
+                        StopLiveBool = false
                     ),
                     token = token,
                 )
-                val body = response.body()
 
+                val body = response.body()
                 if (response.isSuccessful && body != null) {
-                    //If the HLS url has been fetched successfully, pass it to the streamer
+                    //Pass hls to the player
                     startLiveStreaming(body.HLS)
-                    runningLiveEvent.value = body
 
                     //Save the HLS url to the running session
-                    if (sessionProperties != null) {
-                        updateVideo(
-                            videoId = sessionProperties!!.videoId,
-                            token = token,
-                            hlsUrl = body.HLS,
-                        )
-                    }
+                    updateVideo(
+                        videoId = videoId,
+                        token = token,
+                        hlsUrl = body.HLS,
+                    )
+
                 } else {
                     failed = response.message()
                 }
@@ -439,14 +441,14 @@ class SessionViewModel @Inject constructor(
 
     fun stopLiveEvent(token: String) {
         viewModelScope.launch {
-            succeeded =  try {
+            succeeded = try {
                 val response = apiMediaService.updateLiveEvent(
                     body = LiveEventEntity(
                         StopLiveBool = true
                     ),
                     token = token,
                 )
-               response.isSuccessful
+                response.isSuccessful
             } catch (e: java.lang.Exception) {
                 false
             }
@@ -493,7 +495,6 @@ class SessionViewModel @Inject constructor(
 
 
     private fun taskTimer() {
-
         altitude = (10000..50000).random()
         if (generatedEvents <= maxNumberOfEvents) {
             if (secondsPassed % cycleTimeInSeconds == 0) {

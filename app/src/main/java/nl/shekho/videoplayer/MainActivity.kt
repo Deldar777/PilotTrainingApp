@@ -62,8 +62,6 @@ class MainActivity : ComponentActivity() {
 //                    context = this
 //                )
 
-
-
                 SetupNavGraph(
                     navController = navController,
                     accessViewModel = accessViewModel,

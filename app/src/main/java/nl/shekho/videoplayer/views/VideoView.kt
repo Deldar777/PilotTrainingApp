@@ -95,7 +95,7 @@ fun VideoView(
                     .fillMaxSize()
                     .background(Color.Transparent)
             ) {
-                if (sessionViewModel.liveStreamingLoading) {
+                if (sessionViewModel.liveStreamingLoading || sessionViewModel.liveStreamingSettingUp) {
                     CircularProgressIndicator()
                 }
             }
