@@ -9,6 +9,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.MimeTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -239,7 +240,7 @@ class SessionViewModel @Inject constructor(
                     sessionProperties = sessionPropertiesMapped
 
                     //Start the live event
-                    startLiveStreamingProcess(
+                    startLiveEvent(
                         token = token,
                         videoId = body.id
                     )
@@ -399,59 +400,41 @@ class SessionViewModel @Inject constructor(
     //Media services API endpoints
     //Start the live streaming and save the fetched HLS url to the session
     //Live streaming calls
-    fun startLiveStreamingProcess(token: String, videoId: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-
-            //Start the live streaming
-            val liveEvent = startLiveEvent(token = token)
-
-            if (liveEvent != null) {
-
-                //Pass the fetched HLS to the streamer
-                startLiveStreaming(liveEvent.StopLiveBool)
-
-                //Save the HLS url to the running session
-                updateVideo(
-                    videoId = videoId,
+    fun startLiveEvent(token: String, videoId: String) {
+        viewModelScope.launch{
+            try {
+                val response = apiMediaService.updateLiveEvent(
+                    body = LiveEventEntity(
+                        StopLiveBool = false
+                    ),
                     token = token,
-                    hlsUrl = liveEvent.HLS,
                 )
-            } else {
-                fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
+                val body = response.body()
+
+                print(response)
+
+                if (response.isSuccessful && body != null) {
+
+                    if(body.HLS != null){
+                        if(body.HLS == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4"){
+                            fetchVideoFromUrl(body.HLS!!)
+                        }else{
+                            startLiveStreaming(body.HLS!!)
+                        }
+                        apiService.editVideoDetails(
+                            body = VideoDetailsEntity(
+                                VideoId = videoId,
+                                VideoURL = body.HLS!!
+                            ),
+                            token = token,
+                        )
+                    }
+                }else{
+                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
+                }
+            } catch (e: java.lang.Exception) {
+                failed = e.message.toString()
             }
-        }
-    }
-
-    private suspend fun startLiveEvent(token: String): LiveEvent? {
-        try {
-            val response = apiMediaService.updateLiveEvent(
-                body = LiveEventEntity(
-                    StopLiveBool = false
-                ),
-                token = token,
-            )
-            val body = response.body()
-
-            if (response.isSuccessful && body != null) {
-                return body
-            }
-        } catch (e: java.lang.Exception) {
-            failed = e.message.toString()
-        }
-        return null
-    }
-
-    private suspend fun updateVideo(videoId: String, hlsUrl: String, token: String) {
-        try {
-            apiService.editVideoDetails(
-                body = VideoDetailsEntity(
-                    VideoId = videoId,
-                    VideoURL = hlsUrl
-                ),
-                token = token,
-            )
-        } catch (e: java.lang.Exception) {
-            failed = e.message.toString()
         }
     }
 

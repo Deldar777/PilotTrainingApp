@@ -41,20 +41,20 @@ class MainActivity : ComponentActivity() {
             PilotTrainingTheme {
                 navController = rememberNavController()
 
-                //Check if the user has token stored
-                ReadSessionInformation()
+//                //Check if the user has token stored
+//                ReadSessionInformation()
+//
+//                //Based on the token determine which screen should be shown next
+//                accessViewModel.loggedIn.value =
+//                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
+//                        ?: false)
 
-                //Based on the token determine which screen should be shown next
-                accessViewModel.loggedIn.value =
-                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
-                        ?: false)
-
-//                SessionView(
-//                    sessionViewModel = sessionViewModel,
-//                    navController = navController,
-//                    accessViewModel = accessViewModel,
-//                    context = this
-//                )
+                SessionView(
+                    sessionViewModel = sessionViewModel,
+                    navController = navController,
+                    accessViewModel = accessViewModel,
+                    context = this
+                )
 //                ReviewView(
 //                    sessionViewModel = sessionViewModel,
 //                    navController = navController,
@@ -62,12 +62,12 @@ class MainActivity : ComponentActivity() {
 //                    context = this
 //                )
 
-                SetupNavGraph(
-                    navController = navController,
-                    accessViewModel = accessViewModel,
-                    sessionViewModel = sessionViewModel,
-                    context = this
-                )
+//                SetupNavGraph(
+//                    navController = navController,
+//                    accessViewModel = accessViewModel,
+//                    sessionViewModel = sessionViewModel,
+//                    context = this
+//                )
             }
         }
     }
