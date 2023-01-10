@@ -65,7 +65,7 @@ class Helpers {
         }
 
 
-        fun filterSessionIfUserIsInstructor(
+        fun filterSessions(
             sessions: List<Session>,
             isInstructor: Boolean
         ): List<Session> {
@@ -75,12 +75,16 @@ class Helpers {
                     isNotOlderThan24Hours(session.startTime) && (session.status == SessionStatus.STARTED.type || session.status == SessionStatus.FINISHED.type)
                 }
 
-                return sessionsForInstructor
+                return sessionsForInstructor.sortedByDescending {
+                    it.startTime
+                }
             } else {
                 val sessionsForPilot = sessions.filter { session ->
                     session.status == SessionStatus.FINISHED.type
                 }
-                return sessionsForPilot
+                return sessionsForPilot.sortedByDescending {
+                    it.startTime
+                }
             }
 
         }
@@ -91,7 +95,7 @@ class Helpers {
             return formattedDate.isAfter(oneDayOld) || formattedDate.isEqual(oneDayOld)
         }
 
-        fun convertSecondsToTime(NumberOfSeconds: Int): String{
+        fun convertSecondsToTime(NumberOfSeconds: Int): String {
 
             val hours = NumberOfSeconds / 3600;
             val minutes = (NumberOfSeconds % 3600) / 60;

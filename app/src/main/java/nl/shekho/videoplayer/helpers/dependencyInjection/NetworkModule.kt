@@ -30,9 +30,14 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient() = if (BuildConfig.DEBUG){
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+    fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor()
+        .apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient
             .Builder()
             .callTimeout(2, TimeUnit.MINUTES)
@@ -41,12 +46,6 @@ object ApiModule {
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
             .build()
-
-    }else{
-        OkHttpClient
-            .Builder()
-            .build()
-    }
 
     @Singleton
     @Provides
