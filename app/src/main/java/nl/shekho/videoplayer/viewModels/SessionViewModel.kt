@@ -9,12 +9,10 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.MimeTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.*
 import nl.shekho.videoplayer.api.entities.*
@@ -28,6 +26,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
 import kotlin.coroutines.CoroutineContext
+import kotlin.system.measureTimeMillis
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -240,7 +239,7 @@ class SessionViewModel @Inject constructor(
                     sessionProperties = sessionPropertiesMapped
 
                     //Start the live event
-                    startLiveEvent(
+                    startLiveStreamingProcess(
                         token = token,
                         videoId = body.id
                     )
@@ -400,43 +399,42 @@ class SessionViewModel @Inject constructor(
     //Media services API endpoints
     //Start the live streaming and save the fetched HLS url to the session
     //Live streaming calls
-    fun startLiveEvent(token: String, videoId: String) {
-        viewModelScope.launch{
-            try {
-                val response = apiMediaService.updateLiveEvent(
-                    body = LiveEventEntity(
-                        StopLiveBool = false
-                    ),
-                    token = token,
-                )
-                val body = response.body()
 
-                print(response)
+    fun startLiveStreamingProcess(token: String, videoId: String){
 
-                if (response.isSuccessful && body != null) {
+        val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+            throwable.printStackTrace()
+        }
 
-                    if(body.HLS != null){
-                        if(body.HLS == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4"){
-                            fetchVideoFromUrl(body.HLS!!)
-                        }else{
-                            startLiveStreaming(body.HLS!!)
-                        }
+        CoroutineScope(IO + coroutineExceptionHandler).launch {
+            val executionTime = measureTimeMillis {
+                val liveEvent = async {
+                    println("Debug: launching update live event on thread: ${Thread.currentThread().name}")
+                    apiMediaService.updateLiveEvent(
+                        body = LiveEventEntity(
+                            StopLiveBool = false
+                        ),
+                        token = token,
+                    )
+                }.await()
+
+
+                async {
+                    if(liveEvent.isSuccessful && liveEvent.body() != null){
                         apiService.editVideoDetails(
                             body = VideoDetailsEntity(
                                 VideoId = videoId,
-                                VideoURL = body.HLS!!
+                                VideoURL = liveEvent.body()!!.HLS
                             ),
                             token = token,
                         )
                     }
-                }else{
-                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
-                }
-            } catch (e: java.lang.Exception) {
-                failed = e.message.toString()
+                }.await()
             }
+            println("Debug: total elapsed time: $executionTime ms.")
         }
     }
+
 
     fun stopLiveEvent(token: String) {
         viewModelScope.launch {

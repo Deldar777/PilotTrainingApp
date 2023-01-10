@@ -48,26 +48,25 @@ class MainActivity : ComponentActivity() {
 //                accessViewModel.loggedIn.value =
 //                    accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
 //                        ?: false)
-
-                SessionView(
+//                SessionView(
+//                    sessionViewModel = sessionViewModel,
+//                    navController = navController,
+//                    accessViewModel = accessViewModel,
+//                    context = this
+//                )
+                ReviewView(
                     sessionViewModel = sessionViewModel,
                     navController = navController,
                     accessViewModel = accessViewModel,
                     context = this
                 )
-//                ReviewView(
-//                    sessionViewModel = sessionViewModel,
-//                    navController = navController,
-//                    accessViewModel = accessViewModel,
-//                    context = this
-//                )
 
-//                SetupNavGraph(
-//                    navController = navController,
-//                    accessViewModel = accessViewModel,
-//                    sessionViewModel = sessionViewModel,
-//                    context = this
-//                )
+                SetupNavGraph(
+                    navController = navController,
+                    accessViewModel = accessViewModel,
+                    sessionViewModel = sessionViewModel,
+                    context = this
+                )
             }
         }
     }

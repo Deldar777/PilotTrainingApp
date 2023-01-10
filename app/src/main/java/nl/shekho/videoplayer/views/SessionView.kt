@@ -31,15 +31,6 @@ fun SessionView(
     context: Context
 ) {
 
-
-    sessionViewModel.startLiveEvent(
-        videoId = "47d70a6c-9050-4b88-a5e9-a796502f3705",
-        token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJST0xFX0lOU1RSVUNUT1IiLCJDb21wYW55SWQiOiJkNjg0ZGFlMy03NDJiLTQ4ZDQtYjVjMC0wYmJkMDZiYzVjM2EiLCJVc2VySWQiOiI0ZmI4ZGRjNy02NzFhLTQ0ZWMtODBhYy0zMzE2NGE1NjYxODIiLCJuYmYiOjE2NzMzNDc0OTEsImV4cCI6MTY3MzQzMzg5MSwiaWF0IjoxNjczMzQ3NDkxLCJpc3MiOiJodHRwczovL3ZyZWZzb2x1dGlvbnNkZXYwMDEuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpLyIsImF1ZCI6Imh0dHBzOi8vdnJlZnNvbHV0aW9uc2RldjAwMS5henVyZXdlYnNpdGVzLm5ldC9hcGkvIn0.tkBBcTY5_5CJACk_oX0To9LFRB8wgjv_6aYs2GTLvzE"
-    )
-//    sessionViewModel.fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
-//    sessionViewModel.startLiveStreaming("https://msvrefsolutions002-euwe.streaming.media.azure.net/e1d3b9fa-dc49-4b54-a88c-df01508aafa7/255f7307-ba76-482b-823e-fa071540bc1b.ism/manifest(format=m3u8-cmaf)")
-
-
     val cannotSaveSession = stringResource(id = R.string.cannotSaveSession)
 
     Box(
