@@ -9,6 +9,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.MimeTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,7 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -237,10 +239,11 @@ class SessionViewModel @Inject constructor(
                     sessionProperties = sessionPropertiesMapped
 
                     //Start the live event
-                    startLiveEvent(
+                    startLiveStreamingProcess(
                         token = token,
                         videoId = body.id
                     )
+
                 } else {
                     failed = response.message()
                 }
@@ -252,22 +255,6 @@ class SessionViewModel @Inject constructor(
         }
     }
 
-    fun updateVideo(videoId: String, hlsUrl: String, token: String) {
-        viewModelScope.launch {
-            try {
-                apiService.editVideoDetails(
-                    body = VideoDetailsEntity(
-                        VideoId = videoId,
-                        VideoURL = hlsUrl
-                    ),
-                    token = token,
-                )
-            } catch (e: java.lang.Exception) {
-                failed = e.message.toString()
-            }
-        }
-    }
-
     fun getVideo(sessionId: String, token: String) {
         viewModelScope.launch {
             try {
@@ -275,14 +262,18 @@ class SessionViewModel @Inject constructor(
                     sessionId = sessionId,
                     token = token,
                 )
-
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
                     val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body[0])
                     sessionProperties = sessionPropertiesMapped
 
                     //Pass the fetched url to the player
-                    startLiveStreaming(body[0].videoURL)
+                    val fetchedUrl = body[0].videoURL
+                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
+                        fetchVideoFromUrl(fetchedUrl)
+                    } else {
+                        startLiveStreaming(fetchedUrl)
+                    }
 
                     //If the video entity fetched successfully then get the logbook with events
                     getLogBookById(
@@ -406,36 +397,61 @@ class SessionViewModel @Inject constructor(
 
 
     //Media services API endpoints
-    //Start camera 1 streaming
-    fun startLiveEvent(token: String, videoId: String) {
-        viewModelScope.launch {
-            liveStreamingSettingUp = true
-            try {
-                val response = apiMediaService.updateLiveEvent(
-                    body = LiveEventEntity(
-                        StopLiveBool = false
-                    ),
+    //Start the live streaming and save the fetched HLS url to the session
+    //Live streaming calls
+    fun startLiveStreamingProcess(token: String, videoId: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+
+            //Start the live streaming
+            val liveEvent = startLiveEvent(token = token)
+
+            if (liveEvent != null) {
+
+                //Pass the fetched HLS to the streamer
+                startLiveStreaming(liveEvent.StopLiveBool)
+
+                //Save the HLS url to the running session
+                updateVideo(
+                    videoId = videoId,
                     token = token,
+                    hlsUrl = liveEvent.HLS,
                 )
-
-                val body = response.body()
-                if (response.isSuccessful && body != null) {
-                    //Pass hls to the player
-                    startLiveStreaming(body.HLS)
-
-                    //Save the HLS url to the running session
-                    updateVideo(
-                        videoId = videoId,
-                        token = token,
-                        hlsUrl = body.HLS,
-                    )
-
-                } else {
-                    failed = response.message()
-                }
-            } catch (e: java.lang.Exception) {
-                failed = e.message.toString()
+            } else {
+                fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
             }
+        }
+    }
+
+    private suspend fun startLiveEvent(token: String): LiveEvent? {
+        try {
+            val response = apiMediaService.updateLiveEvent(
+                body = LiveEventEntity(
+                    StopLiveBool = false
+                ),
+                token = token,
+            )
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                return body
+            }
+        } catch (e: java.lang.Exception) {
+            failed = e.message.toString()
+        }
+        return null
+    }
+
+    private suspend fun updateVideo(videoId: String, hlsUrl: String, token: String) {
+        try {
+            apiService.editVideoDetails(
+                body = VideoDetailsEntity(
+                    VideoId = videoId,
+                    VideoURL = hlsUrl
+                ),
+                token = token,
+            )
+        } catch (e: java.lang.Exception) {
+            failed = e.message.toString()
         }
     }
 
@@ -454,7 +470,6 @@ class SessionViewModel @Inject constructor(
             }
         }
     }
-
 
     //Stopwatch
     private var time: Duration = Duration.ZERO

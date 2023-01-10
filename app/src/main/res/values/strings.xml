@@ -93,4 +93,6 @@
     <string name="saveChangesFailed">Something went wrong when saving the changes!</string>
     <string name="saveChangesSucceeded">Changes have been saved successfully</string>
 
+    <string name="testVideo">https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4</string>
+
 </resources>
