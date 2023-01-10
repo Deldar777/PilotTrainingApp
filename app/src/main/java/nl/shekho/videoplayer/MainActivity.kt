@@ -16,9 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import nl.shekho.videoplayer.ui.theme.pilotTrainingThemes.PilotTrainingTheme
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
-import nl.shekho.videoplayer.views.ReviewView
-import nl.shekho.videoplayer.views.SessionView
 import nl.shekho.videoplayer.views.navigation.SetupNavGraph
 import kotlin.time.ExperimentalTime
 
@@ -26,7 +23,6 @@ import kotlin.time.ExperimentalTime
 class MainActivity : ComponentActivity() {
 
     private lateinit var navController: NavHostController
-
     @OptIn(ExperimentalTime::class)
     private val sessionViewModel by viewModels<SessionViewModel>()
     private val accessViewModel by viewModels<AccessViewModel>()

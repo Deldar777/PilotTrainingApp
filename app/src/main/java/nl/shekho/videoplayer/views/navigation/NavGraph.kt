@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.*
 import kotlin.time.ExperimentalTime
 

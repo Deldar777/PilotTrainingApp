@@ -15,7 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UserPreferencesModule {
-
     // provides instance of DataStore
     @Provides
     @Singleton

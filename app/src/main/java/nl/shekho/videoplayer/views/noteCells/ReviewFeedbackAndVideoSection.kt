@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.VideoView
 import kotlin.time.ExperimentalTime
 

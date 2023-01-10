@@ -13,7 +13,6 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.generalCells.HighlightAndVideo
 import nl.shekho.videoplayer.views.topbarCells.TopBarReview
 import kotlin.time.ExperimentalTime

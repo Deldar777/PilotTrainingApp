@@ -14,7 +14,6 @@ import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
-import nl.shekho.videoplayer.viewModels.VideoPlayerViewModel
 import nl.shekho.videoplayer.views.highlightSectionCells.HighlightSection
 import nl.shekho.videoplayer.views.noteCells.ReviewFeedbackAndVideoSection
 import nl.shekho.videoplayer.views.noteCells.SessionFeedbackAndLiveStreaming
