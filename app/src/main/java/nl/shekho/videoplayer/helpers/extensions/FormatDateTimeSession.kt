@@ -1,5 +1,6 @@
 package nl.shekho.videoplayer.helpers.extensions
 
+import nl.shekho.videoplayer.models.Record
 import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.models.SessionStatus
 import java.time.LocalDateTime
@@ -108,5 +109,17 @@ class Helpers {
             return this.toString().padStart(2, '0')
         }
 
+        //To get the altitude that belongs to an event
+        fun getAltitude(records: List<Record?>, timeStamp: Int): Int{
+            var altitude = 0
+            records.forEach { record ->
+                if (record != null) {
+                    if(record.timeStamp == timeStamp){
+                        altitude = record.altitude
+                    }
+                }
+            }
+            return altitude
+        }
     }
 }

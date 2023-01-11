@@ -4,6 +4,7 @@ import nl.shekho.videoplayer.api.entities.*
 import nl.shekho.videoplayer.models.Asset
 import nl.shekho.videoplayer.models.Event
 import nl.shekho.videoplayer.models.JwtToken
+import nl.shekho.videoplayer.models.Record
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -78,6 +79,13 @@ interface ApiService {
         @Body body: EventRequestEntity,
         @Header("Authorization") token: String?
     ):Response<Event>
+
+    //Create event
+    @POST("Records/create")
+    suspend fun createRecord(
+        @Body body: RecordEntity,
+        @Header("Authorization") token: String?
+    ):Response<Record>
 
     //Update event
     @PUT("Events/update-single/{eventId}")

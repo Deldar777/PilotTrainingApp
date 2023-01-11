@@ -55,6 +55,7 @@ fun HighlightItems(
                             itemsIndexed(items = it.events) { index, event ->
                                 if (event != null) {
                                     HighlightItem(
+                                        records = it.records,
                                         sessionViewModel = sessionViewModel,
                                         event = event,
                                         isSelected = index == sessionViewModel.selectedItemIndex.value,

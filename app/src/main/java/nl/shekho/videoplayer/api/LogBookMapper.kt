@@ -9,7 +9,8 @@ class LogBookMapper {
         with(entity) {
             LogBook(
                 id = id,
-                events = events
+                events = events,
+                records = records
             )
         }
     }

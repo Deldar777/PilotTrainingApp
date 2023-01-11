@@ -52,7 +52,7 @@ class SessionViewModel @Inject constructor(
     //Live events states
     var liveStreamingLoading: Boolean by mutableStateOf(false)
     var liveStreamingSettingUp: Boolean by mutableStateOf(false)
-    var runningLiveEvent: MutableState<LiveEvent?> = mutableStateOf(null)
+    var HLS: MutableState<String> = mutableStateOf("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 
     // Modify and read feedback and rating
     var selectedParticipantTabIndex: MutableState<Int> = mutableStateOf(1)
@@ -305,6 +305,19 @@ class SessionViewModel @Inject constructor(
         }
     }
 
+    private fun createRecord(recordEntity: RecordEntity, token: String) {
+        viewModelScope.launch {
+            try {
+                apiService.createRecord(
+                    body = recordEntity,
+                    token = token,
+                )
+            } catch (e: java.lang.Exception) {
+                println("Record not created because of this error: $e")
+            }
+        }
+    }
+
     private fun updateEvent(
         eventRequestEntity: EventRequestEntity,
         token: String,
@@ -331,8 +344,6 @@ class SessionViewModel @Inject constructor(
                 logBookId = logBookId,
                 token = token,
             )
-            delay(3000)
-
             val result = when {
                 response.isSuccessful -> {
                     val body = response.body()
@@ -400,9 +411,9 @@ class SessionViewModel @Inject constructor(
     //Start the live streaming and save the fetched HLS url to the session
     //Live streaming calls
 
-    fun startLiveStreamingProcess(token: String, videoId: String){
+    fun startLiveStreamingProcess(token: String, videoId: String) {
 
-        val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             throwable.printStackTrace()
         }
 
@@ -420,11 +431,14 @@ class SessionViewModel @Inject constructor(
 
 
                 async {
-                    if(liveEvent.isSuccessful && liveEvent.body() != null){
+                    if (liveEvent.isSuccessful && liveEvent.body() != null) {
+                        val hls = liveEvent.body()!!.HLS
+                        HLS.value = hls
+                        //Add the fetched hls to the log book
                         apiService.editVideoDetails(
                             body = VideoDetailsEntity(
                                 VideoId = videoId,
-                                VideoURL = liveEvent.body()!!.HLS
+                                VideoURL = hls
                             ),
                             token = token,
                         )
@@ -505,17 +519,21 @@ class SessionViewModel @Inject constructor(
 
     private fun generateEvent(token: String) {
 
+
         if (sessionProperties != null && generatedEvents <= maxNumberOfEvents) {
+
+            var timeStamp = secondsPassed
+
             if (generatedEvents < maxNumberOfEvents) {
                 if (generatedEvents == 0) {
                     createEvent(
-                        eventRequestEntity = getEventRequestEntity(EventType.TAKE_OFF.name),
+                        eventRequestEntity = getEventRequestEntity(EventType.TAKE_OFF.name, timeStamp = timeStamp),
                         token = token
                     )
                 } else {
                     val randomEventIndex = (1..6).random()
                     createEvent(
-                        eventRequestEntity = getEventRequestEntity(EventType.values()[randomEventIndex].name),
+                        eventRequestEntity = getEventRequestEntity(EventType.values()[randomEventIndex].name, timeStamp = timeStamp),
                         token = token
                     )
                 }
@@ -523,12 +541,22 @@ class SessionViewModel @Inject constructor(
 
             if (generatedEvents == maxNumberOfEvents) {
                 createEvent(
-                    eventRequestEntity = getEventRequestEntity(EventType.LANDING.name),
+                    eventRequestEntity = getEventRequestEntity(EventType.LANDING.name,timeStamp = timeStamp),
                     token = token
                 )
             }
 
+            //Create a record
+            createRecord(
+                recordEntity = RecordEntity(
+                    timeStamp = timeStamp,
+                    altitude = altitude,
+                    logbookId = sessionProperties!!.logbookId
+                ),
+                token = token
+            )
 
+            //Get the new list
             getLogBookById(
                 logBookId = sessionProperties!!.logbookId,
                 token = token
@@ -537,9 +565,9 @@ class SessionViewModel @Inject constructor(
         generatedEvents += 1
     }
 
-    private fun getEventRequestEntity(eventType: String): EventRequestEntity {
+    private fun getEventRequestEntity(eventType: String, timeStamp: Int): EventRequestEntity {
         return EventRequestEntity(
-            timeStamp = secondsPassed,
+            timeStamp = timeStamp,
             eventType = eventType,
             logbookId = sessionProperties!!.logbookId,
             captain = null,

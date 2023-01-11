@@ -32,13 +32,6 @@ fun ReviewView(
             sessionId = sessionViewModel.runningSession!!.id,
             token = accessViewModel.encodedJwtToken!!
         )
-
-//        //If the video url has been fetched successfully, then pass it to the player
-//        if (sessionViewModel.sessionProperties != null) {
-//            sessionViewModel.liveStreamingLoading = false
-//            if (sessionViewModel.sessionProperties!!.videoURL.isNotEmpty())
-//                sessionViewModel.startLiveStreaming(sessionViewModel.sessionProperties!!.videoURL)
-//        }
     }
 
     Box(

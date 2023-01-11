@@ -23,6 +23,7 @@ import androidx.compose.ui.zIndex
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.helpers.extensions.Helpers
 import nl.shekho.videoplayer.models.Event
+import nl.shekho.videoplayer.models.Record
 import nl.shekho.videoplayer.ui.theme.*
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.LocalDateTime
@@ -32,6 +33,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 @Composable
 fun HighlightItem(
+    records: List<Record?>,
     sessionViewModel: SessionViewModel,
     event: Event,
     isSelected: Boolean = false,
@@ -83,7 +85,7 @@ fun HighlightItem(
                 }
 
                 Text(
-                    text = sessionViewModel.altitude.toString(),
+                    text = Helpers.getAltitude(records = records, timeStamp = event.timeStamp).toString(),
                     color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
