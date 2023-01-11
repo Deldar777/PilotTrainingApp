@@ -109,7 +109,7 @@ class SessionViewModel @Inject constructor(
         Event(
             "MARKED_EVENT",
             "LOG_BOOK",
-            233,
+            0,
             EventType.MARKED_EVENT.name,
             null,
             null,
@@ -430,20 +430,17 @@ class SessionViewModel @Inject constructor(
                 }.await()
 
 
-                async {
-                    if (liveEvent.isSuccessful && liveEvent.body() != null) {
-                        val hls = liveEvent.body()!!.HLS
-                        HLS.value = hls
-                        //Add the fetched hls to the log book
-                        apiService.editVideoDetails(
-                            body = VideoDetailsEntity(
-                                VideoId = videoId,
-                                VideoURL = hls
-                            ),
-                            token = token,
-                        )
-                    }
-                }.await()
+                if(liveEvent.isSuccessful && liveEvent.body() != null){
+                    apiService.editVideoDetails(
+                        body = VideoDetailsEntity(
+                            VideoId = videoId,
+                            VideoURL = liveEvent.body()!!.HLS
+                        ),
+                        token = token,
+                    )
+
+                    HLS.value = liveEvent.body()!!.HLS
+                }
             }
             println("Debug: total elapsed time: $executionTime ms.")
         }
@@ -730,7 +727,7 @@ class SessionViewModel @Inject constructor(
         selectedEvent.value = Event(
             "MARKED_EVENT",
             "LOG_BOOK",
-            233,
+            0,
             EventType.MARKED_EVENT.name,
             null,
             null,
@@ -749,45 +746,4 @@ class SessionViewModel @Inject constructor(
         return selectedSession.value.status == SessionStatus.STARTED.name
     }
 
-
-    //Get the event icon based on the event name
-    fun getEventIcon(eventType: String): Int {
-
-        return when (eventType) {
-            EventType.TAKE_OFF.name -> R.drawable.takeoff_logo
-            EventType.MASTER_WARNING.name, EventType.MASTER_CAUTION.name -> R.drawable.warning_logo
-            EventType.ENGINE_FIRE.name -> R.drawable.local_fire_department_black_24dp
-            EventType.ENGINE_FAILURE.name -> R.drawable.failure_logo
-            EventType.LANDING.name -> R.drawable.landing_logo
-            else -> R.drawable.marked_event_logo
-        }
-    }
-
-    //Get the event icon color based on the event name
-    fun getEventIconColor(eventType: String): Int {
-        return when (eventType) {
-            EventType.TAKE_OFF.name -> deepBlue.hashCode()
-            EventType.LANDING.name -> deepBlue.hashCode()
-            EventType.MASTER_CAUTION.name -> Color.YELLOW
-            EventType.MASTER_WARNING.name -> Color.RED
-            EventType.TCAS.name -> Color.RED
-            EventType.ENGINE_FIRE.name -> Color.RED
-            EventType.ENGINE_FAILURE.name -> orange.hashCode()
-            else -> deepPurple.hashCode()
-        }
-    }
-
-    //Get the event name
-    fun getEventName(eventType: String): String {
-        return when (eventType) {
-            EventType.TAKE_OFF.name -> EventType.TAKE_OFF.type
-            EventType.LANDING.name -> EventType.LANDING.type
-            EventType.MASTER_CAUTION.name -> EventType.MASTER_CAUTION.type
-            EventType.MASTER_WARNING.name -> EventType.MASTER_WARNING.type
-            EventType.TCAS.name -> EventType.TCAS.type
-            EventType.ENGINE_FIRE.name -> EventType.ENGINE_FIRE.type
-            EventType.ENGINE_FAILURE.name -> EventType.ENGINE_FAILURE.type
-            else -> EventType.MARKED_EVENT.type
-        }
-    }
 }

@@ -32,7 +32,6 @@ fun HighlightItems(
     accessViewModel: AccessViewModel
 ) {
 
-    //Get sessions that the logged in user has participated in
     val logBook by sessionViewModel.logBook.collectAsState()
 
     if (sessionViewModel.isOnline()) {

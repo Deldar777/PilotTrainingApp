@@ -112,9 +112,9 @@ fun HighlightItem(
             )
 
             Icon(
-                painter = painterResource(id = sessionViewModel.getEventIcon(eventType = event.eventType)),
+                painter = painterResource(id = Helpers.getEventIcon(eventType = event.eventType)),
                 contentDescription = "",
-                tint = Color(sessionViewModel.getEventIconColor(eventType = event.eventType)),
+                tint = Color(Helpers.getEventIconColor(eventType = event.eventType)),
                 modifier = Modifier
                     .zIndex(4f)
                     .background(
@@ -123,7 +123,7 @@ fun HighlightItem(
                     )
                     .border(
                         width = 2.dp,
-                        color = Color(sessionViewModel.getEventIconColor(eventType = event.eventType)),
+                        color = Color(Helpers.getEventIconColor(eventType = event.eventType)),
                         shape = CircleShape
                     )
                     .padding(4.dp)
@@ -152,7 +152,7 @@ fun HighlightItem(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = sessionViewModel.getEventName(event.eventType),
+                        text = Helpers.getEventName(event.eventType),
                         color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
