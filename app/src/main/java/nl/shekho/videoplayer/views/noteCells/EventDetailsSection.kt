@@ -51,7 +51,7 @@ fun EventDetailsSection(
             text = subTitle,
             color = MaterialTheme.colors.secondary,
             fontWeight = FontWeight.Light,
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             modifier = Modifier
                 .padding(bottom = 10.dp)
         )
@@ -64,7 +64,7 @@ fun EventDetailsSection(
                 text = "${stringResource(id = R.string.eventType)}: ",
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
             )
 
             Icon(
@@ -78,7 +78,7 @@ fun EventDetailsSection(
                 text = Helpers.getEventName(sessionViewModel.selectedEvent.value.eventType),
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 modifier = Modifier.padding(start = 10.dp)
             )
         }
@@ -93,7 +93,7 @@ fun EventDetailsSection(
                 text = "${stringResource(id = R.string.altitude)}: ",
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
             )
 
             logBook?.let { listEvents ->
@@ -128,14 +128,14 @@ fun EventDetailsSection(
             Text(
                 text = "${stringResource(id = R.string.timestamp)}: ",
                 color = MaterialTheme.colors.primary,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
             )
             Text(
                 text = if (sessionViewModel.selectedEvent.value.id == EventType.MARKED_EVENT.name) {
                     stringResource(id = R.string.currentTimestamp)} else{ Helpers.convertSecondsToTime(
                     sessionViewModel.selectedEvent.value.timeStamp)},
                 color = MaterialTheme.colors.secondary,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
             )
         }
 
