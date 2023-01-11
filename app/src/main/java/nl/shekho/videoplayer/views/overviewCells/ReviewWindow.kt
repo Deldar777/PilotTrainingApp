@@ -107,7 +107,7 @@ fun ReviewWindow(
                             text = stringResource(id = R.string.participants),
                             fontFamily = FontFamily.Monospace,
                             textAlign = TextAlign.Center,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colors.primary,
                             modifier = Modifier.padding()
@@ -131,7 +131,7 @@ fun ReviewWindow(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .weight(1.5f)
+                                    .weight(1f)
                                     .fillMaxHeight()
                                     .padding(top = 60.dp),
                                 contentAlignment = Alignment.TopStart
@@ -146,24 +146,24 @@ fun ReviewWindow(
                                     TextName(
                                         name = stringResource(id = R.string.role),
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 16
+                                        fontSize = 12
                                     )
                                     TextName(
                                         name = stringResource(id = R.string.instructor),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 16
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 12
                                     )
 
                                     TextName(
                                         name = stringResource(id = R.string.firstOfficer),
                                         fontWeight = FontWeight.Normal,
-                                        fontSize = 16
+                                        fontSize = 12
                                     )
 
                                     TextName(
                                         name = stringResource(id = R.string.captain),
                                         fontWeight = FontWeight.Normal,
-                                        fontSize = 16
+                                        fontSize = 12
                                     )
                                 }
                             }
@@ -192,7 +192,7 @@ fun ReviewWindow(
                                     TextName(
                                         name = stringResource(id = R.string.name),
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 16
+                                        fontSize = 12
                                     )
 
                                     if (sessionViewModel.isOnline()) {
@@ -215,20 +215,20 @@ fun ReviewWindow(
                                                     TextName(
                                                         name = instructor.fullName,
                                                         fontWeight = FontWeight.Normal,
-                                                        fontSize = 14
+                                                        fontSize = 12
                                                     )
 
                                                     TextName(
                                                         name = firstOfficer.fullName,
                                                         fontWeight = FontWeight.Normal,
-                                                        fontSize = 14
+                                                        fontSize = 12
                                                     )
                                                     accessViewModel.firstOfficer = firstOfficer
 
                                                     TextName(
                                                         name = captain.fullName,
                                                         fontWeight = FontWeight.Normal,
-                                                        fontSize = 14
+                                                        fontSize = 12
                                                     )
                                                     accessViewModel.captain = captain
                                                 }
@@ -277,7 +277,7 @@ fun ReviewWindow(
                             text = stringResource(id = R.string.session),
                             fontFamily = FontFamily.Monospace,
                             textAlign = TextAlign.Center,
-                            fontSize = 18.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colors.primary,
                             modifier = Modifier.padding()

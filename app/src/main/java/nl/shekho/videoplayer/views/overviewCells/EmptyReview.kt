@@ -33,7 +33,7 @@ fun EmptyReview(
             )
     ) {
 
-        if(accessViewModel.userIsInstructor){
+        if(accessViewModel.userIsInstructor.value){
             Text(
                 text = stringResource(id = R.string.instructorEmptyReview),
                 fontFamily = FontFamily.Monospace,

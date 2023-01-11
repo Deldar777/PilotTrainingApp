@@ -31,7 +31,10 @@ fun HighlightSection(
 
         //Back navigation to sessions overview
         if(screen == stringResource(id = R.string.review)){
-            BackToSessionsReview(navController = navController)
+            BackToSessionsReview(
+                navController = navController,
+                sessionViewModel = sessionViewModel
+            )
         }
 
         //  Highlight title
@@ -41,7 +44,7 @@ fun HighlightSection(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(2f)
+                .weight(1.6f)
                 .background(MaterialTheme.colors.onBackground),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -59,7 +62,7 @@ fun HighlightSection(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(0.3f),
+                    .weight(0.4f),
                 contentAlignment = Alignment.TopCenter
             ) {
                 MarkEventAndAltitudeSection(sessionViewModel = sessionViewModel)

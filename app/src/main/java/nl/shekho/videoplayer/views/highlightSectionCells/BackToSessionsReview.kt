@@ -15,17 +15,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.viewModels.SessionViewModel
 import nl.shekho.videoplayer.views.navigation.Screens
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun BackToSessionsReview(
-    navController: NavController
+    navController: NavController,
+    sessionViewModel: SessionViewModel
 ){
     Row(
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
+                sessionViewModel.player.clearMediaItems()
                 navController.navigate(Screens.OverviewScreen.route)
             }
     ) {

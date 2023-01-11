@@ -39,7 +39,7 @@ class AccessViewModel @Inject constructor(
 
     //Session information
     var sessionId: String? = ""
-    var userIsInstructor: Boolean by mutableStateOf(false)
+    var userIsInstructor = mutableStateOf(false)
     var loggedInUserId: String? = ""
     var loggedInUser: User? by mutableStateOf(null)
     var firstOfficer: User? by mutableStateOf(null)
@@ -50,7 +50,7 @@ class AccessViewModel @Inject constructor(
     var listUsers: List<User?> = listOf()
 
     fun resetSessionInformation() {
-        userIsInstructor = false
+        userIsInstructor.value = false
         loggedIn.value = false
         encodedJwtToken = null
         decodedJwtToken = null
@@ -198,9 +198,10 @@ class AccessViewModel @Inject constructor(
             decodedJwtToken.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
                 .asString()
         if (userRole == Role.INSTRUCTOR.type) {
-            userIsInstructor = true
+            userIsInstructor.value = true
             getUsers()
         } else {
+            userIsInstructor.value = false
             getUser()
         }
     }

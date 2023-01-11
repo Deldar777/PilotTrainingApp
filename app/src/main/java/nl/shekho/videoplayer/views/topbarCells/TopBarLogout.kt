@@ -67,7 +67,7 @@ fun TopBarLogout(
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
                         modifier = Modifier.clickable {
-                            accessViewModel.userIsInstructor = false
+                            accessViewModel.userIsInstructor.value = false
                             accessViewModel.resetSessionInformation()
                             sessionViewModel.resetViewWindowsValues()
                             navController.navigate(Screens.LoginScreen.route)

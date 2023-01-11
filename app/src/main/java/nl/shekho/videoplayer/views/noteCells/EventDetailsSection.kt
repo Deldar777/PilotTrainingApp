@@ -35,7 +35,7 @@ fun EventDetailsSection(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(),
+            .padding(top = 20.dp),
         horizontalAlignment = Alignment.Start
 
     ) {
@@ -51,7 +51,7 @@ fun EventDetailsSection(
             text = subTitle,
             color = MaterialTheme.colors.secondary,
             fontWeight = FontWeight.Light,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             modifier = Modifier
                 .padding(bottom = 10.dp)
         )
@@ -128,6 +128,7 @@ fun EventDetailsSection(
             Text(
                 text = "${stringResource(id = R.string.timestamp)}: ",
                 color = MaterialTheme.colors.primary,
+                fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
             )
             Text(

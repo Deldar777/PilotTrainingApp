@@ -45,19 +45,6 @@ class MainActivity : ComponentActivity() {
                     accessViewModel.encodedJwtToken?.isNotEmpty() == true && accessViewModel.jwtExpired != (true
                         ?: false)
 
-//                SessionView(
-//                    sessionViewModel = sessionViewModel,
-//                    navController = navController,
-//                    accessViewModel = accessViewModel,
-//                    context = this
-//                )
-//                ReviewView(
-//                    sessionViewModel = sessionViewModel,
-//                    navController = navController,
-//                    accessViewModel = accessViewModel,
-//                    context = this
-//                )
-
                 SetupNavGraph(
                     navController = navController,
                     accessViewModel = accessViewModel,

@@ -77,9 +77,9 @@ fun NoteSection(
         //Note details section
         Box(
             modifier = Modifier
-                .weight(1f)
+                .weight(1.2f)
                 .fillMaxHeight()
-                .padding(15.dp),
+                .padding(10.dp),
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
@@ -164,7 +164,7 @@ fun NoteSection(
                             .fillMaxWidth()
                             .zIndex(1f)
                     ) {
-                        if (accessViewModel.userIsInstructor) {
+                        if (accessViewModel.userIsInstructor.value) {
                             if (editMode) {
                                 IconButton(onClick = {
                                     editMode = false
@@ -264,7 +264,7 @@ fun NoteSection(
 
                 Spacer(modifier = Modifier.weight(3f))
                 //Save changes button
-                if (accessViewModel.userIsInstructor) {
+                if (accessViewModel.userIsInstructor.value) {
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier

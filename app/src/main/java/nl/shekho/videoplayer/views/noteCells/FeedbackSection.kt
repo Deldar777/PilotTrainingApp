@@ -106,7 +106,7 @@ fun FeedbackSection(
             modifier = Modifier
                 .weight(1.5f)
                 .fillMaxHeight()
-                .padding(15.dp),
+                .padding(10.dp),
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
@@ -120,7 +120,7 @@ fun FeedbackSection(
         //Add note section
         Box(
             modifier = Modifier
-                .weight(2.5f)
+                .weight(2.4f)
                 .fillMaxHeight(),
             contentAlignment = Alignment.Center
         ) {

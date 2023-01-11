@@ -69,10 +69,11 @@ fun MarkEventAndAltitudeSection(
         }
 
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(30.dp)
                 .background(highlightItemGray)
         ) {
             Text(

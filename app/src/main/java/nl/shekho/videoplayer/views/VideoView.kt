@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.android.exoplayer2.ui.PlayerView
 import nl.shekho.videoplayer.R
+import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 
@@ -28,6 +29,7 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun VideoView(
     sessionViewModel: SessionViewModel,
+    accessViewModel: AccessViewModel
 ) {
 
     var testVideo = stringResource(id = R.string.testVideo)
@@ -48,8 +50,6 @@ fun VideoView(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-
-
 
     Column(
         modifier = Modifier
@@ -107,25 +107,27 @@ fun VideoView(
                     .fillMaxSize()
                     .background(Color.Transparent)
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
-                    contentDescription = "",
-                    tint = MaterialTheme.colors.primary,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .padding(6.dp)
-                        .clickable {
-                            if(!sessionViewModel.player.isPlaying && !sessionViewModel.player.isLoading){
+                if (accessViewModel.userIsInstructor.value) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(6.dp)
+                            .clickable {
+                                if (!sessionViewModel.player.isPlaying && !sessionViewModel.player.isLoading) {
 
-                                if(sessionViewModel.HLS.value == testVideo){
-                                    sessionViewModel.fetchVideoFromUrl(testVideo)
-                                }else{
-                                    sessionViewModel.startLiveStreaming(sessionViewModel.HLS.value)
+                                    if (sessionViewModel.HLS.value == testVideo) {
+                                        sessionViewModel.fetchVideoFromUrl(testVideo)
+                                    } else {
+                                        sessionViewModel.startLiveStreaming(sessionViewModel.HLS.value)
+                                    }
                                 }
-                            }
 
-                        }
-                )
+                            }
+                    )
+                }
             }
         }
     }
