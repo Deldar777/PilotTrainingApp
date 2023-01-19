@@ -49,7 +49,6 @@ fun FeedbackSection(
     accessViewModel: AccessViewModel,
     context: Context
 ) {
-
     val notInternet = stringResource(id = R.string.noInternet)
 
     //Rating states
@@ -75,7 +74,6 @@ fun FeedbackSection(
         mutableStateOf(noteBoth)
     }
     var expanded1 by remember { mutableStateOf(false) }
-    var selectedCommonFeedback by remember { mutableStateOf("") }
     var textfieldSize1 by remember { mutableStateOf(androidx.compose.ui.geometry.Size.Zero) }
     val icon1 = if (expanded1)
         Icons.Filled.ArrowDropUp

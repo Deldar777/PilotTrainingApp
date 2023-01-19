@@ -30,7 +30,6 @@ fun BackToSessionsReview(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                sessionViewModel.player.clearMediaItems()
                 navController.navigate(Screens.OverviewScreen.route)
             }
     ) {

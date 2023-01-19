@@ -1,6 +1,5 @@
 package nl.shekho.videoplayer.views.noteCells
 
-import android.graphics.Paint.Align
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.ui.theme.tabBackground
-import nl.shekho.videoplayer.viewModels.SessionViewModel
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -37,9 +35,7 @@ fun ParticipantTabs(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .width(120.dp)
-            .height(40.dp)
-            .border(BorderStroke(0.1.dp, MaterialTheme.colors.primary))
+            .border(BorderStroke(0.1.dp, Color.Gray))
             .clickable {
                 onItemClick()
             }

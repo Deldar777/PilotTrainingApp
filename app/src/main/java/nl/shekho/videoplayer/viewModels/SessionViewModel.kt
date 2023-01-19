@@ -166,6 +166,8 @@ class SessionViewModel @Inject constructor(
         })
     }
 
+
+
     fun endSession(sessionId: String, token: String, userId: String) {
         viewModelScope.launch {
             savingSession = true
@@ -239,10 +241,13 @@ class SessionViewModel @Inject constructor(
                     sessionProperties = sessionPropertiesMapped
 
                     //Start the live event
-                    startLiveStreamingProcess(
-                        token = token,
-                        videoId = body.id
-                    )
+//                    startLiveStreamingProcess(
+//                        token = token,
+//                        videoId = body.id
+//                    )
+
+                    //Pass mp4 video to the player instead of livestreaming
+                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 
                 } else {
                     failed = response.message()
@@ -263,17 +268,18 @@ class SessionViewModel @Inject constructor(
                     token = token,
                 )
                 val body = response.body()
+
                 if (response.isSuccessful && body != null) {
                     val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body[0])
                     sessionProperties = sessionPropertiesMapped
 
                     //Pass the fetched url to the player
-                    val fetchedUrl = body[0].videoURL
-                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
-                        fetchVideoFromUrl(fetchedUrl)
-                    } else {
-                        startLiveStreaming(fetchedUrl)
-                    }
+//                    val fetchedUrl = body[0].videoURL
+//                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
+//                        fetchVideoFromUrl(fetchedUrl)
+//                    } else {
+//                        startLiveStreaming(fetchedUrl)
+//                    }
 
                     //If the video entity fetched successfully then get the logbook with events
                     getLogBookById(
@@ -410,7 +416,6 @@ class SessionViewModel @Inject constructor(
     //Media services API endpoints
     //Start the live streaming and save the fetched HLS url to the session
     //Live streaming calls
-
     fun startLiveStreamingProcess(token: String, videoId: String) {
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->

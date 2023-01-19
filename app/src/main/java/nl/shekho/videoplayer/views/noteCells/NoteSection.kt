@@ -6,7 +6,10 @@ import android.widget.Toast
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -116,16 +119,22 @@ fun NoteSection(
                     ) {
 
                         for (index in participantTabs.indices) {
-                            ParticipantTabs(
-                                hasFeedback = sessionViewModel.hasFeedback(index),
-                                tabName = participantTabs[index],
-                                isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
-                                activeHighlightColor = activeHighlightColor,
-                                inactiveColor = inactiveColor,
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(1f)
                             ) {
-                                sessionViewModel.selectedParticipantTabIndex.value = index
-                                sessionViewModel.getRating()
-                                sessionViewModel.getFeedback()
+                                ParticipantTabs(
+                                    hasFeedback = sessionViewModel.hasFeedback(index),
+                                    tabName = participantTabs[index],
+                                    isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
+                                    activeHighlightColor = activeHighlightColor,
+                                    inactiveColor = inactiveColor,
+                                ) {
+                                    sessionViewModel.selectedParticipantTabIndex.value = index
+                                    sessionViewModel.getRating()
+                                    sessionViewModel.getFeedback()
+                                }
                             }
                         }
                     }
@@ -169,7 +178,6 @@ fun NoteSection(
                                 IconButton(onClick = {
                                     editMode = false
                                     Toast.makeText(context, editModeOff, Toast.LENGTH_LONG).show()
-
                                 }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_baseline_mode_edit_24),
@@ -192,7 +200,6 @@ fun NoteSection(
                                             .size(36.dp)
                                     )
                                 }
-
                             }
                         }
                     }
@@ -297,12 +304,9 @@ fun NoteSection(
                                     .padding(2.dp)
                             )
                         }
-
                     }
                 }
-
             }
-
         }
     }
 }

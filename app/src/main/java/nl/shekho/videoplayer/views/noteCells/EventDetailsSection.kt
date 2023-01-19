@@ -99,26 +99,21 @@ fun EventDetailsSection(
             logBook?.let { listEvents ->
                 listEvents
                     .onSuccess {
+                        val altitude = Helpers.getAltitude(
+                            it.records,
+                            timeStamp = sessionViewModel.selectedEvent.value.timeStamp
+                        )
                         Text(
-                            text = if (sessionViewModel.selectedEvent.value.eventType == EventType.MARKED_EVENT.name &&
-                                sessionViewModel.selectedEvent.value.id == EventType.MARKED_EVENT.name
-                            ) stringResource(
-                                id = R.string.currentAltitude
-                            ) else "${
-                                Helpers.getAltitude(
-                                    it.records,
-                                    timeStamp = sessionViewModel.selectedEvent.value.timeStamp
-                                )
-                            } ft",
+                            text = if (altitude == 0) {
+                                stringResource(id = R.string.currentAltitude)
+                            } else {
+                                altitude.toString()
+                            },
                             color = MaterialTheme.colors.secondary,
                             fontSize = 16.sp,
                         )
                     }
-                    .onFailure {
-
-                    }
             }
-
         }
 
         Row(
@@ -133,8 +128,12 @@ fun EventDetailsSection(
             )
             Text(
                 text = if (sessionViewModel.selectedEvent.value.id == EventType.MARKED_EVENT.name) {
-                    stringResource(id = R.string.currentTimestamp)} else{ Helpers.convertSecondsToTime(
-                    sessionViewModel.selectedEvent.value.timeStamp)},
+                    stringResource(id = R.string.currentTimestamp)
+                } else {
+                    Helpers.convertSecondsToTime(
+                        sessionViewModel.selectedEvent.value.timeStamp
+                    )
+                },
                 color = MaterialTheme.colors.secondary,
                 fontSize = 16.sp,
             )

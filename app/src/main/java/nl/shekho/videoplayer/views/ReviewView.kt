@@ -28,10 +28,15 @@ fun ReviewView(
 
     //Get video and logbook with events for the session is going to be reviewed
     if (accessViewModel.isOnline() && sessionViewModel.runningSession != null && accessViewModel.encodedJwtToken != null) {
-        sessionViewModel.getVideo(
-            sessionId = sessionViewModel.runningSession!!.id,
-            token = accessViewModel.encodedJwtToken!!
-        )
+
+        //Fetch the recorded video
+//        sessionViewModel.getVideo(
+//            sessionId = sessionViewModel.runningSession!!.id,
+//            token = accessViewModel.encodedJwtToken!!
+//        )
+
+        //pass the video url to the player because there is no live streaming recorded (request of the teacher for the assessment)
+        sessionViewModel.fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
     }
 
     Box(
