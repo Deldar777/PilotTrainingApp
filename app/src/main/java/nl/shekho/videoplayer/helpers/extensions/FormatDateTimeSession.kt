@@ -26,8 +26,8 @@ class Helpers {
 
 
             val formattedMinutes = String.format("%02d", formattedDate.minute)
-            return "Session - ${
-                formattedDate.dayOfWeek.toString().lowercase().subSequence(0, 3)
+            return "${
+                formattedDate.dayOfWeek.toString().subSequence(0, 3)
             } ${formattedDate.dayOfMonth}th-${formattedDate.hour}:${formattedMinutes}"
         }
 
@@ -44,7 +44,7 @@ class Helpers {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             val formattedDate = LocalDateTime.parse(sanitizedDate, formatter)
 
-            return "Session - ${
+            return "${
                 formattedDate.dayOfWeek.toString().lowercase()
             } ${formattedDate.dayOfMonth}th"
         }

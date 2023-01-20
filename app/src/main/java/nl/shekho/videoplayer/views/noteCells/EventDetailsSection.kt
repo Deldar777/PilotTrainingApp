@@ -24,10 +24,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 @Composable
 fun EventDetailsSection(
-    sessionViewModel: SessionViewModel,
-    title: String,
-    subTitle: String,
-    context: Context
+    sessionViewModel: SessionViewModel, title: String, subTitle: String, context: Context
 ) {
 
     val logBook by sessionViewModel.logBook.collectAsState()
@@ -52,13 +49,11 @@ fun EventDetailsSection(
             color = MaterialTheme.colors.secondary,
             fontWeight = FontWeight.Light,
             fontSize = 16.sp,
-            modifier = Modifier
-                .padding(bottom = 10.dp)
+            modifier = Modifier.padding(bottom = 10.dp)
         )
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = "${stringResource(id = R.string.eventType)}: ",
@@ -86,8 +81,7 @@ fun EventDetailsSection(
 
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = "${stringResource(id = R.string.altitude)}: ",
@@ -97,17 +91,15 @@ fun EventDetailsSection(
             )
 
             logBook?.let { listEvents ->
-                listEvents
-                    .onSuccess {
-                        val altitude = Helpers.getAltitude(
-                            it.records,
-                            timeStamp = sessionViewModel.selectedEvent.value.timeStamp
-                        )
+                listEvents.onSuccess {
                         Text(
-                            text = if (altitude == 0) {
+                            text = if (sessionViewModel.selectedEvent.value.id == EventType.MARKED_EVENT.name) {
                                 stringResource(id = R.string.currentAltitude)
                             } else {
-                                altitude.toString()
+                                Helpers.getAltitude(
+                                    it.records,
+                                    timeStamp = sessionViewModel.selectedEvent.value.timeStamp
+                                ).toString()
                             },
                             color = MaterialTheme.colors.secondary,
                             fontSize = 16.sp,
@@ -117,8 +109,7 @@ fun EventDetailsSection(
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = "${stringResource(id = R.string.timestamp)}: ",
@@ -141,8 +132,7 @@ fun EventDetailsSection(
 
         //Feedback on performed action
         SavingSessionFeedback(
-            sessionViewModel = sessionViewModel,
-            context = context
+            sessionViewModel = sessionViewModel, context = context
         )
     }
 }

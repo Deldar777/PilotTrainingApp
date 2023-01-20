@@ -80,9 +80,9 @@ fun NoteSection(
         //Note details section
         Box(
             modifier = Modifier
-                .weight(1.2f)
+                .weight(1f)
                 .fillMaxHeight()
-                .padding(10.dp),
+                .padding(15.dp),
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
@@ -119,22 +119,16 @@ fun NoteSection(
                     ) {
 
                         for (index in participantTabs.indices) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(1f)
+                            ParticipantTabs(
+                                hasFeedback = sessionViewModel.hasFeedback(index),
+                                tabName = participantTabs[index],
+                                isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
+                                activeHighlightColor = activeHighlightColor,
+                                inactiveColor = inactiveColor,
                             ) {
-                                ParticipantTabs(
-                                    hasFeedback = sessionViewModel.hasFeedback(index),
-                                    tabName = participantTabs[index],
-                                    isSelected = index == sessionViewModel.selectedParticipantTabIndex.value,
-                                    activeHighlightColor = activeHighlightColor,
-                                    inactiveColor = inactiveColor,
-                                ) {
-                                    sessionViewModel.selectedParticipantTabIndex.value = index
-                                    sessionViewModel.getRating()
-                                    sessionViewModel.getFeedback()
-                                }
+                                sessionViewModel.selectedParticipantTabIndex.value = index
+                                sessionViewModel.getRating()
+                                sessionViewModel.getFeedback()
                             }
                         }
                     }

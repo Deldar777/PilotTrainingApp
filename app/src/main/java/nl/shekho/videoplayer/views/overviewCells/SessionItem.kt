@@ -25,6 +25,7 @@ import nl.shekho.videoplayer.models.Session
 import nl.shekho.videoplayer.models.SessionStatus
 import nl.shekho.videoplayer.ui.theme.highlightDivider
 import nl.shekho.videoplayer.ui.theme.lightBlue
+import nl.shekho.videoplayer.ui.theme.orange
 import nl.shekho.videoplayer.viewModels.AccessViewModel
 import nl.shekho.videoplayer.viewModels.SessionViewModel
 import java.time.*
@@ -43,6 +44,7 @@ fun SessionItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
@@ -66,6 +68,16 @@ fun SessionItem(
             modifier = Modifier.padding()
         )
 
+        if (accessViewModel.userIsInstructor.value && session.status == SessionStatus.STARTED.type) {
+            Icon(
+                painter = painterResource(id = R.drawable.notfinished),
+                contentDescription = "",
+                tint = orange,
+                modifier = Modifier
+                    .size(26.dp)
+            )
+        }
+
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
@@ -85,23 +97,6 @@ fun SessionItem(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-
-        if(accessViewModel.userIsInstructor.value){
-            Text(
-                text = if (session.status == SessionStatus.STARTED.type) stringResource(id = R.string.inProgress) else stringResource(
-                    id = R.string.finished
-                ),
-                fontSize = 16.sp,
-                color = if (session.status == SessionStatus.STARTED.type) Color.Green else Color.Red
-
-            )
-
-            Divider(
-                color = if (session.status == SessionStatus.STARTED.type) Color.Green else Color.Red,
-                thickness = 1.dp
-            )
-        }else{
-            Divider(color = highlightDivider, thickness = 1.dp)
-        }
+        Divider(color = highlightDivider, thickness = 1.dp)
     }
 }

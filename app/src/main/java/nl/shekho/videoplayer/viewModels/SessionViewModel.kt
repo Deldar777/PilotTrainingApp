@@ -52,7 +52,8 @@ class SessionViewModel @Inject constructor(
     //Live events states
     var liveStreamingLoading: Boolean by mutableStateOf(false)
     var liveStreamingSettingUp: Boolean by mutableStateOf(false)
-    var HLS: MutableState<String> = mutableStateOf("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
+    var HLS: MutableState<String> =
+        mutableStateOf("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 
     // Modify and read feedback and rating
     var selectedParticipantTabIndex: MutableState<Int> = mutableStateOf(1)
@@ -134,8 +135,7 @@ class SessionViewModel @Inject constructor(
     //Exo player functions
     fun startLiveStreaming(mediaUrl: String) {
         //Creating a media item of HLS Type
-        val mediaItem = MediaItem.Builder()
-            .setUri(mediaUrl)
+        val mediaItem = MediaItem.Builder().setUri(mediaUrl)
             .setMimeType(MimeTypes.APPLICATION_M3U8) //m3u8 is the extension used with HLS sources
             .build()
 
@@ -167,7 +167,6 @@ class SessionViewModel @Inject constructor(
     }
 
 
-
     fun endSession(sessionId: String, token: String, userId: String) {
         viewModelScope.launch {
             savingSession = true
@@ -179,13 +178,13 @@ class SessionViewModel @Inject constructor(
 
                 if (response.isSuccessful) {
 
+                    //Only out commented because we are working with mp4 for the assessment
                     //If the session status stopped successfully, then stop the live streaming
-                    stopLiveEvent(token = token)
+//                    stopLiveEvent(token = token)
 
                     savingSessionSucceeded = true
                     fetchSessionsByUserId(
-                        userId = userId,
-                        token = token
+                        userId = userId, token = token
                     )
                 }
 
@@ -215,8 +214,7 @@ class SessionViewModel @Inject constructor(
                     postVideo(
                         videoRequestEntity = VideoRequestEntity(
                             sessionId = session.id
-                        ),
-                        token = token
+                        ), token = token
                     )
                 } else {
                     failed = response.message()
@@ -273,6 +271,9 @@ class SessionViewModel @Inject constructor(
                     val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body[0])
                     sessionProperties = sessionPropertiesMapped
 
+                    //Pass the mp4 url to the payer ony for the assessment
+                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
+
                     //Pass the fetched url to the player
 //                    val fetchedUrl = body[0].videoURL
 //                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
@@ -283,8 +284,7 @@ class SessionViewModel @Inject constructor(
 
                     //If the video entity fetched successfully then get the logbook with events
                     getLogBookById(
-                        logBookId = body[0].logbookId,
-                        token = token
+                        logBookId = body[0].logbookId, token = token
                     )
 
                 } else {
@@ -325,9 +325,7 @@ class SessionViewModel @Inject constructor(
     }
 
     private fun updateEvent(
-        eventRequestEntity: EventRequestEntity,
-        token: String,
-        eventId: String
+        eventRequestEntity: EventRequestEntity, token: String, eventId: String
     ) {
         viewModelScope.launch {
             saveChangesSucceeded = try {
@@ -435,11 +433,10 @@ class SessionViewModel @Inject constructor(
                 }.await()
 
 
-                if(liveEvent.isSuccessful && liveEvent.body() != null){
+                if (liveEvent.isSuccessful && liveEvent.body() != null) {
                     apiService.editVideoDetails(
                         body = VideoDetailsEntity(
-                            VideoId = videoId,
-                            VideoURL = liveEvent.body()!!.HLS
+                            VideoId = videoId, VideoURL = liveEvent.body()!!.HLS
                         ),
                         token = token,
                     )
@@ -529,22 +526,25 @@ class SessionViewModel @Inject constructor(
             if (generatedEvents < maxNumberOfEvents) {
                 if (generatedEvents == 0) {
                     createEvent(
-                        eventRequestEntity = getEventRequestEntity(EventType.TAKE_OFF.name, timeStamp = timeStamp),
-                        token = token
+                        eventRequestEntity = getEventRequestEntity(
+                            EventType.TAKE_OFF.name, timeStamp = timeStamp
+                        ), token = token
                     )
                 } else {
                     val randomEventIndex = (1..6).random()
                     createEvent(
-                        eventRequestEntity = getEventRequestEntity(EventType.values()[randomEventIndex].name, timeStamp = timeStamp),
-                        token = token
+                        eventRequestEntity = getEventRequestEntity(
+                            EventType.values()[randomEventIndex].name, timeStamp = timeStamp
+                        ), token = token
                     )
                 }
             }
 
             if (generatedEvents == maxNumberOfEvents) {
                 createEvent(
-                    eventRequestEntity = getEventRequestEntity(EventType.LANDING.name,timeStamp = timeStamp),
-                    token = token
+                    eventRequestEntity = getEventRequestEntity(
+                        EventType.LANDING.name, timeStamp = timeStamp
+                    ), token = token
                 )
             }
 
@@ -554,14 +554,12 @@ class SessionViewModel @Inject constructor(
                     timeStamp = timeStamp,
                     altitude = altitude,
                     logbookId = sessionProperties!!.logbookId
-                ),
-                token = token
+                ), token = token
             )
 
             //Get the new list
             getLogBookById(
-                logBookId = sessionProperties!!.logbookId,
-                token = token
+                logBookId = sessionProperties!!.logbookId, token = token
             )
         }
         generatedEvents += 1
@@ -651,8 +649,7 @@ class SessionViewModel @Inject constructor(
 
             if (eventRequestEntity != null) {
                 createEvent(
-                    eventRequestEntity = eventRequestEntity,
-                    token = token
+                    eventRequestEntity = eventRequestEntity, token = token
                 )
             }
 
@@ -669,8 +666,7 @@ class SessionViewModel @Inject constructor(
 
         if (eventRequestEntity != null) {
             getLogBookById(
-                logBookId = eventRequestEntity.logbookId,
-                token = token
+                logBookId = eventRequestEntity.logbookId, token = token
             )
         }
 

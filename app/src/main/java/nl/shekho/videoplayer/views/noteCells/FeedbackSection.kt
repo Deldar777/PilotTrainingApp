@@ -102,9 +102,9 @@ fun FeedbackSection(
         //Event details section
         Box(
             modifier = Modifier
-                .weight(1.5f)
+                .weight(1.6f)
                 .fillMaxHeight()
-                .padding(10.dp),
+                .padding(15.dp),
             contentAlignment = Alignment.Center
         ) {
             EventDetailsSection(
@@ -177,7 +177,7 @@ fun FeedbackSection(
                                     .weight(0.5f)
                             ) {
                                 Row(
-                                    modifier = Modifier.padding(6.dp),
+                                    modifier = Modifier.padding(4.dp),
                                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                                 ) {
                                     Box(
@@ -234,7 +234,7 @@ fun FeedbackSection(
                                 Column(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(6.dp)
+                                        .padding(4.dp)
                                 ) {
                                     Row(
                                         modifier = Modifier

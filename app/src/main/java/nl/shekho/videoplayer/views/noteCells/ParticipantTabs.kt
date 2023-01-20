@@ -35,6 +35,8 @@ fun ParticipantTabs(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
+            .width(120.dp)
+            .height(40.dp)
             .border(BorderStroke(0.1.dp, Color.Gray))
             .clickable {
                 onItemClick()
