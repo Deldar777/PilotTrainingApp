@@ -150,7 +150,7 @@ fun OverviewWindow(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.4f)
+                            .weight(0.5f)
 
                     ) {
                         if (accessViewModel.userIsInstructor.value) {
@@ -166,7 +166,7 @@ fun OverviewWindow(
             //New session and overview block
             Box(
                 modifier = Modifier
-                    .weight(1.8f)
+                    .weight(1.9f)
                     .background(MaterialTheme.colors.background)
                     .fillMaxHeight(),
                 contentAlignment = Alignment.Center

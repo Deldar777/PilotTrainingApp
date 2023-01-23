@@ -38,7 +38,7 @@ fun SessionItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
@@ -62,16 +62,14 @@ fun SessionItem(
             modifier = Modifier.padding()
         )
 
-        Icon(
-            painter = painterResource(id = R.drawable.notfinished),
-            contentDescription = "",
-            tint = orange,
-            modifier = Modifier
-                .size(28.dp)
-        )
-
         if(accessViewModel.userIsInstructor.value && session.status == SessionStatus.STARTED.type){
-
+            Icon(
+                painter = painterResource(id = R.drawable.notfinished),
+                contentDescription = "",
+                tint = orange,
+                modifier = Modifier
+                    .size(28.dp)
+            )
         }
 
         Box(
