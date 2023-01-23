@@ -180,7 +180,7 @@ class SessionViewModel @Inject constructor(
 
                     //Only out commented because we are working with mp4 for the assessment
                     //If the session status stopped successfully, then stop the live streaming
-//                    stopLiveEvent(token = token)
+                    stopLiveEvent(token = token)
 
                     savingSessionSucceeded = true
                     fetchSessionsByUserId(
@@ -239,13 +239,13 @@ class SessionViewModel @Inject constructor(
                     sessionProperties = sessionPropertiesMapped
 
                     //Start the live event
-//                    startLiveStreamingProcess(
-//                        token = token,
-//                        videoId = body.id
-//                    )
+                    startLiveStreamingProcess(
+                        token = token,
+                        videoId = body.id
+                    )
 
                     //Pass mp4 video to the player instead of livestreaming
-                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
+//                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 
                 } else {
                     failed = response.message()
@@ -271,16 +271,13 @@ class SessionViewModel @Inject constructor(
                     val sessionPropertiesMapped = sessionPropertiesMapper.mapEntityToModel(body[0])
                     sessionProperties = sessionPropertiesMapped
 
-                    //Pass the mp4 url to the payer ony for the assessment
-                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
-
                     //Pass the fetched url to the player
-//                    val fetchedUrl = body[0].videoURL
-//                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
-//                        fetchVideoFromUrl(fetchedUrl)
-//                    } else {
-//                        startLiveStreaming(fetchedUrl)
-//                    }
+                    val fetchedUrl = body[0].videoURL
+                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
+                        fetchVideoFromUrl(fetchedUrl)
+                    } else {
+                        startLiveStreaming(fetchedUrl)
+                    }
 
                     //If the video entity fetched successfully then get the logbook with events
                     getLogBookById(

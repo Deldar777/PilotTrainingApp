@@ -68,7 +68,6 @@ fun SessionItems(
                                         sessionViewModel.showNewSessionWindow.value = false
                                         sessionViewModel.showEmptyReview.value = false
                                         sessionViewModel.showReviewWindow.value = true
-
                                     }
                                 }
                             }

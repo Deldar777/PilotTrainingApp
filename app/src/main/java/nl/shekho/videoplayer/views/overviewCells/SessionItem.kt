@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,13 +26,8 @@ import nl.shekho.videoplayer.ui.theme.highlightDivider
 import nl.shekho.videoplayer.ui.theme.lightBlue
 import nl.shekho.videoplayer.ui.theme.orange
 import nl.shekho.videoplayer.viewModels.AccessViewModel
-import nl.shekho.videoplayer.viewModels.SessionViewModel
-import java.time.*
-import java.time.format.DateTimeFormatter
-import kotlin.time.ExperimentalTime
 
 
-@OptIn(ExperimentalTime::class)
 @Composable
 fun SessionItem(
     session: Session,
@@ -62,19 +56,19 @@ fun SessionItem(
             text = "${session.startTime.let { Helpers.formatDateTimeSession(it) }}",
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.primary,
             modifier = Modifier.padding()
         )
 
-        if (accessViewModel.userIsInstructor.value && session.status == SessionStatus.STARTED.type) {
+        if(accessViewModel.userIsInstructor.value && session.status == SessionStatus.STARTED.type){
             Icon(
                 painter = painterResource(id = R.drawable.notfinished),
                 contentDescription = "",
                 tint = orange,
                 modifier = Modifier
-                    .size(26.dp)
+                    .size(28.dp)
             )
         }
 

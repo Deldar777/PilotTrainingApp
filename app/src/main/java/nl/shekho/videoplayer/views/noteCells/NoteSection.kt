@@ -46,11 +46,6 @@ fun NoteSection(
     context: Context
 ) {
 
-
-    var ratingFirsOfficer by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingFirstOfficer) }
-    var ratingAll by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingAll) }
-    var ratingCaptain by remember { mutableStateOf(sessionViewModel.selectedEvent.value.ratingCaptain) }
-
     //Participants tabs
     var editMode by remember { mutableStateOf(false) }
     val participantTabs = listOf(
@@ -166,6 +161,7 @@ fun NoteSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .zIndex(1f)
+                            .padding(4.dp)
                     ) {
                         if (accessViewModel.userIsInstructor.value) {
                             if (editMode) {
@@ -181,15 +177,36 @@ fun NoteSection(
                                             .size(36.dp)
                                     )
                                 }
+
+                                IconButton(onClick = {
+                                    sessionViewModel.currentFeedback.value = ""
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                                        contentDescription = "",
+                                        tint = lightBlue,
+                                        modifier = Modifier
+                                            .size(36.dp)
+                                    )
+                                }
                             } else {
                                 IconButton(onClick = {
                                     editMode = true
                                     Toast.makeText(context, editModeOn, Toast.LENGTH_LONG).show()
                                 }) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.ic_baseline_edit_off_24),
+                                        painter = painterResource(id = R.drawable.ic_baseline_mode_edit_24),
                                         contentDescription = "",
-                                        tint = lightBlue,
+                                        modifier = Modifier
+                                            .size(36.dp)
+                                    )
+                                }
+
+                                IconButton(onClick = {
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                                        contentDescription = "",
                                         modifier = Modifier
                                             .size(36.dp)
                                     )
@@ -271,32 +288,34 @@ fun NoteSection(
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-                        OutlinedButton(
-                            enabled = editMode && !sessionViewModel.savingChanges,
-                            onClick = {
-                                sessionViewModel.saveChangesAsked = true
-                                accessViewModel.encodedJwtToken?.let {
-                                    sessionViewModel.saveChanges(
-                                        it
-                                    )
-                                }
-                            },
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = lightBlue,
-                                contentColor = MaterialTheme.colors.primary
-                            ),
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.saveChanges),
-                                fontFamily = FontFamily.Monospace,
-                                textAlign = TextAlign.Center,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colors.primary,
-                                modifier = Modifier
-                                    .padding(2.dp)
-                            )
+                        if (editMode) {
+                            OutlinedButton(
+                                enabled = !sessionViewModel.savingChanges,
+                                onClick = {
+                                    sessionViewModel.saveChangesAsked = true
+                                    accessViewModel.encodedJwtToken?.let {
+                                        sessionViewModel.saveChanges(
+                                            it
+                                        )
+                                    }
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = lightBlue,
+                                    contentColor = MaterialTheme.colors.primary
+                                ),
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.saveChanges),
+                                    fontFamily = FontFamily.Monospace,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colors.primary,
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                )
+                            }
                         }
                     }
                 }

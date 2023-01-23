@@ -30,11 +30,13 @@ fun NewSessionButton(sessionViewModel: SessionViewModel){
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)
+            .height(100.dp)
+            .width(300.dp)
     ) {
 
         OutlinedButton(
+            modifier = Modifier
+                .padding(20.dp),
             enabled = !sessionViewModel.showNewSessionWindow.value,
             onClick = {
                 sessionViewModel.showNewSessionWindow.value = true
@@ -65,7 +67,7 @@ fun NewSessionButton(sessionViewModel: SessionViewModel){
                     text = stringResource(id = R.string.newSession),
                     fontFamily = FontFamily.Monospace,
                     textAlign = TextAlign.Center,
-                    fontSize = 30.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.primary,
                     modifier = Modifier

@@ -1,6 +1,8 @@
 package nl.shekho.videoplayer.helpers.extensions
 
 import android.graphics.Color
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.toLowerCase
 import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.models.EventType
 import nl.shekho.videoplayer.models.Record
@@ -26,9 +28,10 @@ class Helpers {
 
 
             val formattedMinutes = String.format("%02d", formattedDate.minute)
-            return "${
-                formattedDate.dayOfWeek.toString().subSequence(0, 3)
-            } ${formattedDate.dayOfMonth}th-${formattedDate.hour}:${formattedMinutes}"
+            return "Session - "+
+                    "${formattedDate.dayOfWeek.toString().subSequence(0, 1)}"+
+                    "${formattedDate.dayOfWeek.toString().lowercase().subSequence(1, 3)} "+
+                    "${formattedDate.dayOfMonth}th-${formattedDate.hour}:${formattedMinutes}"
         }
 
         private fun extractSanitizedStringFromDate(date: String): String {
