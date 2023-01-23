@@ -56,20 +56,22 @@ fun SessionItem(
             text = "${session.startTime.let { Helpers.formatDateTimeSession(it) }}",
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.primary,
             modifier = Modifier.padding()
         )
 
+        Icon(
+            painter = painterResource(id = R.drawable.notfinished),
+            contentDescription = "",
+            tint = orange,
+            modifier = Modifier
+                .size(28.dp)
+        )
+
         if(accessViewModel.userIsInstructor.value && session.status == SessionStatus.STARTED.type){
-            Icon(
-                painter = painterResource(id = R.drawable.notfinished),
-                contentDescription = "",
-                tint = orange,
-                modifier = Modifier
-                    .size(28.dp)
-            )
+
         }
 
         Box(

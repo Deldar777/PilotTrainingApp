@@ -1,6 +1,5 @@
 package nl.shekho.videoplayer.viewModels
 
-import android.graphics.Color
 import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
@@ -13,19 +12,14 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import nl.shekho.videoplayer.R
 import nl.shekho.videoplayer.api.*
 import nl.shekho.videoplayer.api.entities.*
 import nl.shekho.videoplayer.helpers.ConnectivityChecker
 import nl.shekho.videoplayer.models.*
-import nl.shekho.videoplayer.ui.theme.deepBlue
-import nl.shekho.videoplayer.ui.theme.deepPurple
-import nl.shekho.videoplayer.ui.theme.orange
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
-import kotlin.coroutines.CoroutineContext
 import kotlin.system.measureTimeMillis
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -51,6 +45,7 @@ class SessionViewModel @Inject constructor(
 
     //Live events states
     var liveStreamingLoading: Boolean by mutableStateOf(false)
+    var liveStreamingPlaying: Boolean by mutableStateOf(false)
     var liveStreamingSettingUp: Boolean by mutableStateOf(false)
     var HLS: MutableState<String> =
         mutableStateOf("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
@@ -162,6 +157,13 @@ class SessionViewModel @Inject constructor(
             override fun onIsLoadingChanged(isLoading: Boolean) {
                 super.onIsLoadingChanged(isLoading)
                 liveStreamingLoading = isLoading
+            }
+        })
+
+        player.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                super.onIsPlayingChanged(isPlaying)
+                liveStreamingPlaying = isPlaying
             }
         })
     }

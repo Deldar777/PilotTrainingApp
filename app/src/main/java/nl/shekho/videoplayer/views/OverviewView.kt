@@ -166,7 +166,7 @@ fun OverviewWindow(
             //New session and overview block
             Box(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1.8f)
                     .background(MaterialTheme.colors.background)
                     .fillMaxHeight(),
                 contentAlignment = Alignment.Center

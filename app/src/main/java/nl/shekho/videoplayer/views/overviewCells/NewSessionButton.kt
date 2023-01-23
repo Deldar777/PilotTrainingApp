@@ -30,7 +30,7 @@ fun NewSessionButton(sessionViewModel: SessionViewModel){
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .height(100.dp)
+            .height(160.dp)
             .width(300.dp)
     ) {
 
