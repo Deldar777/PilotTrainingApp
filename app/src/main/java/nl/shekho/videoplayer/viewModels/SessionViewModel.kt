@@ -241,13 +241,13 @@ class SessionViewModel @Inject constructor(
                     sessionProperties = sessionPropertiesMapped
 
                     //Start the live event
-                    startLiveStreamingProcess(
-                        token = token,
-                        videoId = body.id
-                    )
+//                    startLiveStreamingProcess(
+//                        token = token,
+//                        videoId = body.id
+//                    )
 
-                    //Pass mp4 video to the player instead of livestreaming
-//                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
+                    //Pass mp4 video to the player instead of livestreaming (for the assessment)
+                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 
                 } else {
                     failed = response.message()
@@ -274,12 +274,15 @@ class SessionViewModel @Inject constructor(
                     sessionProperties = sessionPropertiesMapped
 
                     //Pass the fetched url to the player
-                    val fetchedUrl = body[0].videoURL
-                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
-                        fetchVideoFromUrl(fetchedUrl)
-                    } else {
-                        startLiveStreaming(fetchedUrl)
-                    }
+//                    val fetchedUrl = body[0].videoURL
+//                    if (fetchedUrl == "https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4") {
+//                        fetchVideoFromUrl(fetchedUrl)
+//                    } else {
+//                        startLiveStreaming(fetchedUrl)
+//                    }
+
+                    //Pass mp4 video to the player instead of the live streaming (for the assessment)
+                    fetchVideoFromUrl("https://vrefsolutionsdownload.blob.core.windows.net/trainevids/OVERVIEW.mp4")
 
                     //If the video entity fetched successfully then get the logbook with events
                     getLogBookById(

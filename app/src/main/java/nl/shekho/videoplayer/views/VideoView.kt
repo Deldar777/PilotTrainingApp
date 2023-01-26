@@ -101,33 +101,33 @@ fun VideoView(
             }
 
             //Start the live streaming - out commented because it is only needed for the live streaming
-            Box(
-                contentAlignment = Alignment.TopEnd,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Transparent)
-            ) {
-                if (accessViewModel.userIsInstructor.value) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
-                        contentDescription = "",
-                        tint = MaterialTheme.colors.primary,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .padding(6.dp)
-                            .clickable {
-                                if (!sessionViewModel.player.isPlaying && !sessionViewModel.player.isLoading) {
-
-                                    if (sessionViewModel.HLS.value == testVideo) {
-                                        sessionViewModel.fetchVideoFromUrl(testVideo)
-                                    } else {
-                                        sessionViewModel.startLiveStreaming(sessionViewModel.HLS.value)
-                                    }
-                                }
-                            }
-                    )
-                }
-            }
+//            Box(
+//                contentAlignment = Alignment.TopEnd,
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(Color.Transparent)
+//            ) {
+//                if (accessViewModel.userIsInstructor.value) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
+//                        contentDescription = "",
+//                        tint = MaterialTheme.colors.primary,
+//                        modifier = Modifier
+//                            .size(40.dp)
+//                            .padding(6.dp)
+//                            .clickable {
+//                                if (!sessionViewModel.player.isPlaying && !sessionViewModel.player.isLoading) {
+//
+//                                    if (sessionViewModel.HLS.value == testVideo) {
+//                                        sessionViewModel.fetchVideoFromUrl(testVideo)
+//                                    } else {
+//                                        sessionViewModel.startLiveStreaming(sessionViewModel.HLS.value)
+//                                    }
+//                                }
+//                            }
+//                    )
+//                }
+//            }
         }
     }
 }
